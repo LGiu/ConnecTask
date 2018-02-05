@@ -19,6 +19,7 @@ public class Avaliacao extends AppCompatActivity {
 
         buttonEnviar = (Button) findViewById(R.id.buttonEnviar);
 
+        //Botão enviar
         buttonEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
