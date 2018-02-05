@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">ConnecTask</string>
+    <string name="connectask">ConnecTask</string>
+    <string name="email">E-mail</string>
+    <string name="senha">Senha</string>
+    <string name="entrar">ENTRAR</string>
+    <string name="nome">Nome</string>
+    <string name="tipo">Tipo</string>
+    <string name="descricao">Descrição</string>
+    <string name="tempo">Tempo</string>
+    <string name="valor">Valor(Em R$)</string>
+    <string name="endereco">Endereço</string>
+    <string name="novoEndereco">Novo Endereço</string>
+    <string name="digiteValor">Digite o valor a ser pago</string>
+    <string name="digiteDescricao">Digite a descrição da tarefa</string>
+    <string name="digiteTempo">Digite o tempo da sua tarefa</string>
+    <string name="novaTarefa">NOVA TAREFA</string>
+    <string name="digiteEmail">Digite seu e-mail</string>
+    <string name="digiteSenha">Digite sua senha</string>
+    <string name="digiteNome">Digite seu nome</string>
+    <string name="digiteTitulo">Digite o título da tarefa</string>
+    <string name="cadastrar">CADASTRAR</string>
+    <string name="esqueceu">ESQUECEU SUA SENHA?</string>
+    <string name="cadastrarse">CADASTRE-SE</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="sair">Sair</string>
+    <string name="titulo">Título</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="cep">CEP</string>
+    <string name="rua">Rua</string>
+    <string name="numero">Número</string>
+    <string name="bairro">Bairro</string>
+    <string name="complemento">Complemento</string>
+    <string name="digiteCep">Digite a CEP</string>
+    <string name="digiteRua">Digite a Rua</string>
+    <string name="digiteNumero">Digite o Número</string>
+    <string name="digiteBairro">Digite o Bairro</string>
+    <string name="digiteComplemento">Digite o Complemento</string>
+    <string name="tarefa">Tarefa:</string>
+    <string name="valorPago">Valor Pago:</string>
+    <string name="tempoB">Tempo para realizar:</string>
+    <string name="descricaoB">Descrição:</string>
+    <string name="maisDetalhes">Mais Detalhes</string>
+    <string name="Tipo">Tipo:</string>
+    <string name="local">Local da tarefa</string>
+    <string name="cadastrado">Cadastrado por:</string>
+    <string name="realizar">Realizar</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_home2">Home2</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

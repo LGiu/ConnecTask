@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom|fill"
+    android:background="@android:color/white"
+    tools:context="com.connectask.activity.activity.Pagamento">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="fill">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tamanho_toolbar"
+            android:background="@color/cor_principal"
+            android:paddingLeft="30px"
+            android:paddingTop="10px"
+            app:title="Pagamento"
+            app:titleTextColor="@android:color/white" />
+
+        <FrameLayout
+            android:id="@+id/fragment_pagamento"
+            android:layout_width="match_parent"
+            android:layout_height="2000dp"
+            android:layout_gravity="fill">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="fill"
+                android:background="@android:color/white"
+                tools:layout_editor_absoluteY="62dp">
+
+                <Button
+                    android:id="@+id/buttonNovoMeio"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/cor_principal"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Novo Meio"
+                    android:textColor="@android:color/background_light"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinnerPagamento"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/spinnerPagamento" />
+
+                <Button
+                    android:id="@+id/buttonFinalizar"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/botaoFormulario"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="27dp"
+                    android:background="@color/cor_principal"
+                    android:text="Finalizar"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="@dimen/TextoBotaoFormulario"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerPagamento" />
+
+                <Spinner
+                    android:id="@+id/spinnerPagamento"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/tamanhoEditTextFormulario"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonNovoMeio"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView25" />
+
+                <TextView
+                    android:id="@+id/textView25"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Meios de pagamentos cadastrados"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/tamanhoTextFormaularios"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+        </FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+</android.support.constraint.ConstraintLayout>

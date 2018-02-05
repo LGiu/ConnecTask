@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "210349518572",
+    "firebase_url": "https://colapp-fe169.firebaseio.com",
+    "project_id": "colapp-fe169",
+    "storage_bucket": "colapp-fe169.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210349518572:android:21db696200618866",
+        "android_client_info": {
+          "package_name": "com.connectask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "210349518572-fcobk0njb5em8v48joilr5gbqrbhas9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectask",
+            "certificate_hash": "a437d67cf3dbc5879bb323b203ecd871ecd10714"
+          }
+        },
+        {
+          "client_id": "210349518572-9e6ggqgit0hbka9ij2l9j3curkhsql37.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP8qf2by9eTtlAhksRh_8n1PWwf74Juv8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "210349518572-9e6ggqgit0hbka9ij2l9j3curkhsql37.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

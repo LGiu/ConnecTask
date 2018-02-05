@@ -1,0 +1,120 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.connectask.activity.Fragments.CadastroPagamento">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp"
+            android:text="Número do cartão"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/tamanhoTextFormaularios"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextComplemento"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/tamanhoEditTextFormulario"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Digite o número do cartão"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Validade"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/tamanhoTextFormaularios"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextComplemento" />
+
+        <EditText
+            android:id="@+id/editTextValidade"
+            android:layout_width="152dp"
+            android:layout_height="@dimen/tamanhoEditTextFormulario"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="MM/AA"
+            android:inputType="textPersonName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            android:layout_marginLeft="16dp" />
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Código"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/tamanhoTextFormaularios"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintStart_toStartOf="@+id/editTextCodigo"
+            app:layout_constraintTop_toTopOf="@+id/textView" />
+
+        <EditText
+            android:id="@+id/editTextCodigo"
+            android:layout_width="152dp"
+            android:layout_height="@dimen/tamanhoEditTextFormulario"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="8dp"
+            android:ems="10"
+            android:hint="CVV"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toBottomOf="@+id/editTextValidade"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/editTextValidade"
+            app:layout_constraintTop_toTopOf="@+id/editTextValidade"
+            android:layout_marginLeft="8dp" />
+
+        <Button
+            android:id="@+id/buttonFinalizar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/botaoFormulario"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/cor_principal"
+            android:text="Finalizar"
+            android:textColor="@android:color/background_light"
+            android:textSize="@dimen/TextoBotaoFormulario"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextCodigo"
+            app:layout_constraintVertical_bias="0.108" />
+
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>
