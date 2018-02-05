@@ -25,6 +25,7 @@ public class Avaliacao extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Avaliacao.this, Home.class);
                 startActivity(intent);
+                startActivity(intent);
             }
         });
     }
