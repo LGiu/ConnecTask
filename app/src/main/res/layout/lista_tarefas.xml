@@ -90,6 +90,7 @@
                     android:id="@+id/textViewDescricao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="50"
                     android:text="Descrição"
                     android:textSize="@dimen/botaoCadastrar" />
 

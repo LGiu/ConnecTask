@@ -15,6 +15,8 @@ public class Usuario {
     private String email;
     private String senha;
     private String status;
+    private String avaliacao;
+    private String numeroAvaliacoes;
 
 
     public Usuario(){
@@ -26,6 +28,9 @@ public class Usuario {
         //1 - Ativo
         //2 - Inativo
         //3 - Suspenso
+
+        setAvaliacao("0");
+        setNumeroAvaliacoes("0");
 
         DatabaseReference referenciaFirebase = ConfiguracaoFirebase.getFirebase();
         referenciaFirebase.child("usuarios").child(getId()).setValue(this);
@@ -71,5 +76,21 @@ public class Usuario {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getAvaliacao() {
+        return avaliacao;
+    }
+
+    public void setAvaliacao(String avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public String getNumeroAvaliacoes() {
+        return numeroAvaliacoes;
+    }
+
+    public void setNumeroAvaliacoes(String numeroAvaliacoes) {
+        this.numeroAvaliacoes = numeroAvaliacoes;
     }
 }

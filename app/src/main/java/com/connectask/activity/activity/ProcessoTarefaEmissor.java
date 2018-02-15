@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProcessoTarefaEmissor extends AppCompatActivity {
 
     private String idTarefa;
+    public String id_ProcessoTarefa;
     private String idVariavel;
     private String idUsario;
     private String statusTarefa;
@@ -51,6 +52,8 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
 
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
+        id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
+
 
         //Status tarefa
         firebase = ConfiguracaoFirebase.getFirebase()
@@ -175,6 +178,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
 
                     Intent intent = new Intent(ProcessoTarefaEmissor.this, TarefaFinalizadaEmissor.class);
                     intent.putExtra("id", idTarefa);
+                    intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
                     startActivity(intent);
                 }
             });

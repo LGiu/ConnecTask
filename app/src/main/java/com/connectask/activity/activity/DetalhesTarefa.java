@@ -1,6 +1,8 @@
 package com.connectask.activity.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -85,14 +87,26 @@ public class DetalhesTarefa extends AppCompatActivity {
                                 @Override
                                 public void onClick(View view) {
 
-                                    firebase.child(idTarefa)
-                                            .child("status").setValue("2");
+                                    new AlertDialog.Builder(DetalhesTarefa.this)
+                                            .setTitle("Realizar tarefa")
+                                            .setMessage("Tem certeza que deseja realizar esta tarefa?")
+                                            .setPositiveButton("Sim",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            firebase.child(idTarefa)
+                                                                    .child("status").setValue("2");
 
-                                    processoTarefa.salvar(idTarefa);
+                                                            processoTarefa.salvar(idTarefa);
 
-                                    Intent intent = new Intent(DetalhesTarefa.this, ProcessoTarefaRealizador.class);
-                                    intent.putExtra("id", idTarefa);
-                                    startActivity(intent);
+                                                            Intent intent = new Intent(DetalhesTarefa.this, ProcessoTarefaRealizador.class);
+                                                            intent.putExtra("id", idTarefa);
+                                                            intent.putExtra("id_ProcessoTarefa", processoTarefa.getId());
+                                                            startActivity(intent);
+                                                        }
+                                                    })
+                                            .setNegativeButton("Não", null)
+                                            .show();
                                 }
                             });
 

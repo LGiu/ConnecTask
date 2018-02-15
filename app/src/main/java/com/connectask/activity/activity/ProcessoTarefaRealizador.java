@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ProcessoTarefaRealizador extends AppCompatActivity {
 
     private String idTarefa;
+    public String id_ProcessoTarefa;
     private String idVariavel;
     private String idUsario;
     private String statusTarefa;
@@ -49,6 +50,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
 
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
+        id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
 
         //Status tarefa
         firebase = ConfiguracaoFirebase.getFirebase()

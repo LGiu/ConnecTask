@@ -33,7 +33,7 @@
             android:name="com.connectask.activity.activity.DetalhesTarefa"
             android:parentActivityName="com.connectask.activity.activity.Home" />
         <activity android:name="com.connectask.activity.activity.Pagamento" />
-        <activity android:name="com.connectask.activity.activity.Avaliacao" />
+        <activity android:name="com.connectask.activity.activity.CriarAvaliacao" />
         <activity android:name="com.connectask.activity.activity.ProcessoTarefaEmissor" />
         <activity android:name="com.connectask.activity.activity.TarefaFinalizadaEmissor" />
         <activity android:name="com.connectask.activity.activity.TarefaFinalizaRealizador" />
