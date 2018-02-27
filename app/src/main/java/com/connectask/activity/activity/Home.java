@@ -1,5 +1,7 @@
 package com.connectask.activity.activity;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,9 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.connectask.R;
+import com.connectask.activity.Fragments.Filtro;
 import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
@@ -31,19 +36,16 @@ import java.util.ArrayList;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
     private FirebaseAuth usuarioAutenticacao;
-
-
-    //NOVO CÓDIGO COMEÇ AQUI
 
     private DatabaseReference firebase;
 
     private ListView listViewTarefas;
     private ArrayAdapter adapter;
     private ArrayList<Tarefa> listaTarefas;
+    private Button buttonFiltros;
+    private SearchView searchViewBusca;
 
-    //TERMINA AQUI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,19 @@ public class Home extends AppCompatActivity
             }
         });
 
-        //
+
+        /*buttonFiltros.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Filtro filtro = new Filtro();
+                fragmentTransaction.replace(R.id.fragment_container, filtro);
+                fragmentTransaction.addToBackStack(null).commit();
+            }
+        });*/
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -143,6 +157,36 @@ public class Home extends AppCompatActivity
             }
         });
 
+
+        searchViewBusca = (SearchView) findViewById(R.id.searchViewBusca);
+
+        //searchViewBusca.setOnQueryTextListener(this);
+
+        /*firebase = ConfiguracaoFirebase.getFirebase()
+                .child("tarefas")
+                .orderByChild("titulo");
+
+        //Evento de consulta
+        firebase.addValueEventListener(new ValueEventListener() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //LIMPANDO A LISTA
+                listaTarefas.clear();
+
+                //Listando cada uma das atividades criadas pelo usuário
+                for (DataSnapshot dados: dataSnapshot.getChildren()){ //recupera os filhos do nó principal
+                    Tarefa tarefa = dados.getValue(Tarefa.class);
+                    listaTarefas.add(tarefa);
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };*/
     }
 
     @Override
@@ -178,8 +222,12 @@ public class Home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_tarefas) {
-
+        if (id == R.id.nav_tarefas_cadastradas) {
+            Intent intent = new Intent(this, MinhasTarefasCadastradas.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_tarefas_realizadas) {
+            Intent intent = new Intent(this, MinhasTarefasRealizadas.class);
+            startActivity(intent);
         } else if (id == R.id.nav_pagamento) {
 
         } else if (id == R.id.nav_configuracoes) {

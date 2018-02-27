@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.connectask.activity.activity.MainActivity">
+        <activity android:name=".activity.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,25 +20,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.connectask.activity.activity.Login"
+            android:name=".activity.activity.Login"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.connectask.activity.activity.CadastroUsuario"
+            android:name=".activity.activity.CadastroUsuario"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name="com.connectask.activity.activity.Home"
+            android:name=".activity.activity.Home"
             android:label="@string/title_activity_home2"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.connectask.activity.activity.DetalhesTarefa"
-            android:parentActivityName="com.connectask.activity.activity.Home" />
-        <activity android:name="com.connectask.activity.activity.Pagamento" />
-        <activity android:name="com.connectask.activity.activity.CriarAvaliacao" />
-        <activity android:name="com.connectask.activity.activity.ProcessoTarefaEmissor" />
-        <activity android:name="com.connectask.activity.activity.TarefaFinalizadaEmissor" />
-        <activity android:name="com.connectask.activity.activity.TarefaFinalizaRealizador" />
-        <activity android:name="com.connectask.activity.activity.ProcessoTarefaRealizador" />
-        <activity android:name="com.connectask.activity.activity.CadastroTarefa"></activity>
+            android:name=".activity.activity.DetalhesTarefa"
+            android:parentActivityName=".activity.activity.Home" />
+        <activity android:name=".activity.activity.Pagamento" />
+        <activity android:name=".activity.activity.CriarAvaliacao" />
+        <activity android:name=".activity.activity.ProcessoTarefaEmissor" />
+        <activity android:name=".activity.activity.TarefaFinalizadaEmissor" />
+        <activity android:name=".activity.activity.TarefaFinalizaRealizador" />
+        <activity android:name=".activity.activity.ProcessoTarefaRealizador" />
+        <activity android:name=".activity.activity.CadastroTarefa" />
+        <activity android:name=".activity.activity.TarefasCadastradas" />
+        <activity android:name=".activity.activity.TarefasRealizadas" />
+        <activity android:name=".activity.activity.MinhasTarefasCadastradas" />
+        <activity android:name=".activity.activity.MinhasTarefasRealizadas" />
+        <activity android:name=".activity.activity.EsqueceuSenha"></activity>
     </application>
 
 </manifest>

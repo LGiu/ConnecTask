@@ -5,8 +5,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_tarefas"
-            android:title="Minhas tarefas" />
+            android:id="@+id/nav_tarefas_cadastradas"
+            android:title="Minhas Tarefas Cadastradas" />
+        <item
+            android:id="@+id/nav_tarefas_realizadas"
+            android:title="Minhas Tarefas Realizadas" />
         <item
             android:id="@+id/nav_pagamento"
             android:title="Pagamento" />
