@@ -18,7 +18,7 @@
         android:background="@color/cor_principal"
         android:paddingLeft="30px"
         android:paddingTop="10px"
-        app:title="Cadastro de tarefa"
+        app:title="Minhas Tarefas Realizadas"
         app:titleTextColor="@android:color/white" />
 
     <LinearLayout

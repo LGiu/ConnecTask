@@ -43,7 +43,8 @@
         <activity android:name=".activity.activity.TarefasRealizadas" />
         <activity android:name=".activity.activity.MinhasTarefasCadastradas" />
         <activity android:name=".activity.activity.MinhasTarefasRealizadas" />
-        <activity android:name=".activity.activity.EsqueceuSenha"></activity>
+        <activity android:name=".activity.activity.EsqueceuSenha" />
+        <activity android:name=".activity.activity.Perfil"></activity>
     </application>
 
 </manifest>

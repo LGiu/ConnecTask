@@ -1,6 +1,8 @@
 package com.connectask.activity.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -170,32 +172,57 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
             buttonFinalizar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    firebase = ConfiguracaoFirebase.getFirebase();
 
-                    firebase.child("tarefas")
-                            .child(idTarefa)
-                            .child("status").setValue("4");
+                    new AlertDialog.Builder(ProcessoTarefaEmissor.this)
+                            .setTitle("Finalizar tarefa")
+                            .setMessage("Tem certeza que deseja finalizar esta tarefa?")
+                            .setPositiveButton("Sim",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                        firebase = ConfiguracaoFirebase.getFirebase();
 
-                    Intent intent = new Intent(ProcessoTarefaEmissor.this, TarefaFinalizadaEmissor.class);
-                    intent.putExtra("id", idTarefa);
-                    intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
-                    startActivity(intent);
+                                        firebase.child("tarefas")
+                                                .child(idTarefa)
+                                                .child("status").setValue("4");
+
+                                        Intent intent = new Intent(ProcessoTarefaEmissor.this, TarefaFinalizadaEmissor.class);
+                                        intent.putExtra("id", idTarefa);
+                                        intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
+                                        startActivity(intent);
+                                        }
+                                    })
+                            .setNegativeButton("Não", null)
+                            .show();
                 }
             });
 
             buttonCancelar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    firebase = ConfiguracaoFirebase.getFirebase();
 
-                    firebase.child("tarefas")
-                            .child(idTarefa)
-                            .child("status").setValue("3");
+                    new AlertDialog.Builder(ProcessoTarefaEmissor.this)
+                            .setTitle("Finalizar tarefa")
+                            .setMessage("Tem certeza que deseja cancelar esta tarefa?")
+                            .setPositiveButton("Sim",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            firebase = ConfiguracaoFirebase.getFirebase();
 
-                    Intent intent = new Intent(ProcessoTarefaEmissor.this, Home.class);
-                    startActivity(intent);
+                                            firebase.child("tarefas")
+                                                    .child(idTarefa)
+                                                    .child("status").setValue("3");
+
+                                            Intent intent = new Intent(ProcessoTarefaEmissor.this, Home.class);
+                                            startActivity(intent);
+                                        }
+                                    })
+                            .setNegativeButton("Não", null)
+                            .show();
                 }
             });
+
         }
 
         else if (statusTarefa.equals("4")){

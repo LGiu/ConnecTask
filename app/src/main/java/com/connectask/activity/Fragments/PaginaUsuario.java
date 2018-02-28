@@ -10,10 +10,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.connectask.R;
-import com.connectask.activity.activity.Home;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
