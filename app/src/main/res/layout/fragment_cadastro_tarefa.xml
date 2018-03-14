@@ -18,7 +18,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/textViewTe"
                 android:layout_width="0dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="16dp"
@@ -33,7 +33,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/editTextRua"
+                android:id="@+id/editTextNome"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/tamanhoEditTextFormulario"
                 android:layout_marginLeft="16dp"
@@ -45,7 +45,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewTe" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -61,7 +61,7 @@
                 android:textSize="@dimen/tamanhoTextFormaularios"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextRua" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextNome" />
 
             <Spinner
                 android:id="@+id/spinnerTipo"

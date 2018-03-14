@@ -24,6 +24,13 @@ public class CadastroPagamento extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_perfil);
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(fragment);
+        fragmentTransaction.commit();
+
         return inflater.inflate(R.layout.fragment_cadastro_pagamento, container, false);
     }
 

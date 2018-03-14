@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.connectask.activity.classes.Base64Custom.codificarBase64;
+
 public class ProcessoTarefaRealizador extends AppCompatActivity {
 
     private String idTarefa;
@@ -27,7 +29,8 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
     private String idUsario;
     private String statusTarefa;
 
-    private DatabaseReference firebase;
+    private DatabaseReference firebase1;
+    private DatabaseReference firebase2;
 
     private Button buttonCancelar;
     private TextView textViewTipo;
@@ -35,7 +38,11 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
     private TextView textViewDescricao;
     private TextView textViewTempo;
     private TextView textViewNome;
-    private TextView textViewLocal;    private ImageButton imageButtonLocal;
+    private TextView textViewLocal;
+    private TextView textViewData;
+    private ImageButton imageButtonLocal;
+
+    private Tarefa tarefa = new Tarefa();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +60,130 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
         id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
 
         //Status tarefa
-        firebase = ConfiguracaoFirebase.getFirebase()
-                .child("tarefas")
-                .child(idTarefa);
+        firebase1 = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Tarefa tarefa = dados.getValue(Tarefa.class);
-                    statusTarefa = tarefa.getStatus();
+
+                    idVariavel = tarefa.getId();
+                    if(idTarefa.equals(idVariavel)){
+                        statusTarefa = tarefa.getStatus();
+
+                        if(statusTarefa.equals("2")) {
+                            buttonCancelar = (Button) findViewById(R.id.buttonFinalizar);
+                            textViewTipo = (TextView) findViewById(R.id.textViewTipo);
+                            textViewTitulo = (TextView) findViewById(R.id.textViewTitulo);
+                            textViewDescricao = (TextView) findViewById(R.id.textViewDescricao);
+                            textViewTempo = (TextView) findViewById(R.id.textViewTempo);
+                            textViewNome = (TextView) findViewById(R.id.textViewNome);
+                            textViewLocal = (TextView) findViewById(R.id.textViewLocal);
+                            textViewData = (TextView) findViewById(R.id.textViewData);
+                            imageButtonLocal = (ImageButton) findViewById(R.id.imageButtonLocal);
+
+                            if (idTarefa != null) {
+                                firebase1 = ConfiguracaoFirebase.getFirebase()
+                                        .child("tarefas");
+
+                                firebase1.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                                            final Tarefa tarefa = dados.getValue(Tarefa.class);
+
+                                            idVariavel = tarefa.getId();
+
+                                            if (idVariavel.equals(idTarefa)) {
+                                                textViewTipo.setText(tarefa.getTipo());
+                                                textViewTitulo.setText(tarefa.getTitulo());
+                                                textViewDescricao.setText(tarefa.getDescricao());
+                                                textViewTempo.setText(tarefa.getTempo());
+                                                textViewData.setText(tarefa.getData());
+
+                                                firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
+
+                                                firebase2.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                        for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                                                            Usuario usuario = dados.getValue(Usuario.class);
+
+                                                            if(tarefa.getId_usuario().toString().equals(codificarBase64(usuario.getEmail().toString()))){
+                                                                textViewNome.setText(usuario.getNome().toString());
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                    }
+                                                });
+
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+
+                            buttonCancelar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    firebase1 = ConfiguracaoFirebase.getFirebase();
+
+                                    firebase1.child("tarefas")
+                                            .child(idTarefa)
+                                            .child("status").setValue("3");
+
+                                    Intent intent = new Intent(ProcessoTarefaRealizador.this, Home.class);
+                                    startActivity(intent);
+                                }
+                            });
+
+                            textViewLocal.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Local local = new Local();
+
+                                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
+                                    fragmentTransaction.addToBackStack(null).commit();
+                                }
+                            });
+
+                            imageButtonLocal.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Local local = new Local();
+
+                                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
+                                    fragmentTransaction.addToBackStack(null).commit();
+                                }
+                            });
+                        }
+
+                        else if (statusTarefa.equals("4")){
+                            Intent intent = new Intent(ProcessoTarefaRealizador.this, TarefaFinalizaRealizador.class);
+                            intent.putExtra("id", idTarefa);
+                            startActivity(intent);
+                        }
+
+
+                    }
                 }
             }
 
@@ -72,116 +193,6 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
             }
         });
 
-        if(statusTarefa.equals("2")) {
-            buttonCancelar = (Button) findViewById(R.id.buttonFinalizar);
-            textViewTipo = (TextView) findViewById(R.id.textViewTipo);
-            textViewTitulo = (TextView) findViewById(R.id.textViewTitulo);
-            textViewDescricao = (TextView) findViewById(R.id.textViewDescricao);
-            textViewTempo = (TextView) findViewById(R.id.textViewTempo);
-            textViewNome = (TextView) findViewById(R.id.textViewNome);
-            textViewLocal = (TextView) findViewById(R.id.textViewLocal);
-            imageButtonLocal = (ImageButton) findViewById(R.id.imageButtonLocal);
 
-            if (idTarefa != null) {
-                firebase = ConfiguracaoFirebase.getFirebase()
-                        .child("tarefas");
-
-                firebase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                            Tarefa tarefa = dados.getValue(Tarefa.class);
-
-                            idVariavel = tarefa.getId();
-                            if (idVariavel.equals(idTarefa)) {
-                                textViewTipo.setText(tarefa.getTipo());
-                                textViewTitulo.setText(tarefa.getTitulo());
-                                textViewDescricao.setText(tarefa.getDescricao());
-                                textViewTempo.setText(tarefa.getTempo());
-
-                                idUsario = tarefa.getId_usuario();
-
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                firebase = ConfiguracaoFirebase.getFirebase()
-                        .child("usuario");
-
-                firebase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                            Usuario usuario = dados.getValue(Usuario.class);
-
-                            idVariavel = usuario.getId();
-                            if (idVariavel.equals(idUsario)) {
-                                textViewNome.setText(usuario.getNome());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-
-            buttonCancelar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    firebase = ConfiguracaoFirebase.getFirebase();
-
-                    firebase.child("tarefas")
-                            .child(idTarefa)
-                            .child("status").setValue("3");
-
-                    Intent intent = new Intent(ProcessoTarefaRealizador.this, Home.class);
-                    startActivity(intent);
-                }
-            });
-
-            textViewLocal.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Local local = new Local();
-
-                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
-                    fragmentTransaction.addToBackStack(null).commit();
-                }
-            });
-
-            imageButtonLocal.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Local local = new Local();
-
-                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
-                    fragmentTransaction.addToBackStack(null).commit();
-                }
-            });
-        }
-
-        else if (statusTarefa.equals("4")){
-            intent = new Intent(ProcessoTarefaRealizador.this, TarefaFinalizaRealizador.class);
-            intent.putExtra("id", idTarefa);
-            startActivity(intent);
-        }
     }
 }

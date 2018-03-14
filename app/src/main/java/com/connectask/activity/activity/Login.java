@@ -45,7 +45,7 @@ public class Login extends AppCompatActivity {
 
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextSenha = (EditText) findViewById(R.id.editTextSenha);
+        editTextSenha = (EditText) findViewById(R.id.editTextCpf);
         buttonEntrar = (Button) findViewById(R.id.buttonFinalizar);
 
         editTextSenha.setTypeface(Typeface.DEFAULT);

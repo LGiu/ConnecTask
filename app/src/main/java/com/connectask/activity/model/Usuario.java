@@ -13,6 +13,7 @@ public class Usuario {
     private String id;
     private String nome;
     private String email;
+    private String cpf;
     private String senha;
     private String status;
     private String avaliacao;
@@ -23,7 +24,7 @@ public class Usuario {
 
     }
 
-    public void salvar(){
+    public void salvar(String identificadorUsuario){
         setStatus("1");
         //1 - Ativo
         //2 - Inativo
@@ -92,5 +93,13 @@ public class Usuario {
 
     public void setNumeroAvaliacoes(String numeroAvaliacoes) {
         this.numeroAvaliacoes = numeroAvaliacoes;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 }

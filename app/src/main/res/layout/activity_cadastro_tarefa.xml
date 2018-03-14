@@ -40,7 +40,7 @@
                         android:background="@android:color/white">
 
                         <TextView
-                            android:id="@+id/textView10"
+                            android:id="@+id/textViewTe"
                             android:layout_width="0dp"
                             android:layout_height="25dp"
                             android:layout_marginLeft="16dp"
@@ -106,7 +106,7 @@
                             android:textSize="@dimen/tamanhoTextFormaularios"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/editTextRua" />
+                            app:layout_constraintTop_toBottomOf="@+id/editTextNome" />
 
                         <TextView
                             android:id="@+id/textView12"
@@ -153,7 +153,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/editTextDescricao" />
 
                         <EditText
-                            android:id="@+id/editTextRua"
+                            android:id="@+id/editTextNome"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/tamanhoEditTextFormulario"
                             android:layout_marginLeft="16dp"
@@ -165,7 +165,7 @@
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                            app:layout_constraintTop_toBottomOf="@+id/textViewTe" />
 
                         <EditText
                             android:id="@+id/editTextValor"
@@ -181,21 +181,30 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-                        <EditText
-                            android:id="@+id/editTextTempo"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/tamanhoEditTextFormulario"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:ems="10"
-                            android:hint="@string/digiteTempo"
-                            android:inputType="time"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                    <EditText
+                        android:id="@+id/editTextTempo"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tamanhoEditTextFormulario"
+                        android:layout_marginStart="16dp"
+                        android:ems="10"
+                        android:hint="@string/digiteTempo"
+                        android:inputType="time"
+                        app:layout_constraintEnd_toStartOf="@+id/spinnerTempo"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-                        <Button
+                    <Spinner
+                        android:id="@+id/spinnerTempo"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tamanhoEditTextFormulario"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/editTextTempo"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/editTextTempo"
+                        app:layout_constraintTop_toTopOf="@+id/editTextTempo" />
+
+                    <Button
                             android:id="@+id/buttonFinalizar"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/botaoFormulario"

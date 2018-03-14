@@ -49,7 +49,7 @@ public class CadastroEndereco extends Fragment {
         view = inflater.inflate(R.layout.fragment_cadastro_endereco, container, false);
 
         editTextCep = (EditText) view.findViewById(R.id.editTextCep);
-        editTextRua = (EditText) view.findViewById(R.id.editTextRua);
+        editTextRua = (EditText) view.findViewById(R.id.editTextNome);
         editTextNumero = (EditText) view.findViewById(R.id.editTextComplemento);
         editTextBairro = (EditText) view.findViewById(R.id.editTextBairro);
         editTextComplemento = (EditText) view.findViewById(R.id.editTextComplemento);
@@ -84,8 +84,11 @@ public class CadastroEndereco extends Fragment {
 
         //tarefa.setId(task.getResult().getUser.getUid(););
         endereco.salvar(getContext());
-        getActivity().onBackPressed();
-    }
+        android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_cadastro);
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(fragment);
+        fragmentTransaction.commit();    }
 
     private void estado(){
         listaEstado.add("AC");

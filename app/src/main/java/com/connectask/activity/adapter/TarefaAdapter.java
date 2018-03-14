@@ -47,7 +47,7 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
             TextView titulo = (TextView) view.findViewById(R.id.textViewTitulo);
             TextView descricao = (TextView) view.findViewById(R.id.textViewDescricao);
             TextView tempo = (TextView) view.findViewById(R.id.textViewTempo);
-            TextView valor = (TextView) view.findViewById(R.id.textViewTempo);
+            TextView valor = (TextView) view.findViewById(R.id.textViewNome);
             Button detalhes = (Button) view.findViewById(R.id.buttonDetalhes);
 
             final Tarefa tarefa = listaTarefa.get(position);
@@ -61,6 +61,7 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
                     Intent intent = new Intent(context, DetalhesTarefa.class);
                     String id = tarefa.getId();
                     intent.putExtra("id", id);
+                    intent.putExtra("status", tarefa.getStatus().toString());
                     context.startActivity(intent);
                 }
             });

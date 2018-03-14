@@ -28,12 +28,13 @@
         <FrameLayout
             android:id="@+id/fragment_pagamento"
             android:layout_width="match_parent"
-            android:layout_height="2000dp"
-            android:layout_gravity="fill">
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:background="@android:color/white">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="600dp"
                 android:layout_gravity="fill"
                 android:background="@android:color/white"
                 tools:layout_editor_absoluteY="62dp">

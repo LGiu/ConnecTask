@@ -10,39 +10,26 @@
     tools:context="com.connectask.activity.activity.Home"
     tools:showIn="@layout/app_bar_home">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/buttonFiltros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:background="@android:color/white"
-            android:orientation="vertical">
+            android:text="Filtros" />
 
-            <Button
-                android:id="@+id/buttonFiltros"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@android:color/white"
-                android:text="Filtros" />
-
-            <SearchView
-                android:id="@+id/searchViewBusca"
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView32" />
-
-            <ListView
-                android:id="@+id/listViewTarefas"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="20dp"
-                android:scrollbars="vertical" />
-        </LinearLayout>
+        <ListView
+            android:id="@+id/listViewTarefas"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:paddingVertical="20dp"
+            android:scrollbars="vertical" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

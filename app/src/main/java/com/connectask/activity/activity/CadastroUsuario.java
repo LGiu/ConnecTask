@@ -2,6 +2,7 @@ package com.connectask.activity.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,13 +23,17 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 
 public class CadastroUsuario extends AppCompatActivity {
 
     private EditText editTextNome;
     private EditText editTextEmail;
+    private EditText editTextCpf;
     private EditText editTextSenha;
     private Button buttoCadastrar;
+
+    private DatabaseReference firebase;
 
     private Usuario usuario;
 
@@ -40,9 +45,11 @@ public class CadastroUsuario extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro);
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextNome = (EditText) findViewById(R.id.editTextRua);
+        editTextNome = (EditText) findViewById(R.id.editTextNome);
+        editTextCpf = (EditText) findViewById(R.id.editTextCpf);
         editTextSenha = (EditText) findViewById(R.id.editTextSenha);
         buttoCadastrar = (Button) findViewById(R.id.buttonFinalizar);
+
 
         buttoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +57,16 @@ public class CadastroUsuario extends AppCompatActivity {
                 usuario = new Usuario();
                 usuario.setEmail(editTextEmail.getText().toString());
                 usuario.setNome(editTextNome.getText().toString());
+                if(editTextCpf.length() == 11){
+                    new AlertDialog.Builder(CadastroUsuario.this)
+                            .setTitle("Erro")
+                            .setMessage("CPF inválido")
+                            .show();
+                }
+                else{
+                    usuario.setCpf(editTextCpf.getText().toString());
+                }
+
                 usuario.setSenha(editTextSenha.getText().toString());
                 cadastrarUsuario();
             }
@@ -71,7 +88,10 @@ public class CadastroUsuario extends AppCompatActivity {
 
                     String identificadorUsuario = Base64Custom.codificarBase64(usuario.getEmail().toString());
                     usuario.setId(identificadorUsuario);
-                    usuario.salvar();
+                    usuario.salvar(identificadorUsuario);
+
+                    firebase = ConfiguracaoFirebase.getFirebase();
+                    //firebase.child("usuarios").child(identificadorUsuario).child("id").setValue(identificadorUsuario);
 
                     Preferencias preferencias = new Preferencias(CadastroUsuario.this);
                     preferencias.salvarDados(identificadorUsuario);

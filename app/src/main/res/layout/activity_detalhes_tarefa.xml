@@ -1,52 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:fillViewport="true"
     tools:context="com.connectask.activity.activity.DetalhesTarefa">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        tools:context="com.connectask.activity.activity.DetalhesTarefa">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/tamanho_toolbar"
+            android:background="@color/cor_principal"
+            android:paddingLeft="30px"
+            android:paddingTop="10px"
+            app:title="Mais detalhes"
+            app:titleTextColor="@android:color/white" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tamanho_toolbar"
-                android:background="@color/cor_principal"
-                android:paddingLeft="30px"
-                android:paddingTop="10px"
-                app:title="Mais detalhes"
-                app:titleTextColor="@android:color/white" />
+        <FrameLayout
+            android:id="@+id/fragment_detalhes_tarefa"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill"
+            android:background="@android:color/white">
 
-            <FrameLayout
-                android:id="@+id/fragment_detalhes_tarefa"
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="fill"
+                android:layout_height="match_parent"
                 android:background="@android:color/white">
-
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@android:color/white">
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/textViewData"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:text="Data"
+                        android:textAlignment="textEnd"
+                        android:textSize="@dimen/botaoCadastrar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textViewER"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="16dp"
@@ -56,7 +67,7 @@
                         android:textSize="@dimen/botaoCadastrar"
                         android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewTe" />
 
                     <TextView
                         android:id="@+id/textViewTempo"
@@ -69,13 +80,13 @@
                         android:layout_weight="1"
                         android:text="8 horas"
                         android:textSize="@dimen/botaoCadastrar"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView10"
+                        app:layout_constraintBottom_toBottomOf="@+id/textViewTe"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView10"
-                        app:layout_constraintTop_toTopOf="@+id/textView10" />
+                        app:layout_constraintStart_toEndOf="@+id/textViewTe"
+                        app:layout_constraintTop_toTopOf="@+id/textViewTe" />
 
                     <TextView
                         android:id="@+id/textViewDescricao"
@@ -89,10 +100,10 @@
                         android:textSize="@dimen/botaoCadastrar"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView1" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewD" />
 
                     <TextView
-                        android:id="@+id/textViewTempo"
+                        android:id="@+id/textViewValor"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_marginEnd="16dp"
@@ -101,12 +112,12 @@
                         android:layout_weight="1"
                         android:text="R$ 12,00 "
                         android:textSize="@dimen/botaoCadastrar"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                        app:layout_constraintBottom_toBottomOf="@+id/textViewER"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView4"
-                        app:layout_constraintTop_toTopOf="@+id/textView4" />
+                        app:layout_constraintStart_toEndOf="@+id/textViewER"
+                        app:layout_constraintTop_toTopOf="@+id/textViewER" />
 
                     <TextView
                         android:id="@+id/textViewTarefa"
@@ -117,10 +128,10 @@
                         android:layout_weight="1"
                         android:text="Lavar o carro"
                         android:textSize="@dimen/botaoCadastrar"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                        app:layout_constraintBottom_toBottomOf="@+id/textViewT"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView2"
-                        app:layout_constraintTop_toTopOf="@+id/textView2" />
+                        app:layout_constraintStart_toEndOf="@+id/textViewT"
+                        app:layout_constraintTop_toTopOf="@+id/textViewT" />
 
                     <TextView
                         android:id="@+id/textView3"
@@ -128,14 +139,14 @@
                         android:layout_height="30dp"
                         android:layout_marginLeft="4dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="16dp"
                         android:layout_weight="1"
                         android:text="@string/Tipo"
                         android:textSize="@dimen/botaoCadastrar"
                         android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewData" />
 
                     <TextView
                         android:id="@+id/textViewNome"
@@ -165,10 +176,10 @@
                         android:textSize="@dimen/botaoCadastrar"
                         android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewLocal" />
+                        app:layout_constraintTop_toBottomOf="@+id/imageButtonLocal" />
 
                     <TextView
-                        android:id="@+id/textView1"
+                        android:id="@+id/textViewD"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="16dp"
@@ -178,10 +189,10 @@
                         android:textSize="@dimen/botaoCadastrar"
                         android:textStyle="bold"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewT" />
 
                     <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/textViewT"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_marginStart="16dp"
@@ -200,7 +211,7 @@
                         android:layout_marginBottom="32dp"
                         android:layout_marginLeft="32dp"
                         android:layout_marginRight="32dp"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="24dp"
                         android:background="@color/cor_principal"
                         android:text="@string/realizar"
                         android:textColor="@android:color/white"
@@ -209,12 +220,13 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewNome" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
                     <TextView
                         android:id="@+id/textViewLocal"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
+                        android:layout_marginBottom="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:clickable="true"
@@ -223,6 +235,7 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/imageButtonLocal"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/imageButtonLocal"
                         app:layout_constraintTop_toTopOf="@+id/imageButtonLocal" />
 
@@ -244,7 +257,7 @@
                         app:layout_constraintTop_toTopOf="@+id/textView3" />
 
                     <TextView
-                        android:id="@+id/textView10"
+                        android:id="@+id/textViewTe"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_marginLeft="16dp"
@@ -262,16 +275,16 @@
                         android:id="@+id/imageButtonLocal"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="32dp"
+                        android:layout_marginStart="40dp"
                         android:layout_marginTop="24dp"
                         android:background="@android:color/white"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewTempo"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewValor"
                         app:srcCompat="@drawable/ic_add_location" />
                 </android.support.constraint.ConstraintLayout>
+            </ScrollView>
 
-            </FrameLayout>
-        </android.support.design.widget.AppBarLayout>
+        </FrameLayout>
+    </android.support.design.widget.AppBarLayout>
 
-    </android.support.constraint.ConstraintLayout>
-</ScrollView>
+</android.support.constraint.ConstraintLayout>

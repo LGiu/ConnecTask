@@ -56,7 +56,7 @@ public class CadastroTarefaFragment extends Fragment {
 
         context = container.getContext();
 
-        editTextTitulo = (EditText) view.findViewById(R.id.editTextRua);
+        editTextTitulo = (EditText) view.findViewById(R.id.editTextNome);
         spinnerTipo = (Spinner) view.findViewById(R.id.spinnerTipo);
         editTextDescricao = (EditText) view.findViewById(R.id.editTextDescricao);
         editTextTempo = (EditText) view.findViewById(R.id.editTextTempo);

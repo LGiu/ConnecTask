@@ -3,6 +3,8 @@ package com.connectask.activity.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -11,6 +13,7 @@ import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
+import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,8 +29,7 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
     private ListView listViewTarefas;
     private ArrayAdapter adapter;
     private ArrayList<Tarefa> listaTarefas;
-
-    private SearchView searchViewBusca;
+    private ArrayList<Tarefa> listaTarefasBusca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,50 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
 
+        listarTarefas();
+
+        SearchView searchView = (SearchView) findViewById(R.id.searchViewBusca);
+        searchView.setOnQueryTextListener(new SearchFiltro());
+    }
+
+    //Busca
+    public class SearchFiltro implements SearchView.OnQueryTextListener {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            // TODO Auto-generated method stub
+            //Log.i("Script", "onQueryTextSubmit-> " + query);
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String text) {
+            if (text.toString() != null && !text.toString().equals("")) {
+                listaTarefasBusca = new ArrayList<>();
+
+                listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
+                adapter = new TarefaAdapter(
+                        MinhasTarefasCadastradas.this,
+                        listaTarefasBusca
+                );
+                listViewTarefas.setAdapter(adapter);
+
+                for (Tarefa  tarefa : listaTarefas)
+                {
+                    if (tarefa.getTitulo().toLowerCase().contains(text.toLowerCase())) {
+                        listaTarefasBusca.add(tarefa);
+                    }
+                }
+            }
+            else {
+                listarTarefas();
+            }
+            return false;
+        }
+    }
+
+
+    private void listarTarefas(){
         listaTarefas = new ArrayList<>();
 
         listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
@@ -86,6 +132,6 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
 
             }
         });
-
     }
+
 }

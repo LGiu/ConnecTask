@@ -7,6 +7,7 @@ import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.classes.Preferencias;
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,7 +16,7 @@ import java.util.Date;
  * Created by Leonardo Giuliani on 21/12/2017.
  */
 
-public class Tarefa {
+public class Tarefa implements Serializable {
 
     private String id;
     private String id_usuario;
@@ -162,7 +163,6 @@ public class Tarefa {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-
 
     public String getData() {
         return data;
