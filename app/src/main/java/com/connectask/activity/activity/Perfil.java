@@ -22,6 +22,7 @@ import com.connectask.R;
 import com.connectask.activity.Fragments.EditarPerfil;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
+import com.connectask.activity.model.Foto;
 import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,7 +51,7 @@ public class Perfil extends AppCompatActivity {
     private TextView textViewCpf;
 
     protected Uri filePath;
-    private final int PICK_IMAGE_REQUEST = 71;
+    private final int PICK_IMAGE = 1234;
     public FirebaseStorage storage = FirebaseStorage.getInstance();
     public StorageReference storageReference = storage.getReference();
 
@@ -65,6 +66,12 @@ public class Perfil extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         imageViewFoto = (ImageView) findViewById(R.id.imageViewFoto);
         textViewNome = (TextView) findViewById(R.id.textViewNome);
@@ -86,6 +93,7 @@ public class Perfil extends AppCompatActivity {
                     if(identificadorUsuarioLogado.equals(codificarBase64(usuario.getEmail()))){
                         textViewNome.setText(usuario.getNome());
                         textViewEmail.setText(usuario.getEmail());
+                        setarImagem();
                     }
                 }
             }
@@ -98,10 +106,9 @@ public class Perfil extends AppCompatActivity {
         imageViewFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("imagem/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Selecione sua foto"), PICK_IMAGE_REQUEST);
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), PICK_IMAGE);
 
             }
         });
@@ -121,7 +128,7 @@ public class Perfil extends AppCompatActivity {
         textViewEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditarPerfil editarPerfil = new EditarPerfil("Email", textViewEmail.getText().toString());
+                EditarPerfil editarPerfil = new EditarPerfil("E-Mail", textViewEmail.getText().toString());
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -146,7 +153,7 @@ public class Perfil extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+        if(requestCode == PICK_IMAGE && resultCode == RESULT_OK
                 && data != null && data.getData() != null )
         {
             filePath = data.getData();
@@ -176,6 +183,10 @@ public class Perfil extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             Toast.makeText(Perfil.this, "Salvo", Toast.LENGTH_SHORT).show();
+                            Foto foto = new Foto(Perfil.this);
+                            foto.setId_imagem(UUID.randomUUID().toString());
+                            foto.salvar();
+                            setarImagem();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -194,6 +205,35 @@ public class Perfil extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void setarImagem(){
+        firebase = ConfiguracaoFirebase.getFirebase()
+                .child("fotos");
+
+        Preferencias preferencias = new Preferencias(Perfil.this);
+        final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados: dataSnapshot.getChildren()){
+                    Foto foto = dados.getValue(Foto.class);
+
+                    if(identificadorUsuarioLogado.equals(foto.getId_usuario())){
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference pathReference = storageRef.child("images/"+foto.getId_imagem()+"");
+
+//https://androidjson.com/upload-image-to-firebase-storage/
+                        //mageViewFoto.setImageResource();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

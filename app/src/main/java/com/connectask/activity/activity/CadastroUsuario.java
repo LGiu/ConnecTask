@@ -5,12 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.connectask.R;
+import com.connectask.activity.classes.Cpf;
+import com.connectask.activity.classes.Util;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.classes.Base64Custom;
 import com.connectask.activity.classes.Preferencias;
@@ -25,6 +28,9 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class CadastroUsuario extends AppCompatActivity {
 
     private EditText editTextNome;
@@ -36,6 +42,8 @@ public class CadastroUsuario extends AppCompatActivity {
     private DatabaseReference firebase;
 
     private Usuario usuario;
+
+    private String msg;
 
     private FirebaseAuth autenticacao;
 
@@ -51,28 +59,38 @@ public class CadastroUsuario extends AppCompatActivity {
         buttoCadastrar = (Button) findViewById(R.id.buttonFinalizar);
 
 
+        editTextCpf.addTextChangedListener(Cpf.insert(editTextCpf,1));
+
         buttoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                usuario = new Usuario();
-                usuario.setEmail(editTextEmail.getText().toString());
-                usuario.setNome(editTextNome.getText().toString());
-                if(editTextCpf.length() == 11){
-                    new AlertDialog.Builder(CadastroUsuario.this)
-                            .setTitle("Erro")
-                            .setMessage("CPF inválido")
-                            .show();
+
+                if(valida()){
+                    usuario = new Usuario();
+                    usuario.setEmail(editTextEmail.getText().toString());
+                    usuario.setNome(editTextNome.getText().toString());
+                    if(editTextCpf.length() == 11){
+                        new AlertDialog.Builder(CadastroUsuario.this)
+                                .setTitle("Erro")
+                                .setMessage("CPF inválido")
+                                .show();
+                    }
+                    else{
+                        usuario.setCpf(editTextCpf.getText().toString());
+                    }
+
+                    usuario.setSenha(editTextSenha.getText().toString());
+                    cadastrarUsuario();
                 }
                 else{
-                    usuario.setCpf(editTextCpf.getText().toString());
+                    Toast.makeText(CadastroUsuario.this, msg, Toast.LENGTH_SHORT).show();
                 }
 
-                usuario.setSenha(editTextSenha.getText().toString());
-                cadastrarUsuario();
             }
         });
 
     }
+
 
     private void cadastrarUsuario(){
 
@@ -127,5 +145,31 @@ public class CadastroUsuario extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    private boolean valida(){
+        boolean teste = true;
+        msg = "Campos incorretos:";
+
+        Util util = new Util();
+
+        if(editTextNome.getText().length() > 75 || editTextNome.getText().length() == 0)
+        {
+            msg += "\nNome inválido.";
+            teste = false;
+        }
+        if(editTextCpf.getText().length() != 14)
+        {
+            msg += "\nCPF inválido.";
+            teste = false;
+        }
+        if(util.isPasswordValid(editTextSenha.getText().toString().trim()))
+        {
+            msg += "\nSenha inválido.";
+            teste = false;
+        }
+
+        return teste;
+    }
+
 
 }

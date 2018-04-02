@@ -15,6 +15,7 @@ import com.connectask.R;
 import com.connectask.activity.activity.CadastroUsuario;
 import com.connectask.activity.activity.Perfil;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.classes.Util;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +41,7 @@ public class EditarPerfil extends Fragment {
 
     private DatabaseReference firebase;
 
+    private String msg;
 
     public EditarPerfil(String tx, String ed) {
         txCampo = tx;
@@ -105,6 +107,37 @@ public class EditarPerfil extends Fragment {
         });
 
         return view;
+    }
+
+    private boolean valida(){
+        boolean teste = true;
+        msg = "Campos incorretos:";
+
+        Util util = new Util();
+
+        if(txCampo.equals("Nome")){
+            if(editTextCampo.getText().length() > 75 || editTextCampo.getText().length() == 0)
+            {
+                msg += "\nNome inválido.";
+                teste = false;
+            }
+        }
+        else if(txCampo.equals("E-Mail")){
+            if(editTextCampo.getText().length() != 14)
+            {
+                msg += "\nCPF inválido.";
+                teste = false;
+            }
+        }
+        else if(txCampo.equals("Senha")){
+            if(util.isPasswordValid(editTextCampo.getText().toString().trim()))
+            {
+                msg += "\nSenha inválido.";
+                teste = false;
+            }
+        }
+
+        return teste;
     }
 
 }

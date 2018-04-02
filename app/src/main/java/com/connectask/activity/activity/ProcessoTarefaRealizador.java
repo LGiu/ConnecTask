@@ -54,6 +54,12 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
@@ -68,8 +74,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Tarefa tarefa = dados.getValue(Tarefa.class);
 
-                    idVariavel = tarefa.getId();
-                    if(idTarefa.equals(idVariavel)){
+                    if(idTarefa.equals(tarefa.getId().toString())){
                         statusTarefa = tarefa.getStatus();
 
                         if(statusTarefa.equals("2")) {
@@ -101,7 +106,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                                 textViewTitulo.setText(tarefa.getTitulo());
                                                 textViewDescricao.setText(tarefa.getDescricao());
                                                 textViewTempo.setText(tarefa.getTempo());
-                                                textViewData.setText(tarefa.getData());
+                                                textViewData.setText(tarefa.getData().replace("-","/"));
 
                                                 firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
 

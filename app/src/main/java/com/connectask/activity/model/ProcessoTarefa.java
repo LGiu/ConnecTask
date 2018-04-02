@@ -27,47 +27,19 @@ public class ProcessoTarefa {
 
     private DatabaseReference firebase;
 
-    private Context context;
-
     private String id;
     private String id_tarefa;
     private String id_usuario_realizador;
     private String id_usuario_emissor;
     private String data;
     private String hora;
+    private String ativo;
 
-    public ProcessoTarefa(Context contextoParamentro){
-        context = contextoParamentro;
+
+    public ProcessoTarefa(){
     }
 
     public void salvar() {
-
-        Preferencias preferencias = new Preferencias(context);
-        final String identificadorUsuarioLogado = preferencias.getIdentificado();
-
-        setId_usuario_realizador(identificadorUsuarioLogado);
-
-        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
-
-        firebase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot dados: dataSnapshot.getChildren()){
-                    final Tarefa tarefa = dados.getValue(Tarefa.class);
-
-                    if(tarefa.getId().toString().equals(getId_tarefa()))
-                    {
-                        setId_usuario_emissor(tarefa.getId_usuario());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         //setar data
         SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
@@ -82,6 +54,7 @@ public class ProcessoTarefa {
         horaAtual = calendar.getTime();
         setHora(formataHora.format(horaAtual));
 
+        setAtivo("1");
 
         firebase = ConfiguracaoFirebase.getFirebase();
 
@@ -141,5 +114,14 @@ public class ProcessoTarefa {
 
     public void setHora(String hora) {
         this.hora = hora;
+    }
+
+
+    public String getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(String ativo) {
+        this.ativo = ativo;
     }
 }

@@ -1,12 +1,10 @@
 package com.connectask.activity.activity;
 
-import android.app.Dialog;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,17 +14,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.classes.ValoresFiltro;
 import com.connectask.activity.config.ConfiguracaoFirebase;
+import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,6 +56,15 @@ public class Home extends AppCompatActivity
     private ArrayList<Tarefa> listaTarefasBusca;
     private Button buttonFiltros;
     private SearchView searchViewBusca;
+    private SwipeRefreshLayout mSwipeToRefresh;
+
+    private String id_processoTarefa = "";
+    private String id_tarefa = "";
+    private int er = 0;
+
+    private boolean controle = false;
+
+    private ProgressDialog loading;
 
 
     @Override
@@ -64,45 +76,6 @@ public class Home extends AppCompatActivity
         setContentView(R.layout.activity_home);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        nomeUsuario();
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-               /* FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                CadastroTarefaFragment cadastroTarefaFragment = new CadastroTarefaFragment();
-                fragmentTransaction.add(R.id.fragment_container, cadastroTarefaFragment);
-                fragmentTransaction.addToBackStack(null).commit();
-
-                fab.hide();
-                toolbar.setTitle("Nova tarefa");
-                toolbar.setNavigationIcon(null);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);*/
-
-                Intent intent = new Intent(Home.this, CadastroTarefa.class);
-                startActivity(intent);
-
-            }
-        });
-
-
-        /*buttonFiltros.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                Filtro filtro = new Filtro();
-                fragmentTransaction.replace(R.id.fragment_container, filtro);
-                fragmentTransaction.addToBackStack(null).commit();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -117,8 +90,71 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        listarTarefas();
 
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                controle = false;
+
+                Preferencias preferencias = new Preferencias(Home.this);
+                final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
+                firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
+
+                firebase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                            ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+
+                            if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivo().equals("1") ){
+                                controle = true;
+                            }
+
+                        }
+                        if(controle){
+                            Toast.makeText(Home.this, "Você já está envolvido em um processo de uma tarefa", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Intent intent = new Intent(Home.this, CadastroTarefa.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        listarTarefas();
+        loading.cancel();
+
+        nomeUsuario();
+
+        buttonFiltros  = (Button) findViewById(R.id.buttonFiltros);
+        buttonFiltros.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Home.this, Filtro.class);
+                startActivity(intent);
+            }
+        });
+
+
+        mSwipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        mSwipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listarTarefas();
+                mSwipeToRefresh.setRefreshing(false);
+            }
+        });
+
+        tarefaFinalizada();
     }
 
     @Override
@@ -134,6 +170,36 @@ public class Home extends AppCompatActivity
 
         SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
         searchView.setOnQueryTextListener(new SearchFiltro());
+
+        //
+        final MenuItem item = menu.findItem(R.id.app_bar_notification);
+
+        controle = false;
+
+        Preferencias preferencias = new Preferencias(Home.this);
+        final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+
+                    if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivo().equals("1") ){
+                        item.setIcon(R.drawable.not);
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         return true;
     }
@@ -192,7 +258,6 @@ public class Home extends AppCompatActivity
         }
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -228,6 +293,15 @@ public class Home extends AppCompatActivity
     }
 
     private void listarTarefas(){
+        loading = new ProgressDialog(Home.this);
+        loading.show();
+
+        ValoresFiltro valoresFiltro = new ValoresFiltro(Home.this);
+        final String categoria = valoresFiltro.getCategoria();
+        final int localizacao = valoresFiltro.getLocalizacao();
+        final int valor = valoresFiltro.getValor();
+        final int tempo = valoresFiltro.getTempo();
+
         listaTarefas = new ArrayList<>();
 
         listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
@@ -257,10 +331,23 @@ public class Home extends AppCompatActivity
 
                     String usuarioLogado = tarefa.getId_usuario();
                     String statusTarefa = tarefa.getStatus();
-                    //if((!(usuarioLogado.equals(identificadorUsuarioLogado)) && (statusTarefa.equals("1")))){
-                    listaTarefas.add(tarefa);
-                    //} COMENTÁRIO COLOCADO PARA TESTE
 
+                    if((!(usuarioLogado.equals(identificadorUsuarioLogado)) && (statusTarefa.equals("1")))) {
+                        if (categoria != "") {
+                            if ((tarefa.getTipo().toString() == categoria) &&
+                                 /*(Integer.parseInt(tarefa.getLocalizacao().toString()) < valor) &&*/
+                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3)) < valor) &&
+                                    (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
+                                listaTarefas.add(tarefa);
+                            }
+                        } else {
+                            if (/*(Integer.parseInt(tarefa.getLocalizacao().toString()) < valor) &&*/
+                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3)) < valor) &&
+                                            (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
+                                listaTarefas.add(tarefa);
+                            }
+                        }
+                    }
                 }
 
                 //Avisar adapter que mudou
@@ -273,6 +360,7 @@ public class Home extends AppCompatActivity
 
             }
         });
+        //https://stackoverflow.com/questions/44777989/firebase-infinite-scroll-list-view-load-10-items-on-scrolling
     }
 
     protected void nomeUsuario(){
@@ -296,6 +384,73 @@ public class Home extends AppCompatActivity
                     }
                 }
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void tarefaFinalizada(){
+        Preferencias preferencias = new Preferencias(Home.this);
+        final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+
+                    //Emissor
+                    if (identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_emissor()) && processoTarefa.getAtivo().equals("1")){
+                        id_processoTarefa = processoTarefa.getId();
+                        id_tarefa = processoTarefa.getId_tarefa();
+                        er = 1;
+                    }
+                    //Realizador
+                    else if (identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_realizador()) && processoTarefa.getAtivo().equals("1")){
+                        id_processoTarefa = processoTarefa.getId();
+                        id_tarefa = processoTarefa.getId_tarefa();
+                        er = 2;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Tarefa tarefa = dados.getValue(Tarefa.class);
+
+                    if (tarefa.getId().equals(id_tarefa) && tarefa.getStatus().equals("4")){
+                        if(er == 1){
+                            Intent intent = new Intent(Home.this, TarefaFinalizadaEmissor.class);
+                            intent.putExtra("id", tarefa.getId());
+                            intent.putExtra("id_ProcessoTarefa", id_processoTarefa);
+                            startActivity(intent);
+                        }
+                        else if (er == 2){
+                            Intent intent = new Intent(Home.this, TarefaFinalizaRealizador.class);
+                            intent.putExtra("id", tarefa.getId());
+                            intent.putExtra("id_ProcessoTarefa", id_processoTarefa);
+                            startActivity(intent);
+                        }
+                    }
+
+                }
             }
 
             @Override

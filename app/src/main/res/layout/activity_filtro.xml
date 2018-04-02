@@ -1,19 +1,36 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.connectask.activity.Fragments.Filtro">
+    tools:context="com.connectask.activity.activity.Filtro">
 
-    <!-- TODO: Update blank fragment layout -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tamanho_toolbar"
+        android:background="@color/cor_principal"
+        android:paddingLeft="30px"
+        android:paddingTop="10px"
+        app:title="Filtro"
+        app:titleTextColor="@android:color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
 
             <Button
                 android:id="@+id/buttonFiltrar"
@@ -73,6 +90,16 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spinnerCategoria" />
 
+            <TextView
+                android:id="@+id/textViewProgressoLocalizacao"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView31" />
+
             <SeekBar
                 android:id="@+id/seekBarLocalizacao"
                 android:layout_width="0dp"
@@ -80,6 +107,9 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
+                android:max="60"
+                android:progress="15"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView31" />
@@ -99,6 +129,17 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/seekBarLocalizacao" />
 
+            <TextView
+                android:id="@+id/textViewProgressoValor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView33" />
+
             <SeekBar
                 android:id="@+id/seekBarValor"
                 android:layout_width="0dp"
@@ -106,6 +147,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
+                android:max="500"
+                android:progress="500"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.531"
                 app:layout_constraintStart_toStartOf="parent"
@@ -126,13 +169,28 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/seekBarValor" />
 
+            <TextView
+                android:id="@+id/textViewProgressoTempo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView34" />
+
             <SeekBar
                 android:id="@+id/seekBarTempo"
                 android:layout_width="0dp"
                 android:layout_height="18dp"
+                android:layout_marginBottom="32dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
+                android:max="96"
+                android:progress="96"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />
@@ -140,4 +198,7 @@
         </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
-</FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+</android.support.constraint.ConstraintLayout>

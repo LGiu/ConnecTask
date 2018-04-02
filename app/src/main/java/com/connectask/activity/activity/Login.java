@@ -12,9 +12,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.connectask.R;
+import com.connectask.activity.classes.ValoresFiltro;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.classes.Base64Custom;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.model.Sessao;
 import com.connectask.activity.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,6 +69,12 @@ public class Login extends AppCompatActivity {
     private void verificarUsuarioLogado(){
         autenticacao = ConfiguracaoFirebase.getFirebaseAuteticacao();
         if (autenticacao.getCurrentUser() != null){
+            Sessao sessao = new Sessao();
+            sessao.salvar(this);
+
+            ValoresFiltro valoresFiltro = new ValoresFiltro(Login.this);
+            valoresFiltro.limparDados();
+
             abrirHome();
         }
     }

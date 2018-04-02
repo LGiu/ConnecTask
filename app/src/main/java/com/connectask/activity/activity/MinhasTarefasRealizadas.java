@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -32,6 +33,8 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
     private ArrayList<Tarefa> listaTarefas;
     private ArrayList<Tarefa> listaTarefasBusca;
 
+    private ProcessoTarefa processoTarefa;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +45,12 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         listarTarefas();
 
@@ -112,7 +121,7 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
                     Preferencias preferencias = new Preferencias(MinhasTarefasRealizadas.this);
                     final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
-                    ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+                    processoTarefa = dados.getValue(ProcessoTarefa.class);
 
                     if(!(processoTarefa.getId_tarefa().equals(identificadorUsuarioLogado))){
                         firebase2 = ConfiguracaoFirebase.getFirebase()

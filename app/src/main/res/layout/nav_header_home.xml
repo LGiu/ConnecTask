@@ -23,8 +23,8 @@
         android:id="@+id/textViewNome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="40dp"
-        android:paddingLeft="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="10dp"
         android:text="Nome"
         android:textSize="18sp" />
 

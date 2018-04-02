@@ -7,7 +7,7 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/textViewTitulo"
+        android:id="@+id/textViewPrincipal"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:text="Tarefa ativas no momento"
@@ -34,7 +34,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -49,70 +49,17 @@
                 <TextView
                     android:id="@+id/textViewT"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="28dp"
                     android:paddingRight="4dp"
                     android:text="@string/tarefa"
                     android:textSize="@dimen/botaoCadastrar"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewTitulo"
+                    android:id="@+id/textViewTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="28dp"
                     android:text="Tarefa"
-                    android:textSize="@dimen/botaoCadastrar" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingHorizontal="20dp">
-
-                <TextView
-                    android:id="@+id/textViewD"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="4dp"
-                    android:text="@string/descricaoB"
-                    android:textSize="@dimen/botaoCadastrar"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:paddingHorizontal="20dp">
-
-                <TextView
-                    android:id="@+id/textViewDescricao"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLength="50"
-                    android:text="Descrição"
                     android:textSize="@dimen/botaoCadastrar" />
 
             </LinearLayout>
@@ -136,7 +83,7 @@
                 <TextView
                     android:id="@+id/textViewTe"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="28dp"
                     android:paddingRight="4dp"
                     android:text="@string/tempoB"
                     android:textSize="@dimen/botaoCadastrar"
@@ -145,7 +92,7 @@
                 <TextView
                     android:id="@+id/textViewTempo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="28dp"
                     android:text="Tempo"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -170,16 +117,16 @@
                 <TextView
                     android:id="@+id/textViewER"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="28dp"
                     android:paddingRight="4dp"
-                    android:text="Emissor:"
+                    android:text="Realizador:"
                     android:textSize="@dimen/botaoCadastrar"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textViewNome"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="28dp"
                     android:text="Nome"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -188,19 +135,54 @@
         </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/imageViewStatus"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_check_circle" />
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <ImageView
+                    android:id="@+id/imageViewStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/andamento" />
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonOk"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:text="Ok" />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
+
+            <Button
+                android:id="@+id/buttonOk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:text="Ok" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

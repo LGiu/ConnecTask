@@ -18,6 +18,7 @@ public class Usuario {
     private String status;
     private String avaliacao;
     private String numeroAvaliacoes;
+    private String avaliacaoAtual;
 
 
     public Usuario(){
@@ -32,6 +33,7 @@ public class Usuario {
 
         setAvaliacao("0");
         setNumeroAvaliacoes("0");
+        setAvaliacaoAtual("0");
 
         DatabaseReference referenciaFirebase = ConfiguracaoFirebase.getFirebase();
         referenciaFirebase.child("usuarios").child(getId()).setValue(this);
@@ -101,5 +103,13 @@ public class Usuario {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public String getAvaliacaoAtual() {
+        return avaliacaoAtual;
+    }
+
+    public void setAvaliacaoAtual(String avaliacaoAtual) {
+        this.avaliacaoAtual = avaliacaoAtual;
     }
 }

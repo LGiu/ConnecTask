@@ -20,59 +20,33 @@ public class Avaliacao {
     private String id;
     private String id_tarefa;
     private String id_usuario_emissor;
-    private String id_usuario_realizaor;
+    private String id_usuario_realizador;
     private String notaAvaliancao;
     private String avaliacao;
+    private String id_processoTarefa;
+
+    private String idProcessoTarefa;
+    private String idTarefa;
 
     private DatabaseReference firebase;
 
-    public void salvar(String idTarefa, String nota, String descricao, String idProcessoTarefa) {
+    public void salvar(String idT, String nota, String descricao, String idProcessoT) {
+        this.idProcessoTarefa = idProcessoT;
+        this.idTarefa = idT;
+
         firebase = ConfiguracaoFirebase.getFirebase();
 
         setId(firebase.child("avaliacao").push().getKey());
         setId_tarefa(idTarefa);
 
-        firebase = ConfiguracaoFirebase.getFirebase()
-                .child("tarefa")
-                .child(idTarefa);
-        firebase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    Tarefa tarefa = dados.getValue(Tarefa.class);
-                    setId_usuario_emissor(tarefa.getId_usuario());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        firebase = ConfiguracaoFirebase.getFirebase()
-                .child("ProcessoTarefa")
-                .child(idProcessoTarefa);
-        firebase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
-                    setId_usuario_realizaor(processoTarefa.getId_usuario_realizador());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         setNotaAvaliancao(nota);
         setAvaliacao(descricao);
+        setId_processoTarefa(idProcessoTarefa);
 
-        firebase.child("avaliacao")
-                .child(getId()).setValue(this);
+        firebase = ConfiguracaoFirebase.getFirebase();
+        firebase.child("avaliacao").child(getId()).setValue(this);
+
     }
 
     public String getId() {
@@ -99,12 +73,12 @@ public class Avaliacao {
         this.id_usuario_emissor = id_usuario_emissor;
     }
 
-    public String getId_usuario_realizaor() {
-        return id_usuario_realizaor;
+    public String getId_usuario_realizador() {
+        return id_usuario_realizador;
     }
 
-    public void setId_usuario_realizaor(String id_usuario_realizaor) {
-        this.id_usuario_realizaor = id_usuario_realizaor;
+    public void setId_usuario_realizador(String id_usuario_realizador) {
+        this.id_usuario_realizador = id_usuario_realizador;
     }
 
     public String getNotaAvaliancao() {
@@ -121,5 +95,13 @@ public class Avaliacao {
 
     public void setAvaliacao(String avaliacao) {
         this.avaliacao = avaliacao;
+    }
+
+    public String getId_processoTarefa() {
+        return id_processoTarefa;
+    }
+
+    public void setId_processoTarefa(String id_processoTarefa) {
+        this.id_processoTarefa = id_processoTarefa;
     }
 }

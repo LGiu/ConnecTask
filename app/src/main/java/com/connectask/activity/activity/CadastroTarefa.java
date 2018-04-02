@@ -1,5 +1,6 @@
 package com.connectask.activity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +9,16 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.Fragments.CadastroEndereco;
+import com.connectask.activity.classes.Moeda;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.classes.Util;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
 import com.connectask.activity.model.Tarefa;
@@ -33,8 +39,8 @@ public class CadastroTarefa extends AppCompatActivity {
     private EditText editTextTitulo;
     private Spinner spinnerTipo;
     private EditText editTextDescricao;
-    private EditText editTextTempo;
-    private Spinner spinnerTempo;
+    private TextView textViewTempo;
+    private SeekBar seekBarTempo;
     private EditText editTextValor;
     private Spinner spinnerEndereco;
     private Button buttonCadastro;
@@ -47,6 +53,8 @@ public class CadastroTarefa extends AppCompatActivity {
     private FirebaseAuth autenticacao;
     private DatabaseReference firebase;
 
+    private String msg = "Campos incorretos:";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,37 +65,71 @@ public class CadastroTarefa extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         editTextTitulo = (EditText) findViewById(R.id.editTextNome);
         spinnerTipo = (Spinner) findViewById(R.id.spinnerTipo);
         editTextDescricao = (EditText) findViewById(R.id.editTextDescricao);
-        spinnerTempo = (Spinner) findViewById(R.id.spinnerTempo);
-        editTextTempo = (EditText) findViewById(R.id.editTextTempo);
+        seekBarTempo = (SeekBar) findViewById(R.id.seekBarTempo);
+        textViewTempo = (TextView) findViewById(R.id.textViewTempo);
         editTextValor = (EditText) findViewById(R.id.editTextValor);
         spinnerEndereco = (Spinner) findViewById(R.id.spinnerEndereco);
         buttonCadastro = (Button) findViewById(R.id.buttonFinalizar);
         buttonNovoEndereco = (Button) findViewById(R.id.buttonNovoEndereco);
 
         tipo();
-        tempo();
         endereco();
+
+        editTextValor.addTextChangedListener(new Moeda(editTextValor));
+
+
+        seekBarTempo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 15;
+            @SuppressLint("WrongConstant")
+            @Override
+
+            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+                progress = progresValue;
+                //Toast.makeText(Filtro.this, ""+progress+"", Toast.LENGTH_LONG).show();
+                textViewTempo.setText(""+progress+" hora(s)");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //Toast.makeText(Filtro.this, ""+progress+"", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //Toast.makeText(Filtro.this, ""+progress+"", Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
         buttonCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tarefa = new Tarefa();
-                tarefa.setTitulo(editTextTitulo.getText().toString());
-                tarefa.setTipo(spinnerTipo.getSelectedItem().toString());
-                tarefa.setDescricao(editTextDescricao.getText().toString());
-                String temp = editTextTempo.getText().toString()+" "+spinnerTempo.getSelectedItem().toString();
-                tarefa.setTempo(temp);
-                tarefa.setValor((editTextValor.getText().toString()));
-                tarefa.setEndereco(editTextValor.getText().toString());
 
-                tarefa.salvar(CadastroTarefa.this);
+                if(valida()) {
+                    tarefa = new Tarefa();
+                    tarefa.setTitulo(editTextTitulo.getText().toString());
+                    tarefa.setTipo(spinnerTipo.getSelectedItem().toString());
+                    tarefa.setDescricao(editTextDescricao.getText().toString());
+                    tarefa.setTempo(String.valueOf(seekBarTempo.getProgress()));
+                    tarefa.setValor((editTextValor.getText().toString()));
+                    tarefa.setEndereco(spinnerEndereco.getSelectedItem().toString());
 
-                Intent intent = new Intent(CadastroTarefa.this, Pagamento.class);
-                startActivity(intent);
+                    tarefa.salvar(CadastroTarefa.this);
+
+                    Intent intent = new Intent(CadastroTarefa.this, Pagamento.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(CadastroTarefa.this, msg, Toast.LENGTH_SHORT).show();
+                }
               }
         });
 
@@ -101,20 +143,6 @@ public class CadastroTarefa extends AppCompatActivity {
 
                 fragmentTransaction.replace(R.id.fragment_cadastro, cadastroEndereco);
                 fragmentTransaction.addToBackStack(null).commit();
-
-
-                /*FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                CadastroEndereco cadastroEndereco = new CadastroEndereco();
-                FragmentTransaction add = fragmentTransaction.add(R.id.fragment_container, cadastroEndereco);
-                fragmentTransaction.addToBackStack(null).commit();
-
-                toolbar.setTitle("Nova tarefa");
-                toolbar.setNavigationIcon(null);
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setDisplayShowHomeEnabled(true);*/
-
             }
         });
     }
@@ -130,32 +158,27 @@ public class CadastroTarefa extends AppCompatActivity {
         spinnerTipo.setAdapter(arrayAdapterTipo);
     }
 
-    public void tempo(){
-        listaTempo.add("Hora(s)");
-        listaTempo.add("Dia(s)");
-        listaTempo.add("Minuto(s)");
-
-        ArrayAdapter<String> arrayAdapterTempo = new ArrayAdapter<String>(CadastroTarefa.this, android.R.layout.simple_list_item_1, listaTempo);
-        arrayAdapterTempo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTempo.setAdapter(arrayAdapterTempo);
-    }
-
     public void endereco(){
         Preferencias preferencias = new Preferencias(CadastroTarefa.this);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
-        firebase = ConfiguracaoFirebase.getFirebase();
-        firebase = firebase.child("endereco");
+        firebase = ConfiguracaoFirebase.getFirebase().child("endereco").child(identificadorUsuarioLogado);
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Endereco endereco = dados.getValue(Endereco.class);
-
+                    String id = endereco.getId();
                     if(identificadorUsuarioLogado.equals(endereco.getId_usuario())){
-                        String end = endereco.getRua().toString()+", "+endereco.getNumero().toString();
-                        listaEndereco.add(end);
+                        String end = ""+endereco.getRua()+", "+endereco.getNumero()+"";
+                        if(end.length() > 20){
+                            end = end.substring(0, 20);
+                            listaEndereco.add(end);
+                        }
+                        else{
+                            listaEndereco.add(end);
+                        }
                     }
                 }
             }
@@ -164,9 +187,45 @@ public class CadastroTarefa extends AppCompatActivity {
 
             }
         });
+        listaEndereco.add("");
 
         ArrayAdapter<String> arrayAdapterEndereco = new ArrayAdapter<String>(CadastroTarefa.this, android.R.layout.simple_list_item_1, listaEndereco);
         arrayAdapterEndereco.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEndereco.setAdapter(arrayAdapterEndereco);
+
+    }
+
+    private boolean valida(){
+        boolean teste = true;
+        msg = "Campos incorretos:";
+        Util util = new Util();
+
+        if(editTextTitulo.getText().length() > 75 || editTextTitulo.getText().length() == 0)
+        {
+            msg += "\nTítulo inválido.";
+            teste = false;
+        }
+        if(spinnerTipo.getSelectedItem().toString().equals("") || spinnerTipo.getSelectedItem().toString().equals(null))
+        {
+            msg += "\nSelecione um tipo de tarefa.";
+            teste = false;
+        }
+        if(editTextDescricao.getText().length() > 255)
+        {
+            msg += "\nDescrição inválida.";
+            teste = false;
+        }
+        if(editTextValor.getText().length() > 8)
+        {
+            msg += "\nValor inválido.";
+            teste = false;
+        }
+        if(spinnerEndereco.getSelectedItem().toString().equals("") || spinnerEndereco.getSelectedItem().toString().equals(null))
+        {
+            msg += "\nSelecione um endereço de tarefa.";
+            teste = false;
+        }
+
+        return teste;
     }
 }

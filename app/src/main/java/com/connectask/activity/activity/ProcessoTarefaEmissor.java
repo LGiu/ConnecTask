@@ -44,6 +44,8 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
     private TextView textViewData;
     private ImageButton imageButtonLocal;
 
+    private Tarefa tarefa = new Tarefa();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,34 +56,20 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
         id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
+        statusTarefa = intent.getStringExtra("status");
 
-
-        //Status tarefa
-        firebase1 = ConfiguracaoFirebase.getFirebase()
-                .child("tarefas");
-
-        firebase1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    Tarefa tarefa = dados.getValue(Tarefa.class);
-                    if (tarefa.getId().toString().equals(idTarefa)) {
-                        statusTarefa = tarefa.getStatus();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        if(statusTarefa.equals("2")) {
+        if(statusTarefa.equals("2"))
+        {
 
             buttonFinalizar = (Button) findViewById(R.id.buttonFinalizar);
             buttonCancelar = (Button) findViewById(R.id.buttonCancelar);
@@ -94,55 +82,52 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
             imageButtonLocal = (ImageButton) findViewById(R.id.imageButtonLocal);
             textViewData = (TextView) findViewById(R.id.textViewData);
 
-            if (firebase1 != null) {
-                firebase1 = ConfiguracaoFirebase.getFirebase()
-                        .child("tarefas");
+            firebase1 = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
-                firebase1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+            firebase1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                            final Tarefa tarefa = dados.getValue(Tarefa.class);
+                    for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                        tarefa = dados.getValue(Tarefa.class);
 
-                            idVariavel = tarefa.getId();
-                            if (idVariavel.equals(idTarefa)) {
-                                textViewTipo.setText(tarefa.getTipo());
-                                textViewTitulo.setText(tarefa.getTitulo());
-                                textViewDescricao.setText(tarefa.getDescricao());
-                                textViewTempo.setText(tarefa.getTempo());
-                                textViewData.setText(tarefa.getData());
+                        idVariavel = tarefa.getId();
+                        if (idVariavel.equals(idTarefa)) {
+                            textViewTipo.setText(tarefa.getTipo());
+                            textViewTitulo.setText(tarefa.getTitulo());
+                            textViewDescricao.setText(tarefa.getDescricao());
+                            textViewTempo.setText(tarefa.getTempo());
+                            textViewData.setText(tarefa.getData().replace("-","/"));
 
-                                firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
+                            firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
 
-                                firebase2.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                            firebase2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                        for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                                            Usuario usuario = dados.getValue(Usuario.class);
+                                    for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                                        Usuario usuario = dados.getValue(Usuario.class);
 
-                                            if(tarefa.getId_usuario().toString().equals(codificarBase64(usuario.getEmail().toString()))){
-                                                textViewNome.setText(usuario.getNome().toString());
-                                            }
+                                        if(tarefa.getId_usuario().toString().equals(codificarBase64(usuario.getEmail().toString()))){
+                                            textViewNome.setText(usuario.getNome().toString());
                                         }
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                                    }
-                                });
-                            }
+                                }
+                            });
                         }
                     }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-            }
+                }
+            });
 
             textViewLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -173,6 +158,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
             buttonFinalizar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    firebase1 = ConfiguracaoFirebase.getFirebase();
 
                     new AlertDialog.Builder(ProcessoTarefaEmissor.this)
                             .setTitle("Finalizar tarefa")
@@ -229,6 +215,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
         else if (statusTarefa.equals("4")){
             intent = new Intent(ProcessoTarefaEmissor.this, TarefaFinalizadaEmissor.class);
             intent.putExtra("id", idTarefa);
+            intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
             startActivity(intent);
         }
     }

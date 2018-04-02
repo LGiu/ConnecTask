@@ -15,7 +15,7 @@ tools:context=".MainActivity">
 
     <item
         android:id="@+id/app_bar_notification"
-        android:icon="@drawable/ic_radio_button_unchecked"
+        android:icon="@drawable/notpadrao"
         android:title="Notification"
         app:showAsAction="always"
         />

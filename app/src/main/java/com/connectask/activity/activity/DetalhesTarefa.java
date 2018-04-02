@@ -10,9 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.Fragments.Local;
+import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
@@ -28,6 +30,8 @@ public class DetalhesTarefa extends AppCompatActivity {
 
     private String idTarefa;
     private String status;
+    private boolean controle = false;
+    private boolean controle2 = false;
 
     private DatabaseReference firebase1;
     private DatabaseReference firebase2;
@@ -43,8 +47,7 @@ public class DetalhesTarefa extends AppCompatActivity {
     private TextView textViewLocal;
     private ImageButton imageButtonLocal;
 
-    private ProcessoTarefa processoTarefa = new ProcessoTarefa(DetalhesTarefa.this);
-
+    private ProcessoTarefa processoTarefa = new ProcessoTarefa();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,13 @@ public class DetalhesTarefa extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
 
         textViewData = (TextView) findViewById(R.id.textViewData);
         textViewTipo = (TextView) findViewById(R.id.textViewTipo);
@@ -72,7 +82,35 @@ public class DetalhesTarefa extends AppCompatActivity {
         idTarefa = intent.getStringExtra("id");
         status = intent.getStringExtra("status");
 
+        Preferencias preferencias = new Preferencias(DetalhesTarefa.this);
+        final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
         if(idTarefa != null && (status.equals("1"))){
+
+            controle = false;
+
+            firebase1 = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
+
+            firebase1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                        ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+
+                        if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivo().equals("1") ){
+                            controle = true;
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
 
             firebase1 = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
@@ -120,29 +158,36 @@ public class DetalhesTarefa extends AppCompatActivity {
                                     buttonRealizar.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
+                                            if(controle){
+                                                Toast.makeText(DetalhesTarefa.this, "Você já está envolvido em um processo de uma tarefa", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else {
+                                                new AlertDialog.Builder(DetalhesTarefa.this)
+                                                        .setTitle("Realizar tarefa")
+                                                        .setMessage("Tem certeza que deseja realizar esta tarefa?")
+                                                        .setPositiveButton("Sim",
+                                                                new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                                        firebase1.child(idTarefa)
+                                                                                .child("status").setValue("2");
+                                                                        status = "2";
 
-                                            new AlertDialog.Builder(DetalhesTarefa.this)
-                                                    .setTitle("Realizar tarefa")
-                                                    .setMessage("Tem certeza que deseja realizar esta tarefa?")
-                                                    .setPositiveButton("Sim",
-                                                            new DialogInterface.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                                    firebase1.child(idTarefa)
-                                                                            .child("status").setValue("2");
+                                                                        processoTarefa.setId_tarefa(idTarefa);
+                                                                        processoTarefa.setId_usuario_emissor(tarefa.getId_usuario());
+                                                                        processoTarefa.setId_usuario_realizador(identificadorUsuarioLogado);
+                                                                        processoTarefa.salvar();
 
-                                                                    processoTarefa.setId_tarefa(idTarefa);
-                                                                    processoTarefa.salvar();
+                                                                        Intent intent = new Intent(DetalhesTarefa.this, ProcessoTarefaRealizador.class);
+                                                                        intent.putExtra("id", idTarefa);
+                                                                        intent.putExtra("id_ProcessoTarefa", processoTarefa.getId());
 
-                                                                    Intent intent = new Intent(DetalhesTarefa.this, ProcessoTarefaRealizador.class);
-                                                                    intent.putExtra("id", idTarefa);
-                                                                    intent.putExtra("id_ProcessoTarefa", processoTarefa.getId());
-
-                                                                    startActivity(intent);
-                                                                }
-                                                            })
-                                                    .setNegativeButton("Não", null)
-                                                    .show();
+                                                                        startActivity(intent);
+                                                                    }
+                                                                })
+                                                        .setNegativeButton("Não", null)
+                                                        .show();
+                                            }
                                         }
                                     });
 

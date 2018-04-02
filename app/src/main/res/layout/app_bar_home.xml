@@ -33,5 +33,4 @@
         app:srcCompat="@drawable/ic_action_add" />
 
 
-
 </android.support.design.widget.CoordinatorLayout>

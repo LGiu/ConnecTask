@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.connectask.R;
+import com.connectask.activity.classes.Util;
+import com.connectask.activity.config.ConfiguracaoFirebase;
+import com.google.firebase.database.DatabaseReference;
 
 public class TarefaFinalizaRealizador extends AppCompatActivity {
 
@@ -15,7 +18,7 @@ public class TarefaFinalizaRealizador extends AppCompatActivity {
     private String idTarefa;
     public String id_ProcessoTarefa;
 
-
+    private DatabaseReference firebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,10 @@ public class TarefaFinalizaRealizador extends AppCompatActivity {
         idTarefa = intent.getStringExtra("id");
         id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
 
+
+        firebase = ConfiguracaoFirebase.getFirebase();
+        firebase.child("tarefas").child(idTarefa).child("status").setValue("5");
+
         buttonAvaliar = (Button) findViewById(R.id.buttonAvaliar);
 
         buttonAvaliar.setOnClickListener(new View.OnClickListener() {
@@ -33,6 +40,7 @@ public class TarefaFinalizaRealizador extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(TarefaFinalizaRealizador.this, CriarAvaliacao.class);
                 intent.putExtra("id", idTarefa);
+                intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
                 startActivity(intent);
             }
         });

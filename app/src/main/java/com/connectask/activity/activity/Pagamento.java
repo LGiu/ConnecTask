@@ -34,6 +34,12 @@ public class Pagamento extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         spinnerPagamento = (Spinner) findViewById(R.id.spinnerPagamento);
         buttonNovoMeio = (Button) findViewById(R.id.buttonNovoMeio);

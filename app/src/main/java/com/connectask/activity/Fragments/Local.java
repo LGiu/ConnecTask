@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.activity.DetalhesTarefa;
+import com.connectask.activity.activity.MapsActivity;
 import com.connectask.activity.activity.ProcessoTarefaRealizador;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
@@ -21,6 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +45,10 @@ public class Local extends Fragment {
     private TextView textViewNumero;
     private TextView textViewBairro;
     private TextView textViewComplemento;
+    private ImageButton imageButtonMaps;
+    private TextView textViewMaps;
+
+    private String end = "";
 
     public Local() {
         // Required empty public constructor
@@ -60,7 +68,8 @@ public class Local extends Fragment {
         textViewNumero = (TextView) view.findViewById(R.id.textViewNumero);
         textViewBairro = (TextView) view.findViewById(R.id.textViewBairro);
         textViewComplemento = (TextView) view.findViewById(R.id.textViewComplemento);
-
+        imageButtonMaps = (ImageButton) view.findViewById(R.id.imageButtonMaps);
+        textViewMaps = (TextView) view.findViewById(R.id.textViewMaps);
 
 
         if(idTarefa != null) {
@@ -97,6 +106,8 @@ public class Local extends Fragment {
                                         textViewNumero.setText(endereco.getNumero());
                                         textViewBairro.setText(endereco.getBairro());
                                         textViewComplemento.setText(endereco.getComplemento());
+
+                                        end = ""+textViewCep.getText()+", "+textViewCidade.getText()+", "+textViewRua.getText()+", "+textViewNumero.getText()+"";
                                     }
                                 }
 
@@ -118,6 +129,23 @@ public class Local extends Fragment {
             });
         }
 
+
+        imageButtonMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MapsActivity.class);
+                intent.putExtra("endereco", end);
+                startActivity(intent);
+            }
+        });
+
+        textViewMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MapsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

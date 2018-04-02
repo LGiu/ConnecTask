@@ -36,9 +36,7 @@ public class Dialog extends DialogFragment {
 
     private View view;
 
-    private DatabaseReference firebase1;
-    private DatabaseReference firebase2;
-    private DatabaseReference firebase3;
+    private DatabaseReference firebase;
 
     private Button ok;
     private TextView textViewTitulo;
@@ -49,8 +47,17 @@ public class Dialog extends DialogFragment {
     private TextView textViewStatus;
     private LinearLayout layoutTarefa;
 
+    private ProcessoTarefa processoTarefa;
+    private Tarefa tarefa;
 
-    private boolean controle = false;
+    private String tarefaId = "";
+    private String id_usuario = "";
+    private String id_ProcessoTarefa = "";
+    private String status = "";
+
+    private boolean c1 = true;
+    private boolean c2 = true;
+
 
     public Dialog() {
         // Required empty public constructor
@@ -61,9 +68,9 @@ public class Dialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_dialog, container, false);
-        getDialog().setTitle("Simple Dialog");
+        getDialog().setTitle("");
 
-        textViewTitulo = (TextView) view.findViewById(R.id.textViewTitulo);
+        textViewTitulo = (TextView) view.findViewById(R.id.textViewTitle);
         textViewDescricao = (TextView) view.findViewById(R.id.textViewDescricao);
         textViewTempo = (TextView) view.findViewById(R.id.textViewTempo);
         textViewNome = (TextView) view.findViewById(R.id.textViewNome);
@@ -83,75 +90,23 @@ public class Dialog extends DialogFragment {
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
 
-
         //Se o usuário for o Emissor da tarefa
-        firebase1 = ConfiguracaoFirebase.getFirebase()
-                .child("usuarios");
+        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
-        firebase1.addValueEventListener(new ValueEventListener() {
+        firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    final Tarefa tarefa = dados.getValue(Tarefa.class);
-
-                    if(tarefa.getStatus().toString().equals("2") && tarefa.getId_usuario().toString() == identificadorUsuarioLogado){
-                        controle = true;
+                    tarefa = dados.getValue(Tarefa.class);
+                    if(tarefa.getStatus().toString().equals("2") && tarefa.getId_usuario().equals(identificadorUsuarioLogado)){
+                        tarefaId = tarefa.getId();
+                        status = tarefa.getStatus();
 
                         textViewTitulo.setText(tarefa.getTitulo().toString());
-                        textViewDescricao.setText(tarefa.getDescricao().toString());
                         textViewTempo.setText(tarefa.getTempo().toString());
                         textViewER.setText("Realizador:");
-
-                        firebase2 = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
-
-                        firebase2.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                                    final ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
-
-                                    if(processoTarefa.getId_tarefa().toString().equals(tarefa.getId().toString())){
-                                        textViewNome.setText(tarefa.getTitulo().toString());
-
-                                        firebase3 = ConfiguracaoFirebase.getFirebase()
-                                                .child("usuarios");
-
-                                        firebase3.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                                                    Usuario usuario = dados.getValue(Usuario.class);
-
-                                                    if(processoTarefa.getId_usuario_realizador().toString().equals(codificarBase64(usuario.getEmail().toString()))){
-                                                        textViewNome.setText(usuario.getNome().toString());
-                                                    }
-
-                                                    layoutTarefa.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            Intent intent = new Intent(getContext(), ProcessoTarefaEmissor.class);
-                                                            startActivity(intent);
-                                                        }
-                                                    });
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-                                    }
-
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
+                        c1 = false;
+                        montaEmissor();
                     }
 
                 }
@@ -163,77 +118,62 @@ public class Dialog extends DialogFragment {
             }
         });
 
+        tarefaId = "";
+        id_usuario = "";
+        id_ProcessoTarefa = "";
 
         //Se o usuário for o Realizador da tarefa
-        firebase1 = ConfiguracaoFirebase.getFirebase()
-                .child("ProcessoTarefa");
+        firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
 
-        firebase1.addValueEventListener(new ValueEventListener() {
+        firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    final ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+                    processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                    if(processoTarefa.getId_usuario_realizador().toString().equals(identificadorUsuarioLogado)){
+                    if(processoTarefa.getId_usuario_realizador().toString().equals(identificadorUsuarioLogado) && processoTarefa.getAtivo().equals("1")){
+                        tarefaId = processoTarefa.getId_tarefa().toString();
+                        id_ProcessoTarefa = processoTarefa.getId().toString();
+                        c2 = false;
 
-                        firebase2 = ConfiguracaoFirebase.getFirebase()
-                                .child("tarefas");
+                        montaRealizador();
+                    }
 
-                        firebase2.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                                    final Tarefa tarefa = dados.getValue(Tarefa.class);
+                }
 
-                                    if(tarefa.getId().toString() == processoTarefa.getId_tarefa().toString() && tarefa.getStatus().toString().equals("2")){
+                if (c1 && c2) {
+                    vazio();
+                }
+            }
 
-                                        textViewER.setText("Emissor:");
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                                        textViewTitulo.setText(tarefa.getTitulo().toString());
-                                        textViewDescricao.setText(tarefa.getDescricao().toString());
-                                        textViewTempo.setText(tarefa.getTempo().toString());
+            }
+
+        });
 
 
-                                        firebase3 = ConfiguracaoFirebase.getFirebase()
-                                                .child("usuarios");
+        return view;
+    }
 
-                                        firebase3.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                                                    Usuario usuario = dados.getValue(Usuario.class);
+    public void vazio(){
+        layoutTarefa.setVisibility(View.GONE);
+        textViewStatus.setText("Nenhuma tarefa ativa no momento.");
+    }
 
-                                                    if(tarefa.getId_usuario().toString().equals(codificarBase64(usuario.getEmail().toString()))){
-                                                        textViewNome.setText(usuario.getNome().toString());
-                                                        controle = true;
+    public void montaEmissor(){
+        firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
 
-                                                        layoutTarefa.setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View view) {
-                                                                Intent intent = new Intent(getContext(), ProcessoTarefaRealizador.class);
-                                                                startActivity(intent);
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            }
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-                                    }
-
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
+                    if (processoTarefa.getId_tarefa().equals(tarefaId)) {
+                        id_usuario = processoTarefa.getId_usuario_realizador();
+                        id_ProcessoTarefa = processoTarefa.getId().toString();
                     }
 
                 }
@@ -245,13 +185,95 @@ public class Dialog extends DialogFragment {
             }
         });
 
+        firebase = ConfiguracaoFirebase.getFirebase().child("usuarios");
 
-        if(controle == false){
-            layoutTarefa.setVisibility(View.GONE);
-            textViewStatus.setText("Nenhuma tarefa ativa no momento.");
-        }
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Usuario usuario = dados.getValue(Usuario.class);
 
-        return view;
+                    if (id_usuario.equals(codificarBase64(usuario.getEmail()))) {
+                        textViewNome.setText(usuario.getNome().toString());
+                    }
+
+                    layoutTarefa.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getContext(), ProcessoTarefaEmissor.class);
+                            intent.putExtra("id", tarefaId);
+                            intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
+                            intent.putExtra("status", status);
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void montaRealizador(){
+        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    tarefa = dados.getValue(Tarefa.class);
+                    tarefaId = tarefaId;
+                    id_ProcessoTarefa = id_ProcessoTarefa;
+                    if (tarefa.getId().toString().equals(tarefaId) && tarefa.getStatus().toString().equals("2")) {
+                        id_usuario = tarefa.getId_usuario();
+
+                        textViewER.setText("Emissor:");
+
+                        textViewTitulo.setText(tarefa.getTitulo().toString());
+                        textViewTempo.setText(tarefa.getTempo().toString());
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("usuarios");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Usuario usuario = dados.getValue(Usuario.class);
+
+                    if (id_usuario.equals(codificarBase64(usuario.getEmail().toString()))) {
+                        textViewNome.setText(usuario.getNome().toString());
+
+                        layoutTarefa.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(getContext(), ProcessoTarefaRealizador.class);
+                                intent.putExtra("id", tarefaId);
+                                intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

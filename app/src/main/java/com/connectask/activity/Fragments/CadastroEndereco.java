@@ -3,6 +3,8 @@ package com.connectask.activity.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.connectask.R;
+import com.connectask.activity.classes.BuscaEndereco;
+import com.connectask.activity.classes.Util;
 import com.connectask.activity.model.Endereco;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,10 @@ public class CadastroEndereco extends Fragment {
     private EditText editTextCidade;
     private Spinner spinnerEstado;
     private Button buttonCadastro;
+
+    private BuscaEndereco buscaEndereco = new BuscaEndereco();
+
+    private String msg = "Campos incorretos:";
 
     private List<String> listaEstado = new ArrayList<String>();
 
@@ -75,6 +85,32 @@ public class CadastroEndereco extends Fragment {
             }
         });
 
+
+        editTextCep.addTextChangedListener(new TextWatcher() {
+            int x = 0;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //if(start == 4){
+                //   editTextCep.setText(editTextCep.getText()+"-");
+                //    s = editTextCep.getText()+"-";
+                //}
+                if(start == 7){
+                    try {
+                        buscaCep();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         // Inflate the layout for this fragment
         return view;
@@ -122,6 +158,58 @@ public class CadastroEndereco extends Fragment {
         ArrayAdapter<String> arrayAdapterEstado = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, listaEstado);
         arrayAdapterEstado.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEstado.setAdapter(arrayAdapterEstado);
+    }
+
+    private void buscaCep() throws JSONException {
+        buscaEndereco.execute(editTextCep.getText().toString());
+        editTextRua.setText(buscaEndereco.object.getString("logradouro"));
+        editTextBairro.setText(buscaEndereco.object.getString("bairro"));
+
+        for (int i = 0; i < 26; i++) {
+            if(listaEstado.get(i).equals(buscaEndereco.object.getString("estado"))){
+                spinnerEstado.setSelection(i);
+            }
+        }
+
+    }
+
+    private boolean valida(){
+        boolean teste = true;
+        msg = "Campos incorretos:";
+        Util util = new Util();
+
+        if(editTextCep.getText().length() != 8)
+        {
+            msg += "\nCep inválida.";
+            teste = false;
+        }
+        if(editTextCidade.getText().length() > 100 || editTextCidade.getText().length() == 0)
+        {
+            msg += "\nCidade inválido.";
+            teste = false;
+        }
+        if(editTextRua.getText().length() > 255 || editTextCidade.getText().length() == 0)
+        {
+            msg += "\nRua Inválida.";
+            teste = false;
+        }
+        if(editTextBairro.getText().length() > 70 || editTextBairro.getText().length() == 0)
+        {
+            msg += "\nBairro inválido.";
+            teste = false;
+        }
+        if(editTextNumero.getText().length() > 7 || editTextNumero.getText().length() == 0)
+        {
+            msg += "\nNúmero inválido.";
+            teste = false;
+        }
+        if(editTextNumero.getText().length() > 70)
+        {
+            msg += "\nNúmero inválido.";
+            teste = false;
+        }
+
+        return teste;
     }
 
 }

@@ -68,7 +68,7 @@ public class Tarefa implements Serializable {
         //2-Em andamento
         //3-Cancelado
         //4-Finalizada
-
+        //5-Concluída
 
         //Pegar id único
         setId(firebase.child("tarefas").push().getKey());
@@ -141,7 +141,7 @@ public class Tarefa implements Serializable {
     }
 
     public String getValor() {
-        return valor;
+        return valor.replace(".", ",");
     }
 
     public void setValor(String valor) {
