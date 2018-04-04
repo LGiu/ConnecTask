@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.Fragments.Local;
+import com.connectask.activity.Fragments.PaginaUsuario;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
@@ -129,10 +130,23 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                 }
             });
 
+            textViewNome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PaginaUsuario paginaUsuario = new PaginaUsuario();
+
+                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, paginaUsuario);
+                    fragmentTransaction.addToBackStack(null).commit();
+                }
+            });
+
             textViewLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Local local = new Local();
+                    Local local = new Local(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -145,7 +159,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
             imageButtonLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Local local = new Local();
+                    Local local = new Local(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

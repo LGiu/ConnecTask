@@ -2,6 +2,8 @@ package com.connectask.activity.model;
 
 import android.content.Context;
 
+import com.connectask.activity.activity.Home;
+import com.connectask.activity.classes.Coordenadas;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +22,8 @@ public class Endereco {
     private String numero;
     private String bairro;
     private String complemento;
+    private String latitude;
+    private String longitude;
     private String id_usuario;
 
     private DatabaseReference firebase;
@@ -34,6 +38,10 @@ public class Endereco {
 
         setId_usuario(identificadorUsuarioLogado);
 
+        Coordenadas coordenadas = new Coordenadas(contextoParamentro, estado, cidade, cep, rua, numero);
+        setLatitude(String.valueOf(coordenadas.getLatitude()));
+        setLongitude(String.valueOf(coordenadas.getLongitude()));
+
         firebase = ConfiguracaoFirebase.getFirebase();
 
         //Pegar id único
@@ -44,6 +52,8 @@ public class Endereco {
                 .child(getId()).setValue(this);
 
     }
+
+
 
     public String getId() {
         return id;
@@ -115,5 +125,21 @@ public class Endereco {
 
     public void setCidade(String cidade) {
         this.cidade = cidade;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

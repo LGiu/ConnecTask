@@ -1,9 +1,13 @@
 package com.connectask.activity.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,12 +30,16 @@ import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
+import com.connectask.activity.classes.Coordenadas;
+import com.connectask.activity.classes.LocalizacaoAtual;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.classes.ValoresFiltro;
 import com.connectask.activity.config.ConfiguracaoFirebase;
+import com.connectask.activity.model.Endereco;
 import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,9 +70,14 @@ public class Home extends AppCompatActivity
     private String id_tarefa = "";
     private int er = 0;
 
+    private double latitude;
+    private double longitude;
+
     private boolean controle = false;
 
     private ProgressDialog loading;
+
+    public double distancia = 0;
 
 
     @Override
@@ -130,8 +143,10 @@ public class Home extends AppCompatActivity
             }
         });
 
+        pegarLocalizacao();
+
         listarTarefas();
-        loading.cancel();
+        //loading.cancel();
 
         nomeUsuario();
 
@@ -293,8 +308,10 @@ public class Home extends AppCompatActivity
     }
 
     private void listarTarefas(){
-        loading = new ProgressDialog(Home.this);
-        loading.show();
+        //loading = new ProgressDialog(Home.this);
+        //loading.show();
+
+        distancia = 0;
 
         ValoresFiltro valoresFiltro = new ValoresFiltro(Home.this);
         final String categoria = valoresFiltro.getCategoria();
@@ -329,21 +346,25 @@ public class Home extends AppCompatActivity
 
                     Tarefa tarefa = dados.getValue(Tarefa.class);
 
-                    String usuarioLogado = tarefa.getId_usuario();
+                    String usuarioId = tarefa.getId_usuario();
                     String statusTarefa = tarefa.getStatus();
 
-                    if((!(usuarioLogado.equals(identificadorUsuarioLogado)) && (statusTarefa.equals("1")))) {
+                    distancia(usuarioId, tarefa.getEndereco());
+
+                    if((!(usuarioId.equals(identificadorUsuarioLogado)) && (statusTarefa.equals("1")))) {
                         if (categoria != "") {
                             if ((tarefa.getTipo().toString() == categoria) &&
-                                 /*(Integer.parseInt(tarefa.getLocalizacao().toString()) < valor) &&*/
-                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3)) < valor) &&
+                                 (distancia < localizacao) &&
+                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) < valor) &&
                                     (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
+
                                 listaTarefas.add(tarefa);
                             }
                         } else {
-                            if (/*(Integer.parseInt(tarefa.getLocalizacao().toString()) < valor) &&*/
-                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3)) < valor) &&
+                            if ((distancia < localizacao) &&
+                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) < valor) &&
                                             (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
+
                                 listaTarefas.add(tarefa);
                             }
                         }
@@ -361,6 +382,44 @@ public class Home extends AppCompatActivity
             }
         });
         //https://stackoverflow.com/questions/44777989/firebase-infinite-scroll-list-view-load-10-items-on-scrolling
+    }
+
+    private void distancia(String usuarioId, final String end){
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("endereco").child(usuarioId);
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados: dataSnapshot.getChildren()){
+                    Endereco endereco = dados.getValue(Endereco.class);
+
+                    //http://helpdev.com.br/2015/05/06/android-java-como-calcular-distancia-entre-dois-pontos-gps/
+                    if(endereco.getId().equals(end)){
+                            //double earthRadius = 3958.75;//miles
+                            double earthRadius = 6371;//kilometers
+                            double dLat = Math.toRadians(Double.parseDouble(endereco.getLatitude())  - latitude);
+                            double dLng = Math.toRadians(Double.parseDouble(endereco.getLongitude())  - longitude);
+                            double sindLat = Math.sin(dLat / 2);
+                            double sindLng = Math.sin(dLng / 2);
+                            double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                                    * Math.cos(Math.toRadians(latitude))
+                                    * Math.cos(Math.toRadians(Double.parseDouble(endereco.getLatitude())));
+                            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                            double dist = earthRadius * c;
+
+                            distancia = dist / 1000;
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     protected void nomeUsuario(){
@@ -458,6 +517,12 @@ public class Home extends AppCompatActivity
 
             }
         });
+    }
+
+    private void pegarLocalizacao(){
+        LocalizacaoAtual localizacaoAtual = new LocalizacaoAtual(Home.this);
+        latitude = localizacaoAtual.getLatitude();
+        longitude = localizacaoAtual.getLongitude();
     }
 
 }

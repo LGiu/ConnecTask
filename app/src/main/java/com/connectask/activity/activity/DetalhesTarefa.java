@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.Fragments.Local;
+import com.connectask.activity.Fragments.PaginaUsuario;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.ProcessoTarefa;
@@ -123,7 +124,7 @@ public class DetalhesTarefa extends AppCompatActivity {
 
                         String id = tarefa.getId();
                         if(id.equals(idTarefa)){
-                            textViewData.setText(tarefa.getData().toString());
+                            textViewData.setText(tarefa.getData().toString().replace("-","/"));
 
                             String tipo = tarefa.getTipo();
                             textViewTipo.setText(tarefa.getTipo().toString());
@@ -132,7 +133,7 @@ public class DetalhesTarefa extends AppCompatActivity {
                             textViewTarefa.setText(tituloTarefa);
 
                             textViewDescricao.setText(tarefa.getDescricao().toString());
-                            textViewTempo.setText(tarefa.getTempo().toString());
+                            textViewTempo.setText(tarefa.getTempo().toString() + "hora(s)");
                             textViewValor.setText(tarefa.getValor().toString());
 
                             firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
@@ -201,10 +202,23 @@ public class DetalhesTarefa extends AppCompatActivity {
                 }
             });
 
+            textViewNome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PaginaUsuario paginaUsuario = new PaginaUsuario();
+
+                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, paginaUsuario);
+                    fragmentTransaction.addToBackStack(null).commit();
+                }
+            });
+
             textViewLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Local local = new Local();
+                    Local local = new Local(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -217,7 +231,7 @@ public class DetalhesTarefa extends AppCompatActivity {
             imageButtonLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Local local = new Local();
+                    Local local = new Local(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

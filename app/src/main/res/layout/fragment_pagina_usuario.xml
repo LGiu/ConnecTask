@@ -61,11 +61,16 @@
 
         <RatingBar
             android:id="@+id/ratingBar"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="24dp"
+            android:isIndicator="false"
             android:numStars="5"
+            android:padding="0dp"
+            android:rating="5"
+            android:stepSize="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView24" />
@@ -75,7 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:text="Comentários"
             android:textColor="@android:color/black"
             android:textSize="24sp"
@@ -85,6 +90,19 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+        <ListView
+            android:id="@+id/listViewComentarios"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/white"
+            android:paddingVertical="20dp"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

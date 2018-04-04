@@ -37,7 +37,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         Intent intent = getIntent();
-        end = intent.getStringExtra("end");
+        String latitude = intent.getStringExtra("latitude");
+        String longitude = intent.getStringExtra("longitude");
+        lat = Double.parseDouble(latitude);
+        lon = Double.parseDouble(longitude);
+
 
         /*final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,33 +67,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        try {
-            geoLocate();
-            LatLng ll = new LatLng(-lat, lon);
-            //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 15);
-            mMap.moveCamera(update);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        LatLng ll = new LatLng(lat, lon);
+        mMap.addMarker(new MarkerOptions().position(ll).title("Localização"));
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 15);
+        mMap.moveCamera(update);
     }
 
-    public void geoLocate() throws IOException {
-        Geocoder gc = new Geocoder(this);
-        try{
-            List<Address> list = null;
-            list = gc.getFromLocationName(end, 4);
-
-            Address add = list.get(0);
-            String locality = add.getLocality();
-
-            lat = add.getLatitude();
-            lon = add.getLongitude();
-        }
-        catch(IOException e) {
-        }
-
-
-    }
 }

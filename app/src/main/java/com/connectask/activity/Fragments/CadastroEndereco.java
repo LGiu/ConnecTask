@@ -99,11 +99,11 @@ public class CadastroEndereco extends Fragment {
                 //    s = editTextCep.getText()+"-";
                 //}
                 if(start == 7){
-                    try {
+                    /*try {
                         buscaCep();
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 }
             }
 

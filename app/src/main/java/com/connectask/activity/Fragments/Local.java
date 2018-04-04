@@ -1,6 +1,7 @@
 package com.connectask.activity.Fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import com.connectask.R;
 import com.connectask.activity.activity.DetalhesTarefa;
 import com.connectask.activity.activity.MapsActivity;
 import com.connectask.activity.activity.ProcessoTarefaRealizador;
+import com.connectask.activity.classes.Coordenadas;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
 import com.connectask.activity.model.Tarefa;
@@ -34,9 +36,6 @@ public class Local extends Fragment {
     private View view;
 
     private DatabaseReference firebase;
-    private DatabaseReference firebase2;
-
-    private String idTarefa;
 
     private TextView textViewEstado;
     private TextView textViewCidade;
@@ -48,10 +47,15 @@ public class Local extends Fragment {
     private ImageButton imageButtonMaps;
     private TextView textViewMaps;
 
-    private String end = "";
+    private double latitude;
+    private double longitude;
 
-    public Local() {
-        // Required empty public constructor
+    private String idTarefa;
+    private String idEndereco;
+    private String idUsuario;
+
+    public Local(String idTarefa) {
+        this.idTarefa = idTarefa;
     }
 
 
@@ -84,40 +88,10 @@ public class Local extends Fragment {
                     for (DataSnapshot dados : dataSnapshot.getChildren()) {
                         Tarefa tarefa = dados.getValue(Tarefa.class);
 
-                        String id = tarefa.getId();
-                        if (id.equals(idTarefa)) {
-
-                            String idEndereco = tarefa.getEndereco();
-                            firebase2 = ConfiguracaoFirebase.getFirebase()
-                                    .child("endereco")
-                                    .child(idEndereco);
-
-                            firebase2.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                                        Endereco endereco = dados.getValue(Endereco.class);
-
-                                        textViewEstado.setText(endereco.getEstado());
-                                        textViewCidade.setText(endereco.getCidade());
-                                        textViewCep.setText(endereco.getCep());
-                                        textViewRua.setText(endereco.getRua());
-                                        textViewNumero.setText(endereco.getNumero());
-                                        textViewBairro.setText(endereco.getBairro());
-                                        textViewComplemento.setText(endereco.getComplemento());
-
-                                        end = ""+textViewCep.getText()+", "+textViewCidade.getText()+", "+textViewRua.getText()+", "+textViewNumero.getText()+"";
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-
+                        if (tarefa.getId().equals(idTarefa)) {
+                            idUsuario = tarefa.getId_usuario();
+                            idEndereco = tarefa.getEndereco();
+                            preencherEndereco();
                         }
                     }
                 }
@@ -127,6 +101,8 @@ public class Local extends Fragment {
 
                 }
             });
+
+
         }
 
 
@@ -134,7 +110,8 @@ public class Local extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), MapsActivity.class);
-                intent.putExtra("endereco", end);
+                intent.putExtra("latitude", String.valueOf(latitude));
+                intent.putExtra("longitude", String.valueOf(longitude));
                 startActivity(intent);
             }
         });
@@ -150,4 +127,41 @@ public class Local extends Fragment {
         return view;
     }
 
+    private void preencherEndereco(){
+        if(idUsuario != null) {
+            firebase = ConfiguracaoFirebase.getFirebase()
+                    .child("endereco")
+                    .child(idUsuario);
+
+            firebase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                        Endereco endereco = dados.getValue(Endereco.class);
+
+                        if (endereco.getId().equals(idEndereco)) {
+                            textViewEstado.setText(endereco.getEstado());
+                            textViewCidade.setText(endereco.getCidade());
+                            textViewCep.setText(endereco.getCep());
+                            textViewRua.setText(endereco.getRua());
+                            textViewNumero.setText(endereco.getNumero());
+                            textViewBairro.setText(endereco.getBairro());
+                            textViewComplemento.setText(endereco.getComplemento());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            Coordenadas coordenadas = new Coordenadas(getContext(), textViewEstado.getText().toString(), textViewCidade.getText().toString(), textViewCep.getText().toString(), textViewRua.getText().toString(), textViewNumero.getText().toString());
+            latitude = coordenadas.getLatitude();
+            longitude = coordenadas.getLongitude();
+
+        }
+    }
 }

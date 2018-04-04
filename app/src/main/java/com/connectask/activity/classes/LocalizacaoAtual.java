@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -18,42 +21,34 @@ import com.google.android.gms.location.LocationServices;
 
 public class LocalizacaoAtual extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    public Context context;
     private GoogleApiClient googleApiClient;
 
-    public double latitude;
-    public double longitude;
+    private Context contexto;
 
-    public LocalizacaoAtual(Context cont) {
-        context = cont;
+    private double latitude;
+    private double longitude;
+
+    public LocalizacaoAtual(Context context) {
+
+        contexto = context;
+
+        callConnection();
     }
 
-    public void googleClient() {
-        googleApiClient = new GoogleApiClient.Builder(context)
-                .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) context) //Be aware of state of the connection
-                .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) context) //Be aware of failures
+    private synchronized void callConnection() {
+        googleApiClient = new GoogleApiClient.Builder(contexto)
+                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
                 .build();
-
         googleApiClient.connect();
     }
 
-    public void pararConexaoComGoogleApi() {
-        //Verificando se está conectado para então cancelar a conexão!
-        if (googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
-    }
-
-    /**
-     * Depois que o método connect() for chamado, esse método será chamado de forma assíncrona caso a conexão seja bem sucedida.
-     *
-     * @param bundle
-     */
-
-    public void onConnected(Bundle bundle) {
-        //Conexão com o serviços do Google Service API foi estabelecida!
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(contexto, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(contexto, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -63,31 +58,31 @@ public class LocalizacaoAtual extends AppCompatActivity implements GoogleApiClie
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        latitude = lastLocation.getLatitude();
-        longitude = lastLocation.getLongitude();
+
+        Location l = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+        if(l != null){
+            latitude = l.getLatitude();
+            longitude = l.getLongitude();
+        }
     }
 
-    /**
-     * Esse método é chamado quando o client está temporariamente desconectado. Isso pode acontecer quando houve uma falha ou problema com o serviço que faça com que o client seja desligado.
-     * Nesse estado, todas as requisições e listeners são cancelados.
-     * Não se preocupe em tentar reestabelecer a conexão, pois isso acontecerá automaticamente.
-     * As aplicações devem desabilitar recursos visuais que estejam relacionados com o uso dos serviços e habilitá-los novamente quando o método onConnected() for chamado, indicando reestabelecimento da conexão.
-     */
-
+    @Override
     public void onConnectionSuspended(int i) {
-        // Aguardando o GoogleApiClient reestabelecer a conexão.
+        Log.i("LOG", "onConnectionSuspended(" + i +")");
     }
 
-    /**
-     * Método chamado quando um erro de conexão acontece e não é possível acessar os serviços da Google Service.
-     *
-     * @param connectionResult
-     */
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        //A conexão com o Google API falhou!
-        pararConexaoComGoogleApi();
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public double getLatitude(){
+        return latitude;
+    }
+
+    public double getLongitude(){
+        return longitude;
     }
 }
 

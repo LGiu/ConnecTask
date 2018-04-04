@@ -5,10 +5,17 @@ import android.content.Context;
 import com.connectask.activity.activity.Home;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.classes.Preferencias;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -76,28 +83,51 @@ public class Tarefa implements Serializable {
         firebase.child("tarefas")
                 .child(getId()).setValue(this);
 
-        /*firebase = ConfiguracaoFirebase.getFirebase().child("tarefas").child(identificadorUsuarioLogado);
-        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+    }
+
+    public void atualizarTempo(){
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
+        firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null){
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Tarefa tarefa = dados.getValue(Tarefa.class);
 
-                    firebase = ConfiguracaoFirebase.getFirebase();
-                    firebase.child("tarefas")
-                            .child(identificadorUsuarioLogado)
-                            .child(getId()).setValue(this);
-                }
-                else{
-                    firebase = ConfiguracaoFirebase.getFirebase();
-                    firebase.child(getId()).setValue(this);
+                    if(tarefa.getStatus().equals("1"))
+                    {
+                        SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
+                        Date dataAtual = new Date();
+
+                        SimpleDateFormat formataHora = new SimpleDateFormat("HH:mm:ss");
+                        Calendar calendar = Calendar.getInstance();
+                        Date horaAtual = new Date();
+                        calendar.setTime(horaAtual);
+                        horaAtual = calendar.getTime();
+
+                        ParsePosition pos = new ParsePosition(0);
+                        Date dia = formataData.parse(tarefa.getData().toString(), pos);
+
+
+                        int hora = (Integer.parseInt(tarefa.getTempo().substring(0, 2)) - Integer.parseInt(String.valueOf(horaAtual).substring(0, 2)));
+                        hora = Integer.parseInt(tarefa.getTempo()) - hora;
+
+                        if(hora <= 0){
+                            firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
+                            firebase.child("tarefas").child(tarefa.getId()).child("status").setValue("3");
+                        }
+                        else{
+                            firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
+                        }
+                    }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
-
+        });
     }
 
     public String getId() {

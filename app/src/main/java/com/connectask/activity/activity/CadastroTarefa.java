@@ -47,6 +47,7 @@ public class CadastroTarefa extends AppCompatActivity {
     private Button buttonNovoEndereco;
     private List<String> listaTipo = new ArrayList<String>();
     private List<String> listaEndereco = new ArrayList<String>();
+    private List<String> idEndereco = new ArrayList<String>();
     private List<String> listaTempo = new ArrayList<String>();
 
     private Tarefa tarefa;
@@ -120,7 +121,7 @@ public class CadastroTarefa extends AppCompatActivity {
                     tarefa.setDescricao(editTextDescricao.getText().toString());
                     tarefa.setTempo(String.valueOf(seekBarTempo.getProgress()));
                     tarefa.setValor((editTextValor.getText().toString()));
-                    tarefa.setEndereco(spinnerEndereco.getSelectedItem().toString());
+                    tarefa.setEndereco(idEndereco.get(spinnerEndereco.getSelectedItemPosition() - 1));
 
                     tarefa.salvar(CadastroTarefa.this);
 
@@ -175,9 +176,11 @@ public class CadastroTarefa extends AppCompatActivity {
                         if(end.length() > 20){
                             end = end.substring(0, 20);
                             listaEndereco.add(end);
+                            idEndereco.add(id);
                         }
                         else{
                             listaEndereco.add(end);
+                            idEndereco.add(id);
                         }
                     }
                 }
