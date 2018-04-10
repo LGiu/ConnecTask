@@ -1,6 +1,7 @@
 package com.connectask.activity.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.connectask.R;
+import com.connectask.activity.activity.Denunciar;
 import com.connectask.activity.activity.Home;
+import com.connectask.activity.activity.Login;
 import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
@@ -27,6 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.connectask.activity.classes.Base64Custom.codificarBase64;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -38,6 +43,7 @@ public class PaginaUsuario extends Fragment {
 
     private TextView textViewNome;
     private ListView listViewComentarios;
+    private TextView textViewDenunciar;
     private RatingBar ratingBar;
 
     private ArrayList<String> comentarios;
@@ -46,7 +52,12 @@ public class PaginaUsuario extends Fragment {
 
     private Float notaAvaliacao = 0.0f;
 
+    private String idUsuario;
+    private String idTarefa;
+
+
     public PaginaUsuario() {
+
     }
 
     @Override
@@ -56,8 +67,8 @@ public class PaginaUsuario extends Fragment {
 
 
         textViewNome = (TextView) view.findViewById(R.id.textViewNome);
+        textViewDenunciar = (TextView) view.findViewById(R.id.textViewDenunciar);
         ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
-
 
         Preferencias preferencias = new Preferencias(getContext());
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
@@ -72,9 +83,11 @@ public class PaginaUsuario extends Fragment {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     Usuario usuario = dados.getValue(Usuario.class);
 
-                    textViewNome.setText(usuario.getNome());
+                    if(idUsuario.equals(codificarBase64(usuario.getEmail().toString()))){
+                        textViewNome.setText(usuario.getNome());
 
-                    notaAvaliacao = Float.parseFloat(usuario.getAvaliacao());
+                        notaAvaliacao = Float.parseFloat(usuario.getAvaliacao());
+                    }
 
                 }
             }
@@ -91,14 +104,48 @@ public class PaginaUsuario extends Fragment {
 
         listarComentarios();
 
+        textViewDenunciar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Denunciar.class);
+                intent.putExtra("nome", textViewNome.getText().toString());
+                intent.putExtra("id", idUsuario);
+                startActivity(intent);
+            }
+        });
+
         return view;
+    }
+
+    public void setId(String id) {
+
+        idTarefa = id;
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    Tarefa tarefa = dados.getValue(Tarefa.class);
+
+                    if(tarefa.getId().equals(idTarefa)){
+                        idUsuario = tarefa.getId_usuario();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void listarComentarios(){
         comentarios = new ArrayList<String>();
-
-        Preferencias preferencias = new Preferencias(getContext());
-        final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
         firebase = ConfiguracaoFirebase.getFirebase().child("avalicao");
 
@@ -108,7 +155,7 @@ public class PaginaUsuario extends Fragment {
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Avaliacao avaliacao = dados.getValue(Avaliacao.class);
 
-                    if(avaliacao.getId_usuario_emissor().equals(identificadorUsuarioLogado) || avaliacao.getId_usuario_realizador().equals(identificadorUsuarioLogado)) {
+                    if(avaliacao.getId_usuario_emissor().equals(idUsuario) || avaliacao.getId_usuario_realizador().equals(idUsuario)) {
                         comentarios.add(avaliacao.getAvaliacao());
                     }
                 }

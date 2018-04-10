@@ -53,6 +53,16 @@ public class Endereco {
 
     }
 
+    public void update(Context contextoParamentro){
+        contexto = contextoParamentro;
+
+        Coordenadas coordenadas = new Coordenadas(contextoParamentro, estado, cidade, cep, rua, numero);
+        setLatitude(String.valueOf(coordenadas.getLatitude()));
+        setLongitude(String.valueOf(coordenadas.getLongitude()));
+
+        firebase.child("endereco").child(getId_usuario()).child(getId()).setValue(this);
+    }
+
 
 
     public String getId() {

@@ -14,6 +14,9 @@
             android:id="@+id/nav_tarefas_realizadas"
             android:title="Minhas Tarefas Realizadas" />
         <item
+            android:id="@+id/nav_endereco"
+            android:title="Endereços" />
+        <item
             android:id="@+id/nav_pagamento"
             android:title="Pagamento" />
         <item

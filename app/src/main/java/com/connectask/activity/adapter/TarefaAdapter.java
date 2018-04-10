@@ -46,7 +46,7 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
             // recupera elemento para exibição
             TextView titulo = (TextView) view.findViewById(R.id.textViewTitulo);
             TextView descricao = (TextView) view.findViewById(R.id.textViewDescricao);
-            TextView tempo = (TextView) view.findViewById(R.id.textViewTempo);
+            TextView tempo = (TextView) view.findViewById(R.id.textViewCep);
             TextView valor = (TextView) view.findViewById(R.id.textViewNome);
             Button detalhes = (Button) view.findViewById(R.id.buttonDetalhes);
 

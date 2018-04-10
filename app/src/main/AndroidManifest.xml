@@ -14,7 +14,7 @@
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
+         location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -60,8 +60,6 @@
             android:name=".activity.activity.ProcessoTarefaRealizador"
             android:parentActivityName=".activity.activity.Home" />
         <activity android:name=".activity.activity.CadastroTarefa" />
-        <activity android:name=".activity.activity.TarefasCadastradas" />
-        <activity android:name=".activity.activity.TarefasRealizadas" />
         <activity android:name=".activity.activity.MinhasTarefasCadastradas" />
         <activity android:name=".activity.activity.MinhasTarefasRealizadas" />
         <activity android:name=".activity.activity.EsqueceuSenha" />
@@ -74,16 +72,22 @@
              Note that the API key is linked to the encryption key used to sign the APK.
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".activity.activity.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".activity.activity.Filtro"></activity>
+        <activity android:name=".activity.activity.Filtro" />
+        <activity android:name=".activity.activity.Denunciar" />
+        <activity android:name=".activity.activity.Endereco" />
+        <activity android:name=".activity.activity.EditarEndereco"></activity>
     </application>
 
 </manifest>

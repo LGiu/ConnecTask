@@ -10,6 +10,7 @@
         android:id="@+id/textViewPrincipal"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
         android:text="Tarefa ativas no momento"
         android:textAlignment="center"
         android:textSize="20dp"
@@ -50,6 +51,7 @@
                     android:id="@+id/textViewT"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
+                    android:fontFamily="@font/roboto_bold"
                     android:paddingRight="4dp"
                     android:text="@string/tarefa"
                     android:textSize="@dimen/botaoCadastrar"
@@ -59,6 +61,7 @@
                     android:id="@+id/textViewTitle"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
+                    android:fontFamily="@font/roboto"
                     android:text="Tarefa"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -84,15 +87,17 @@
                     android:id="@+id/textViewTe"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
+                    android:fontFamily="@font/roboto_bold"
                     android:paddingRight="4dp"
                     android:text="@string/tempoB"
                     android:textSize="@dimen/botaoCadastrar"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewTempo"
+                    android:id="@+id/textViewCep"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
+                    android:fontFamily="@font/roboto"
                     android:text="Tempo"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -118,6 +123,7 @@
                     android:id="@+id/textViewER"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
+                    android:fontFamily="@font/roboto_bold"
                     android:paddingRight="4dp"
                     android:text="Realizador:"
                     android:textSize="@dimen/botaoCadastrar"
@@ -127,6 +133,7 @@
                     android:id="@+id/textViewNome"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
+                    android:fontFamily="@font/roboto"
                     android:text="Nome"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -180,6 +187,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
+                android:fontFamily="@font/roboto"
                 android:text="Ok" />
         </LinearLayout>
 

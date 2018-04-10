@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,6 +33,7 @@ import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Coordenadas;
 import com.connectask.activity.classes.LocalizacaoAtual;
+import com.connectask.activity.classes.Permissao;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.classes.ValoresFiltro;
 import com.connectask.activity.config.ConfiguracaoFirebase;
@@ -51,7 +53,7 @@ import java.util.ArrayList;
 import static com.connectask.activity.classes.Base64Custom.codificarBase64;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Runnable {
 
     private FirebaseAuth usuarioAutenticacao;
 
@@ -79,6 +81,14 @@ public class Home extends AppCompatActivity
 
     public double distancia = 0;
 
+    private String[] permissoesNecessarias = new String[]{
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.LOCATION_HARDWARE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +112,7 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -142,10 +153,6 @@ public class Home extends AppCompatActivity
                 });
             }
         });
-
-        pegarLocalizacao();
-
-        listarTarefas();
         //loading.cancel();
 
         nomeUsuario();
@@ -169,7 +176,15 @@ public class Home extends AppCompatActivity
             }
         });
 
+        listarTarefas();
+
+
+        pegarLocalizacao();
+
         tarefaFinalizada();
+
+        //Permissões
+        Permissao.validaPermissao(1, this, permissoesNecessarias);
     }
 
     @Override
@@ -237,6 +252,11 @@ public class Home extends AppCompatActivity
         }
     }
 
+    @Override
+    public void run() {
+
+    }
+
     //Busca
     public class SearchFiltro implements SearchView.OnQueryTextListener {
 
@@ -288,6 +308,11 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_tarefas_realizadas) {
             Intent intent = new Intent(this, MinhasTarefasRealizadas.class);
             startActivity(intent);
+
+        } else if (id == R.id.nav_endereco) {
+            Intent intent = new Intent(this, com.connectask.activity.activity.Endereco.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_pagamento) {
 
         } else if (id == R.id.nav_configuracoes) {
@@ -339,12 +364,13 @@ public class Home extends AppCompatActivity
                 listaTarefas.clear();
                 //percorre o nó
 
+                Preferencias preferencias = new Preferencias(Home.this);
+                final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
-
-                    Preferencias preferencias = new Preferencias(Home.this);
-                    final String identificadorUsuarioLogado = preferencias.getIdentificado();
-
                     Tarefa tarefa = dados.getValue(Tarefa.class);
+
+                    //tarefa.atualizarTempo();
 
                     String usuarioId = tarefa.getId_usuario();
                     String statusTarefa = tarefa.getStatus();

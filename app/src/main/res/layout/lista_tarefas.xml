@@ -29,6 +29,7 @@
                     android:id="@+id/textViewT"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
                     android:paddingRight="4dp"
                     android:text="@string/tarefa"
                     android:textSize="@dimen/botaoCadastrar"
@@ -38,6 +39,7 @@
                     android:id="@+id/textViewTitulo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
                     android:text="Tarefa"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -63,6 +65,7 @@
                     android:id="@+id/textViewD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
                     android:paddingRight="4dp"
                     android:text="@string/descricaoB"
                     android:textSize="@dimen/botaoCadastrar"
@@ -90,6 +93,7 @@
                     android:id="@+id/textViewDescricao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
                     android:maxLength="50"
                     android:text="Descrição"
                     android:textSize="@dimen/botaoCadastrar" />
@@ -116,15 +120,17 @@
                     android:id="@+id/textViewTe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
                     android:paddingRight="4dp"
                     android:text="@string/tempoB"
                     android:textSize="@dimen/botaoCadastrar"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewTempo"
+                    android:id="@+id/textViewCep"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
                     android:text="Tempo"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -150,6 +156,7 @@
                     android:id="@+id/textViewER"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
                     android:paddingRight="4dp"
                     android:text="@string/valorPago"
                     android:textSize="@dimen/botaoCadastrar"
@@ -159,6 +166,7 @@
                     android:id="@+id/textViewNome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
                     android:text="Valor"
                     android:textSize="@dimen/botaoCadastrar" />
 
@@ -189,6 +197,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:background="@color/cor_principal"
+                    android:fontFamily="@font/roboto_bold"
                     android:text="@string/maisDetalhes"
                     android:textColor="@android:color/white" />
             </LinearLayout>

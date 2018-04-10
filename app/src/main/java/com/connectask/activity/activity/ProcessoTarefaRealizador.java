@@ -83,7 +83,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                             textViewTipo = (TextView) findViewById(R.id.textViewTipo);
                             textViewTitulo = (TextView) findViewById(R.id.textViewTitulo);
                             textViewDescricao = (TextView) findViewById(R.id.textViewDescricao);
-                            textViewTempo = (TextView) findViewById(R.id.textViewTempo);
+                            textViewTempo = (TextView) findViewById(R.id.textViewCep);
                             textViewNome = (TextView) findViewById(R.id.textViewNome);
                             textViewLocal = (TextView) findViewById(R.id.textViewLocal);
                             textViewData = (TextView) findViewById(R.id.textViewData);
@@ -159,6 +159,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     PaginaUsuario paginaUsuario = new PaginaUsuario();
+                                    paginaUsuario.setId(idTarefa);
 
                                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -171,7 +172,8 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                             textViewLocal.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    Local local = new Local(idTarefa);
+                                    Local local = new Local();
+                                    local.setId(idTarefa);
 
                                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -184,7 +186,8 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                             imageButtonLocal.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    Local local = new Local(idTarefa);
+                                    Local local = new Local();
+                                    local.setId(idTarefa);
 
                                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

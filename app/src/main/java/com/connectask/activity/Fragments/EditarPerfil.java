@@ -43,9 +43,7 @@ public class EditarPerfil extends Fragment {
 
     private String msg;
 
-    public EditarPerfil(String tx, String ed) {
-        txCampo = tx;
-        etCampo = ed;
+    public EditarPerfil() {
     }
 
     @Override
@@ -107,6 +105,11 @@ public class EditarPerfil extends Fragment {
         });
 
         return view;
+    }
+
+    public void setCampos(String tx, String ed){
+        txCampo = tx;
+        etCampo = ed;
     }
 
     private boolean valida(){

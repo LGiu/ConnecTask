@@ -116,7 +116,9 @@ public class Perfil extends AppCompatActivity {
         textViewNome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditarPerfil editarPerfil = new EditarPerfil("Nome", textViewNome.getText().toString());
+                EditarPerfil editarPerfil = new EditarPerfil();
+                editarPerfil.setCampos("Nome", textViewNome.getText().toString());
+
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -128,7 +130,9 @@ public class Perfil extends AppCompatActivity {
         textViewEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditarPerfil editarPerfil = new EditarPerfil("E-Mail", textViewEmail.getText().toString());
+                EditarPerfil editarPerfil = new EditarPerfil();
+                editarPerfil.setCampos("Nome", textViewNome.getText().toString());
+
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -140,7 +144,9 @@ public class Perfil extends AppCompatActivity {
         textViewCpf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditarPerfil editarPerfil = new EditarPerfil("CPF", textViewCpf.getText().toString());
+                EditarPerfil editarPerfil = new EditarPerfil();
+                editarPerfil.setCampos("Nome", textViewNome.getText().toString());
+
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 

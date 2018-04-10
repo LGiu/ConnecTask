@@ -72,7 +72,7 @@ public class DetalhesTarefa extends AppCompatActivity {
         textViewTipo = (TextView) findViewById(R.id.textViewTipo);
         textViewTarefa = (TextView) findViewById(R.id.textViewTarefa);
         textViewDescricao = (TextView) findViewById(R.id.textViewDescricao);
-        textViewTempo = (TextView) findViewById(R.id.textViewTempo);
+        textViewTempo = (TextView) findViewById(R.id.textViewCep);
         textViewValor = (TextView) findViewById(R.id.textViewNome);
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         buttonRealizar = (Button) findViewById(R.id.buttonRealizar);
@@ -206,6 +206,7 @@ public class DetalhesTarefa extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     PaginaUsuario paginaUsuario = new PaginaUsuario();
+                    paginaUsuario.setId(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -218,7 +219,8 @@ public class DetalhesTarefa extends AppCompatActivity {
             textViewLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Local local = new Local(idTarefa);
+                    Local local = new Local();
+                    local.setId(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -231,7 +233,8 @@ public class DetalhesTarefa extends AppCompatActivity {
             imageButtonLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Local local = new Local(idTarefa);
+                    Local local = new Local();
+                    local.setId(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

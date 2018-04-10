@@ -28,7 +28,6 @@ public class Sessao {
     public void salvar(Context contextoParamentro){
         contexto = contextoParamentro;
 
-        Home home = new Home();
         Preferencias preferencias = new Preferencias(contexto);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
         setId_usuario(identificadorUsuarioLogado);
@@ -54,7 +53,8 @@ public class Sessao {
 
         firebase.child("sessao")
                 .child(getId_usuario())
-                .child(getId()).setValue(this);    }
+                .child(getId()).setValue(this);
+    }
 
     public String getId() {
         return id;

@@ -39,33 +39,35 @@
                         android:layout_height="wrap_content"
                         android:background="@android:color/white">
 
-                        <TextView
-                            android:id="@+id/textViewTe"
-                            android:layout_width="0dp"
-                            android:layout_height="25dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginTop="32dp"
-                            android:text="@string/titulo"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/tamanhoTextFormaularios"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/textViewTe"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="32dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/titulo"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/tamanhoTextFormaularios"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <EditText
-                            android:id="@+id/editTextDescricao"
-                            android:layout_width="0dp"
-                            android:layout_height="100dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:ems="10"
-                            android:hint="@string/digiteDescricao"
-                            android:inputType="textMultiLine"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                    <EditText
+                        android:id="@+id/editTextDescricao"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:ems="10"
+                        android:fontFamily="@font/roboto"
+                        android:hint="@string/digiteDescricao"
+                        android:inputType="textMultiLine"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
                     <Spinner
                         android:id="@+id/spinnerEndereco"
@@ -78,64 +80,68 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-                        <TextView
-                            android:id="@+id/textView11"
-                            android:layout_width="0dp"
-                            android:layout_height="25dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/descricao"
-                            android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                            android:textSize="@dimen/tamanhoTextFormaularios"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.326"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/spinnerTipo" />
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/descricao"
+                        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                        android:textSize="@dimen/tamanhoTextFormaularios"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.326"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/spinnerTipo" />
 
-                        <TextView
-                            android:id="@+id/textView6"
-                            android:layout_width="0dp"
-                            android:layout_height="25dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/tipo"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/tamanhoTextFormaularios"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/editTextNome" />
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/tipo"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/tamanhoTextFormaularios"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/editTextNome" />
 
-                        <TextView
-                            android:id="@+id/textView12"
-                            android:layout_width="0dp"
-                            android:layout_height="25dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:text="@string/endereco"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/tamanhoTextFormaularios"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.326"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/editTextValor" />
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/endereco"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/tamanhoTextFormaularios"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.326"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/editTextValor" />
 
-                        <Button
-                            android:id="@+id/buttonNovoEndereco"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@color/cor_principal"
-                            android:padding="10dp"
-                            android:text="@string/novoEndereco"
-                            android:textColor="@android:color/background_light"
-                            app:layout_constraintBottom_toBottomOf="@+id/spinnerEndereco"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/spinnerEndereco" />
+                    <Button
+                        android:id="@+id/buttonNovoEndereco"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/cor_principal"
+                        android:fontFamily="@font/roboto"
+                        android:padding="10dp"
+                        android:text="@string/novoEndereco"
+                        android:textColor="@android:color/background_light"
+                        app:layout_constraintBottom_toBottomOf="@+id/spinnerEndereco"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/spinnerEndereco" />
 
                     <TextView
                         android:id="@+id/textView7"
@@ -152,7 +158,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/editTextDescricao" />
 
                     <TextView
-                        android:id="@+id/textViewTempo"
+                        android:id="@+id/textViewCep"
                         android:layout_width="0dp"
                         android:layout_height="33dp"
                         android:layout_marginTop="8dp"
@@ -179,53 +185,56 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewTempo" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewCep" />
 
                     <EditText
-                            android:id="@+id/editTextNome"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/tamanhoEditTextFormulario"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginTop="8dp"
-                            android:ems="10"
-                            android:hint="@string/digiteTitulo"
-                            android:inputType="textPersonName"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textViewTe" />
+                        android:id="@+id/editTextNome"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tamanhoEditTextFormulario"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginTop="8dp"
+                        android:ems="10"
+                        android:fontFamily="@font/roboto"
+                        android:hint="@string/digiteTitulo"
+                        android:inputType="textPersonName"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewTe" />
 
-                        <EditText
-                            android:id="@+id/editTextValor"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/tamanhoEditTextFormulario"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:ems="10"
-                            android:hint="@string/digiteValor"
-                            android:inputType="numberDecimal"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                    <EditText
+                        android:id="@+id/editTextValor"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tamanhoEditTextFormulario"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:ems="10"
+                        android:fontFamily="@font/roboto"
+                        android:hint="@string/digiteValor"
+                        android:inputType="numberDecimal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
                     <Button
-                            android:id="@+id/buttonFinalizar"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/botaoFormulario"
-                            android:layout_marginBottom="32dp"
-                            android:layout_marginEnd="32dp"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="27dp"
-                            android:background="@color/cor_principal"
-                            android:text="@string/cadastrar"
-                            android:textColor="@android:color/background_light"
-                            android:textSize="@dimen/TextoBotaoFormulario"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/spinnerEndereco" />
+                        android:id="@+id/buttonFinalizar"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/botaoFormulario"
+                        android:layout_marginBottom="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="27dp"
+                        android:background="@color/cor_principal"
+                        android:fontFamily="@font/roboto"
+                        android:text="@string/cadastrar"
+                        android:textColor="@android:color/background_light"
+                        android:textSize="@dimen/TextoBotaoFormulario"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/spinnerEndereco" />
 
                     <Spinner
                         android:id="@+id/spinnerTipo"

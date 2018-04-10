@@ -105,8 +105,35 @@ public class Tarefa implements Serializable {
                         calendar.setTime(horaAtual);
                         horaAtual = calendar.getTime();
 
-                        ParsePosition pos = new ParsePosition(0);
-                        Date dia = formataData.parse(tarefa.getData().toString(), pos);
+                        String dataFormatada = formataData.format(dataAtual);
+                        dataFormatada = dataFormatada.replace("-","").substring(2, 2);
+                        int mesAtual = Integer.parseInt(dataFormatada);
+                        int mes = Integer.parseInt(tarefa.getData().toString().substring(3, 2));
+
+                        if((mesAtual - mes) == 0){
+                            int hora = (Integer.parseInt(tarefa.getTempo().substring(0, 2)) - Integer.parseInt(String.valueOf(horaAtual).substring(0, 2)));
+                            hora = Integer.parseInt(tarefa.getTempo()) - hora;
+
+                            if(hora <= 0){
+                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
+                                firebase.child("tarefas").child(tarefa.getId()).child("status").setValue("3");
+                            }
+                            else{
+                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
+                            }
+                        }
+                        else if((mesAtual - mes) == 1){
+                            int hora = ((Integer.parseInt(String.valueOf(horaAtual).substring(0, 2))+30) - Integer.parseInt(tarefa.getTempo().substring(0, 2)));
+                            hora = Integer.parseInt(tarefa.getTempo()) - hora;
+
+                            if(hora <= 0){
+                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
+                                firebase.child("tarefas").child(tarefa.getId()).child("status").setValue("3");
+                            }
+                            else{
+                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
+                            }
+                        }
 
 
                         int hora = (Integer.parseInt(tarefa.getTempo().substring(0, 2)) - Integer.parseInt(String.valueOf(horaAtual).substring(0, 2)));

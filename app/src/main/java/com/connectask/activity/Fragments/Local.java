@@ -1,22 +1,17 @@
 package com.connectask.activity.Fragments;
 
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.connectask.R;
-import com.connectask.activity.activity.DetalhesTarefa;
 import com.connectask.activity.activity.MapsActivity;
-import com.connectask.activity.activity.ProcessoTarefaRealizador;
 import com.connectask.activity.classes.Coordenadas;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
@@ -25,8 +20,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +47,7 @@ public class Local extends Fragment {
     private String idEndereco;
     private String idUsuario;
 
-    public Local(String idTarefa) {
-        this.idTarefa = idTarefa;
+    public Local() {
     }
 
 
@@ -69,9 +61,9 @@ public class Local extends Fragment {
         textViewCidade = (TextView) view.findViewById(R.id.textViewCidade);
         textViewCep = (TextView) view.findViewById(R.id.textViewCep);
         textViewRua = (TextView) view.findViewById(R.id.textViewRua);
-        textViewNumero = (TextView) view.findViewById(R.id.textViewNumero);
+        textViewNumero = (TextView) view.findViewById(R.id.textViewCep);
         textViewBairro = (TextView) view.findViewById(R.id.textViewBairro);
-        textViewComplemento = (TextView) view.findViewById(R.id.textViewComplemento);
+        textViewComplemento = (TextView) view.findViewById(R.id.textViewCep);
         imageButtonMaps = (ImageButton) view.findViewById(R.id.imageButtonMaps);
         textViewMaps = (TextView) view.findViewById(R.id.textViewMaps);
 
@@ -125,6 +117,10 @@ public class Local extends Fragment {
         });
 
         return view;
+    }
+
+    public void setId(String idTarefa) {
+        this.idTarefa = idTarefa;
     }
 
     private void preencherEndereco(){

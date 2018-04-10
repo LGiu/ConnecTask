@@ -12,14 +12,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.connectask.R;
+import com.connectask.activity.activity.CadastroTarefa;
 import com.connectask.activity.classes.BuscaEndereco;
 import com.connectask.activity.classes.Util;
 import com.connectask.activity.model.Endereco;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +63,7 @@ public class CadastroEndereco extends Fragment {
 
         editTextCep = (EditText) view.findViewById(R.id.editTextCep);
         editTextRua = (EditText) view.findViewById(R.id.editTextNome);
-        editTextNumero = (EditText) view.findViewById(R.id.editTextComplemento);
+        editTextNumero = (EditText) view.findViewById(R.id.editTextNumero);
         editTextBairro = (EditText) view.findViewById(R.id.editTextBairro);
         editTextComplemento = (EditText) view.findViewById(R.id.editTextComplemento);
         editTextCidade = (EditText) view.findViewById(R.id.editTextCidade);
@@ -81,7 +84,13 @@ public class CadastroEndereco extends Fragment {
                 endereco.setBairro(editTextBairro.getText().toString());
                 endereco.setComplemento((editTextComplemento.getText().toString()));
 
-                cadastrarEnderenco();
+                try{
+                    cadastrarEnderenco();
+                }
+                catch (Exception e){
+                    Toast.makeText(getContext(), "Endereço Incorreto", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -117,7 +126,6 @@ public class CadastroEndereco extends Fragment {
     }
 
     private void cadastrarEnderenco() {
-
         //tarefa.setId(task.getResult().getUser.getUid(););
         endereco.salvar(getContext());
         android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();

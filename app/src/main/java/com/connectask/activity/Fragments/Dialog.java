@@ -9,12 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.connectask.R;
-import com.connectask.activity.activity.Perfil;
 import com.connectask.activity.activity.ProcessoTarefaEmissor;
 import com.connectask.activity.activity.ProcessoTarefaRealizador;
 import com.connectask.activity.classes.Preferencias;
@@ -72,7 +70,7 @@ public class Dialog extends DialogFragment {
 
         textViewTitulo = (TextView) view.findViewById(R.id.textViewTitle);
         textViewDescricao = (TextView) view.findViewById(R.id.textViewDescricao);
-        textViewTempo = (TextView) view.findViewById(R.id.textViewTempo);
+        textViewTempo = (TextView) view.findViewById(R.id.textViewCep);
         textViewNome = (TextView) view.findViewById(R.id.textViewNome);
         textViewER = (TextView) view.findViewById(R.id.textViewER);
         textViewStatus = (TextView) view.findViewById(R.id.textViewStatus);
