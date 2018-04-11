@@ -16,8 +16,10 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 
 /**
  * Created by Leonardo Giuliani on 21/12/2017.
@@ -40,6 +42,7 @@ public class Tarefa implements Serializable {
     private DatabaseReference firebase;
     private Context contexto;
 
+    private ArrayList<String> tarefaId = new ArrayList<>();
 
     public Tarefa(){
 
@@ -85,7 +88,9 @@ public class Tarefa implements Serializable {
 
     }
 
-    public void atualizarTempo(){
+    public void atualizarTempo()
+    {
+        tarefaId = new ArrayList<String>();
 
         firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
         firebase.addValueEventListener(new ValueEventListener() {
@@ -94,59 +99,120 @@ public class Tarefa implements Serializable {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     Tarefa tarefa = dados.getValue(Tarefa.class);
 
-                    if(tarefa.getStatus().equals("1"))
-                    {
-                        SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
-                        Date dataAtual = new Date();
+                    if(tarefaId.size() > 0){
+                        for(String idTarefa : tarefaId){
+                            if(!tarefa.getId().equals(idTarefa)){
+                                if(tarefa.getStatus().equals("1") )
+                                {
+                                    tarefaId.add(tarefa.getId());
 
-                        SimpleDateFormat formataHora = new SimpleDateFormat("HH:mm:ss");
-                        Calendar calendar = Calendar.getInstance();
-                        Date horaAtual = new Date();
-                        calendar.setTime(horaAtual);
-                        horaAtual = calendar.getTime();
+                                    Calendar calendario = Calendar.getInstance();
+                                    calendario.setTime(new Date());
 
-                        String dataFormatada = formataData.format(dataAtual);
-                        dataFormatada = dataFormatada.replace("-","").substring(2, 2);
-                        int mesAtual = Integer.parseInt(dataFormatada);
-                        int mes = Integer.parseInt(tarefa.getData().toString().substring(3, 2));
+                                    int mesAtual = Integer.parseInt(String.valueOf((calendario.get(Calendar.MONTH) + 1)));
+                                    int mes = Integer.parseInt(tarefa.getData().toString().substring(3, 5));
 
-                        if((mesAtual - mes) == 0){
-                            int hora = (Integer.parseInt(tarefa.getTempo().substring(0, 2)) - Integer.parseInt(String.valueOf(horaAtual).substring(0, 2)));
-                            hora = Integer.parseInt(tarefa.getTempo()) - hora;
+                                    int diaAtual = Integer.parseInt(String.valueOf((calendario.get(Calendar.DAY_OF_MONTH))));
+                                    int dia = Integer.parseInt(tarefa.getData().toString().substring(0, 2));
 
-                            if(hora <= 0){
-                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
-                                firebase.child("tarefas").child(tarefa.getId()).child("status").setValue("3");
+                                    String novaData = ((String.valueOf(calendario.get(Calendar.DAY_OF_MONTH))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.DAY_OF_MONTH))) : String.valueOf(calendario.get(Calendar.DAY_OF_MONTH))) + "-" + ((String.valueOf(calendario.get(Calendar.MONTH)+1)).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.MONTH)+1)) : String.valueOf(calendario.get(Calendar.MONTH)+1)) +"-"+String.valueOf(calendario.get(Calendar.YEAR));
+                                    String novaHora = ((String.valueOf(calendario.get(Calendar.HOUR_OF_DAY))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.HOUR_OF_DAY))) : String.valueOf(calendario.get(Calendar.HOUR_OF_DAY))) + ":" + ((String.valueOf(calendario.get(Calendar.MINUTE))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.MINUTE))) : String.valueOf(calendario.get(Calendar.MINUTE))) + ":" + ((String.valueOf(calendario.get(Calendar.SECOND))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.SECOND))) : String.valueOf(calendario.get(Calendar.SECOND)));
+
+                                    if((mes - mesAtual) == 0){
+                                        int diferencaDia = (diaAtual - dia)*24;
+
+                                        int hora = (Integer.parseInt(String.valueOf(calendario.get(Calendar.HOUR_OF_DAY)))+diferencaDia) - Integer.parseInt(tarefa.getHora().substring(0, 2));
+                                        hora = Integer.parseInt(tarefa.getTempo()) - hora;
+
+                                        if(hora <= 0){
+                                            firebase.child(tarefa.getId()).child("tempo").setValue(String.valueOf(hora));
+                                            firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                            firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                            firebase.child(tarefa.getId()).child("status").setValue("3");
+                                        }
+                                        else{
+                                            firebase.child(tarefa.getId()).child("tempo").setValue(String.valueOf(hora));
+                                            firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                            firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                        }
+                                    }
+                                    else if((mesAtual - mes) == 1){
+                                        int hora = Integer.parseInt(tarefa.getHora().substring(0, 2)) - Integer.parseInt(String.valueOf(calendario.get(Calendar.HOUR_OF_DAY)));
+                                        hora = Integer.parseInt(tarefa.getTempo()) - hora;
+
+                                        if(hora <= 0){
+                                            firebase.child(tarefa.getId()).child("tempo").setValue(hora);
+                                            firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                            firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                            firebase.child(tarefa.getId()).child("status").setValue("3");
+                                        }
+                                        else{
+                                            firebase.child(tarefa.getId()).child("tempo").setValue(hora);
+                                            firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                            firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                        }
+                                    }
+
+                                }
                             }
-                            else{
-                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
-                            }
-                        }
-                        else if((mesAtual - mes) == 1){
-                            int hora = ((Integer.parseInt(String.valueOf(horaAtual).substring(0, 2))+30) - Integer.parseInt(tarefa.getTempo().substring(0, 2)));
-                            hora = Integer.parseInt(tarefa.getTempo()) - hora;
-
-                            if(hora <= 0){
-                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
-                                firebase.child("tarefas").child(tarefa.getId()).child("status").setValue("3");
-                            }
-                            else{
-                                firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
-                            }
-                        }
-
-
-                        int hora = (Integer.parseInt(tarefa.getTempo().substring(0, 2)) - Integer.parseInt(String.valueOf(horaAtual).substring(0, 2)));
-                        hora = Integer.parseInt(tarefa.getTempo()) - hora;
-
-                        if(hora <= 0){
-                            firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
-                            firebase.child("tarefas").child(tarefa.getId()).child("status").setValue("3");
-                        }
-                        else{
-                            firebase.child("tarefas").child(tarefa.getId()).child("tempo").setValue(hora);
                         }
                     }
+                    else{
+                        if(tarefa.getStatus().equals("1") )
+                        {
+                            tarefaId.add(tarefa.getId());
+
+                            Calendar calendario = Calendar.getInstance();
+                            calendario.setTime(new Date());
+
+                            int mesAtual = Integer.parseInt(String.valueOf((calendario.get(Calendar.MONTH) + 1)));
+                            int mes = Integer.parseInt(tarefa.getData().toString().substring(3, 5));
+
+                            int diaAtual = Integer.parseInt(String.valueOf((calendario.get(Calendar.DAY_OF_MONTH))));
+                            int dia = Integer.parseInt(tarefa.getData().toString().substring(0, 2));
+
+                            String novaData = ((String.valueOf(calendario.get(Calendar.DAY_OF_MONTH))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.DAY_OF_MONTH))) : String.valueOf(calendario.get(Calendar.DAY_OF_MONTH))) + "-" + ((String.valueOf(calendario.get(Calendar.MONTH)+1)).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.MONTH)+1)) : String.valueOf(calendario.get(Calendar.MONTH)+1)) +"-"+String.valueOf(calendario.get(Calendar.YEAR));
+                            String novaHora = ((String.valueOf(calendario.get(Calendar.HOUR_OF_DAY))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.HOUR_OF_DAY))) : String.valueOf(calendario.get(Calendar.HOUR_OF_DAY))) + ":" + ((String.valueOf(calendario.get(Calendar.MINUTE))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.MINUTE))) : String.valueOf(calendario.get(Calendar.MINUTE))) + ":" + ((String.valueOf(calendario.get(Calendar.SECOND))).length() < 2 ? "0"+(String.valueOf(calendario.get(Calendar.SECOND))) : String.valueOf(calendario.get(Calendar.SECOND)));
+
+                            if((mes - mesAtual) == 0){
+                                int diferencaDia = (diaAtual - dia)*24;
+
+                                int hora = (Integer.parseInt(String.valueOf(calendario.get(Calendar.HOUR_OF_DAY)))+diferencaDia) - Integer.parseInt(tarefa.getHora().substring(0, 2));
+                                hora = Integer.parseInt(tarefa.getTempo()) - hora;
+
+                                if(hora <= 0){
+                                    firebase.child(tarefa.getId()).child("tempo").setValue(String.valueOf(hora));
+                                    firebase.child(tarefa.getId()).child("status").setValue("3");
+                                    firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                    firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                }
+                                else{
+                                    firebase.child(tarefa.getId()).child("tempo").setValue(String.valueOf(hora));
+                                    firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                    firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                }
+                            }
+                            else if((mesAtual - mes) == 1){
+                                int hora = Integer.parseInt(tarefa.getHora().substring(0, 2)) - Integer.parseInt(String.valueOf(calendario.get(Calendar.HOUR_OF_DAY)));
+                                hora = Integer.parseInt(tarefa.getTempo()) - hora;
+
+                                if(hora <= 0){
+                                    firebase.child(tarefa.getId()).child("tempo").setValue(hora);
+                                    firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                    firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                    firebase.child(tarefa.getId()).child("status").setValue("3");
+                                }
+                                else{
+                                    firebase.child(tarefa.getId()).child("tempo").setValue(hora);
+                                    firebase.child(tarefa.getId()).child("data").setValue(novaData);
+                                    firebase.child(tarefa.getId()).child("hora").setValue(novaHora);
+                                }
+                            }
+
+                        }
+                    }
+
+
                 }
             }
 

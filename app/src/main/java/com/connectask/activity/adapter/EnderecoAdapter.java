@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.activity.DetalhesTarefa;
+import com.connectask.activity.activity.EditarEndereco;
 import com.connectask.activity.activity.Home;
 import com.connectask.activity.activity.ProcessoTarefaRealizador;
 import com.connectask.activity.classes.Preferencias;
@@ -89,7 +90,7 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
             imageButtonEditar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, DetalhesTarefa.class);
+                    Intent intent = new Intent(context, EditarEndereco.class);
                     intent.putExtra("id", endereco.getId());
                     intent.putExtra("estado", textViewEstado.getText().toString());
                     intent.putExtra("cidade", textViewCidade.getText().toString());
@@ -116,7 +117,7 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             firebase.child(identificadorUsuarioLogado).child(endereco.getId()).setValue(null);
-                                            Intent intent = new Intent(context, EnderecoAdapter.class);
+                                            Intent intent = new Intent(context, com.connectask.activity.activity.Endereco.class);
                                             context.startActivity(intent);
 
                                         }

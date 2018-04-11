@@ -49,6 +49,7 @@ public class Perfil extends AppCompatActivity {
     private TextView textViewNome;
     private TextView textViewEmail;
     private TextView textViewCpf;
+    private TextView textViewTelefone;
 
     protected Uri filePath;
     private final int PICK_IMAGE = 1234;
@@ -77,6 +78,7 @@ public class Perfil extends AppCompatActivity {
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         textViewEmail = (TextView) findViewById(R.id.textViewEmail);
         textViewCpf = (TextView) findViewById(R.id.textViewCpf);
+        textViewTelefone = (TextView) findViewById(R.id.textViewTelefone);
 
         Preferencias preferencias = new Preferencias(Perfil.this);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
@@ -93,6 +95,8 @@ public class Perfil extends AppCompatActivity {
                     if(identificadorUsuarioLogado.equals(codificarBase64(usuario.getEmail()))){
                         textViewNome.setText(usuario.getNome());
                         textViewEmail.setText(usuario.getEmail());
+                        textViewCpf.setText(usuario.getCpf());
+                        textViewTelefone.setText(usuario.getTelefone());
                         setarImagem();
                     }
                 }
@@ -146,6 +150,20 @@ public class Perfil extends AppCompatActivity {
             public void onClick(View view) {
                 EditarPerfil editarPerfil = new EditarPerfil();
                 editarPerfil.setCampos("Nome", textViewNome.getText().toString());
+
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.add(R.id.fragment_perfil, editarPerfil);
+                fragmentTransaction.addToBackStack(null).commit();
+            }
+        });
+
+        textViewTelefone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditarPerfil editarPerfil = new EditarPerfil();
+                editarPerfil.setCampos("Telefone", textViewTelefone.getText().toString());
 
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

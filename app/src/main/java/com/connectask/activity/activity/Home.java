@@ -178,7 +178,6 @@ public class Home extends AppCompatActivity
 
         listarTarefas();
 
-
         pegarLocalizacao();
 
         tarefaFinalizada();
@@ -344,6 +343,9 @@ public class Home extends AppCompatActivity
         final int valor = valoresFiltro.getValor();
         final int tempo = valoresFiltro.getTempo();
 
+        Tarefa tarefa = new Tarefa();
+        tarefa.atualizarTempo();
+
         listaTarefas = new ArrayList<>();
 
         listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
@@ -364,13 +366,12 @@ public class Home extends AppCompatActivity
                 listaTarefas.clear();
                 //percorre o nó
 
+
                 Preferencias preferencias = new Preferencias(Home.this);
                 final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Tarefa tarefa = dados.getValue(Tarefa.class);
-
-                    //tarefa.atualizarTempo();
 
                     String usuarioId = tarefa.getId_usuario();
                     String statusTarefa = tarefa.getStatus();

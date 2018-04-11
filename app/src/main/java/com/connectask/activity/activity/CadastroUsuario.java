@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.classes.Cpf;
+import com.connectask.activity.classes.Telefone;
 import com.connectask.activity.classes.Util;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.classes.Base64Custom;
@@ -37,6 +38,7 @@ public class CadastroUsuario extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextCpf;
     private EditText editTextSenha;
+    private EditText editTextTelefone;
     private Button buttoCadastrar;
 
     private DatabaseReference firebase;
@@ -55,11 +57,14 @@ public class CadastroUsuario extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextNome = (EditText) findViewById(R.id.editTextNome);
         editTextCpf = (EditText) findViewById(R.id.editTextCpf);
+        editTextTelefone = (EditText) findViewById(R.id.editTextTelefone);
         editTextSenha = (EditText) findViewById(R.id.editTextSenha);
         buttoCadastrar = (Button) findViewById(R.id.buttonFinalizar);
 
 
         editTextCpf.addTextChangedListener(Cpf.insert(editTextCpf,1));
+        editTextTelefone.addTextChangedListener(Telefone.insert("(##)#####-####", editTextTelefone));
+
 
         buttoCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +84,7 @@ public class CadastroUsuario extends AppCompatActivity {
                         usuario.setCpf(editTextCpf.getText().toString());
                     }
 
+                    usuario.setTelefone(editTextTelefone.getText().toString());
                     usuario.setSenha(editTextSenha.getText().toString());
                     cadastrarUsuario();
                 }
@@ -160,6 +166,11 @@ public class CadastroUsuario extends AppCompatActivity {
         if(editTextCpf.getText().length() != 14)
         {
             msg += "\nCPF inválido.";
+            teste = false;
+        }
+        if(editTextTelefone.getText().length() != 13 && editTextTelefone.getText().length() != 14)
+        {
+            msg += "\nTelefone inválido.";
             teste = false;
         }
         if(util.isPasswordValid(editTextSenha.getText().toString().trim()))

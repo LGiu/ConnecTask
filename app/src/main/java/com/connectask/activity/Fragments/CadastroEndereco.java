@@ -16,7 +16,8 @@ import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.activity.CadastroTarefa;
-import com.connectask.activity.classes.BuscaEndereco;
+import com.connectask.activity.classes.AsyncResponse;
+import com.connectask.activity.classes.BuscaCep;
 import com.connectask.activity.classes.Util;
 import com.connectask.activity.model.Endereco;
 
@@ -29,7 +30,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CadastroEndereco extends Fragment {
+public class CadastroEndereco extends Fragment implements AsyncResponse {
 
     private View view;
 
@@ -42,7 +43,7 @@ public class CadastroEndereco extends Fragment {
     private Spinner spinnerEstado;
     private Button buttonCadastro;
 
-    private BuscaEndereco buscaEndereco = new BuscaEndereco();
+    private BuscaCep buscaCep;
 
     private String msg = "Campos incorretos:";
 
@@ -103,17 +104,13 @@ public class CadastroEndereco extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //if(start == 4){
-                //   editTextCep.setText(editTextCep.getText()+"-");
-                //    s = editTextCep.getText()+"-";
-                //}
-                if(start == 7){
-                    /*try {
+                /*if(start == 7){
+                    try {
                         buscaCep();
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }*/
-                }
+                    }
+                }*/
             }
 
             @Override
@@ -169,16 +166,9 @@ public class CadastroEndereco extends Fragment {
     }
 
     private void buscaCep() throws JSONException {
-        buscaEndereco.execute(editTextCep.getText().toString());
-        editTextRua.setText(buscaEndereco.object.getString("logradouro"));
-        editTextBairro.setText(buscaEndereco.object.getString("bairro"));
-
-        for (int i = 0; i < 26; i++) {
-            if(listaEstado.get(i).equals(buscaEndereco.object.getString("estado"))){
-                spinnerEstado.setSelection(i);
-            }
-        }
-
+        buscaCep = new BuscaCep(getContext(), editTextCep.getText().toString());
+        buscaCep.delegate = CadastroEndereco.this;
+        buscaCep.execute();
     }
 
     private boolean valida(){
@@ -218,6 +208,28 @@ public class CadastroEndereco extends Fragment {
         }
 
         return teste;
+    }
+
+    @Override
+    public void processFinish(int status, String output) {
+        switch (status) {
+            case 1:
+                for (int i = 0; i < 26; i++) {
+                    if(listaEstado.get(i).equals(output)){
+                        spinnerEstado.setSelection(i);
+                    }
+                }
+                break;
+            case 2:
+                editTextCidade.setText(output);
+                break;
+            case 3:
+                editTextRua.setText(output);
+                break;
+            case 4:
+                editTextBairro.setText(output);
+                break;
+        }
     }
 
 }

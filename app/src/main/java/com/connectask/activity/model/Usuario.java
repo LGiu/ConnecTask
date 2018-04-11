@@ -14,6 +14,7 @@ public class Usuario {
     private String nome;
     private String email;
     private String cpf;
+    private String telefone;
     private String senha;
     private String status;
     private String avaliacao;
@@ -111,5 +112,13 @@ public class Usuario {
 
     public void setAvaliacaoAtual(String avaliacaoAtual) {
         this.avaliacaoAtual = avaliacaoAtual;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 }

@@ -253,7 +253,7 @@
                     android:layout_marginTop="27dp"
                     android:background="@color/cor_principal"
                     android:fontFamily="@font/roboto"
-                    android:text="@string/cadastrar"
+                    android:text="Salvar"
                     android:textColor="@android:color/background_light"
                     android:textSize="@dimen/TextoBotaoFormulario"
                     app:layout_constraintBottom_toBottomOf="parent"

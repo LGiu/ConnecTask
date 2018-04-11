@@ -55,7 +55,7 @@ public class EditarEndereco extends AppCompatActivity {
 
         editTextCep = (EditText) findViewById(R.id.editTextCep);
         editTextRua = (EditText) findViewById(R.id.editTextNome);
-        editTextNumero = (EditText) findViewById(R.id.editTextComplemento);
+        editTextNumero = (EditText) findViewById(R.id.editTextNumero);
         editTextBairro = (EditText) findViewById(R.id.editTextBairro);
         editTextComplemento = (EditText) findViewById(R.id.editTextComplemento);
         editTextCidade = (EditText) findViewById(R.id.editTextCidade);
@@ -99,6 +99,9 @@ public class EditarEndereco extends AppCompatActivity {
                 endereco.setComplemento((editTextComplemento.getText().toString()));
 
                 endereco.update(EditarEndereco.this);
+
+                Intent intent = new Intent(EditarEndereco.this, com.connectask.activity.activity.Endereco.class);
+                startActivity(intent);
             }
         });
     }

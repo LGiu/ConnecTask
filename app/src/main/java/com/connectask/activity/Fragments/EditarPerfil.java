@@ -14,7 +14,9 @@ import android.widget.TextView;
 import com.connectask.R;
 import com.connectask.activity.activity.CadastroUsuario;
 import com.connectask.activity.activity.Perfil;
+import com.connectask.activity.classes.Cpf;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.classes.Telefone;
 import com.connectask.activity.classes.Util;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Usuario;
@@ -57,6 +59,14 @@ public class EditarPerfil extends Fragment {
 
         textViewCampo.setText(txCampo);
         editTextCampo.setText(etCampo);
+
+        if(textViewCampo.equals("CPF")){
+            editTextCampo.addTextChangedListener(Cpf.insert(editTextCampo,1));
+
+        }
+        else if(textViewCampo.equals("Telefone")){
+            editTextCampo.addTextChangedListener(Telefone.insert("(##)#####-####", editTextCampo));
+        }
 
         buttonSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +139,13 @@ public class EditarPerfil extends Fragment {
             if(editTextCampo.getText().length() != 14)
             {
                 msg += "\nCPF inválido.";
+                teste = false;
+            }
+        }
+        else if(txCampo.equals("Telefone")){
+            if(editTextCampo.getText().length() != 13 && editTextCampo.getText().length() != 14)
+            {
+                msg += "\nTelefone inválido.";
                 teste = false;
             }
         }

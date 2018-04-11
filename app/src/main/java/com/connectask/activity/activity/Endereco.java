@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.connectask.R;
+import com.connectask.activity.Fragments.CadastroEndereco;
 import com.connectask.activity.adapter.EnderecoAdapter;
 import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Preferencias;
@@ -55,6 +56,20 @@ public class Endereco extends AppCompatActivity {
         buttonNovoEndereco = (Button) findViewById(R.id.buttonNovoEndereco);
         listViewEndereco = (ListView) findViewById(R.id.listViewEndereco);
 
+        listarEndereco();
+
+        buttonNovoEndereco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CadastroEndereco cadastroEndereco = new CadastroEndereco();
+
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                fragmentTransaction.replace(R.id.fragment_endereco, cadastroEndereco);
+                fragmentTransaction.addToBackStack(null).commit();
+            }
+        });
     }
 
     private void listarEndereco(){
@@ -67,18 +82,24 @@ public class Endereco extends AppCompatActivity {
 
         listViewEndereco.setAdapter(adapter);
 
-        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
+        Preferencias preferencias = new Preferencias(Endereco.this);
+        final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("endereco").child(identificadorUsuarioLogado);
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Preferencias preferencias = new Preferencias(Endereco.this);
-                final String identificadorUsuarioLogado = preferencias.getIdentificado();
+                listaEndereco.clear();
 
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
-                    Tarefa tarefa = dados.getValue(Tarefa.class);
+                    com.connectask.activity.model.Endereco endereco = dados.getValue(com.connectask.activity.model.Endereco.class);
 
+                    listaEndereco.add(endereco);
                 }
+
+                adapter.notifyDataSetChanged();
+
             }
 
             @Override
