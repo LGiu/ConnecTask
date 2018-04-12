@@ -34,21 +34,32 @@
 
             <Button
                 android:id="@+id/buttonFiltrar"
-                android:layout_width="0dp"
+                android:layout_width="185dp"
                 android:layout_height="@dimen/botaoFormulario"
-                android:layout_marginEnd="32dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:background="@color/cor_principal"
                 android:fontFamily="@font/roboto"
                 android:text="Filtrar"
                 android:textColor="@android:color/background_light"
-                android:textSize="@dimen/TextoBotaoFormulario"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintRight_toRightOf="parent"
+                android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buttonLimpar"
+                android:layout_width="185dp"
+                android:layout_height="@dimen/botaoFormulario"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="32dp"
+                android:background="@color/cor_principal"
+                android:fontFamily="@font/roboto"
+                android:text="Limpar"
+                android:textColor="@android:color/background_light"
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

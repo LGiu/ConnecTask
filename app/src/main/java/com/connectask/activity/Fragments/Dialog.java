@@ -69,7 +69,7 @@ public class Dialog extends DialogFragment {
         getDialog().setTitle("");
 
         textViewTitulo = (TextView) view.findViewById(R.id.textViewTitle);
-        textViewDescricao = (TextView) view.findViewById(R.id.textViewDescricao);
+        textViewDescricao = (TextView) view.findViewById(R.id.textViewComentario);
         textViewTempo = (TextView) view.findViewById(R.id.textViewCep);
         textViewNome = (TextView) view.findViewById(R.id.textViewNome);
         textViewER = (TextView) view.findViewById(R.id.textViewER);

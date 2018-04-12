@@ -31,6 +31,7 @@ public class Filtro extends AppCompatActivity {
     private SeekBar seekBarTempo;
     private SeekBar seekBarValor;
     private Button buttonFiltrar;
+    private Button buttonLimpar;
 
     private TextView textViewProgressoLocalizacao;
     private TextView textViewProgressoValor;
@@ -61,6 +62,7 @@ public class Filtro extends AppCompatActivity {
         seekBarTempo = (SeekBar) findViewById(R.id.seekBarTempo);
         seekBarValor = (SeekBar) findViewById(R.id.seekBarValor);
         buttonFiltrar = (Button) findViewById(R.id.buttonFiltrar);
+        buttonLimpar = (Button) findViewById(R.id.buttonLimpar);
         textViewProgressoLocalizacao = (TextView) findViewById(R.id.textViewProgressoLocalizacao);
         textViewProgressoValor = (TextView) findViewById(R.id.textViewProgressoValor);
         textViewProgressoTempo = (TextView) findViewById(R.id.textViewProgressoTempo);
@@ -134,8 +136,6 @@ public class Filtro extends AppCompatActivity {
 
         });
 
-
-
         buttonFiltrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +145,19 @@ public class Filtro extends AppCompatActivity {
                 ValoresFiltro preferencias = new ValoresFiltro(Filtro.this);
 
                 preferencias.salvarDados(spinnerCategoria.getSelectedItem().toString(), seekBarLocalizacao.getProgress(), seekBarValor.getProgress() , seekBarTempo.getProgress());
+                startActivity(intent);
+            }
+        });
+
+        buttonLimpar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent = new Intent(Filtro.this, Home.class);
+
+                ValoresFiltro preferencias = new ValoresFiltro(Filtro.this);
+                preferencias.limparDados();
+
                 startActivity(intent);
             }
         });

@@ -4,48 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.connectask.activity.activity.MinhasTarefasCadastradas">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tamanho_toolbar"
-        android:background="@color/cor_principal"
-        android:paddingLeft="30px"
-        android:paddingTop="10px"
-        app:title="Minhas Tarefas Cadastradas"
-        app:titleTextColor="@android:color/white"/>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical">
-
-        <SearchView
-            android:id="@+id/searchViewBusca"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewCampo" />
+            android:layout_height="@dimen/tamanho_toolbar"
+            android:background="@color/cor_principal"
+            android:paddingLeft="30px"
+            android:paddingTop="10px"
+            app:title="Minhas Tarefas Cadastradas"
+            app:titleTextColor="@android:color/white" />
 
-        <ListView
-            android:id="@+id/listViewTarefas"
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="20dp"
-            android:scrollbars="vertical" />
-    </LinearLayout>
+            android:layout_height="fill_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <SearchView
+                android:id="@+id/searchViewBusca"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewCampo" />
+
+            <ListView
+                android:id="@+id/listViewTarefas"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="20dp"
+                android:scrollbars="vertical" />
+        </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 </android.support.constraint.ConstraintLayout>

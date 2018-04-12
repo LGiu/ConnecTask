@@ -82,7 +82,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                             buttonCancelar = (Button) findViewById(R.id.buttonFinalizar);
                             textViewTipo = (TextView) findViewById(R.id.textViewTipo);
                             textViewTitulo = (TextView) findViewById(R.id.textViewTitulo);
-                            textViewDescricao = (TextView) findViewById(R.id.textViewDescricao);
+                            textViewDescricao = (TextView) findViewById(R.id.textViewComentario);
                             textViewTempo = (TextView) findViewById(R.id.textViewCep);
                             textViewNome = (TextView) findViewById(R.id.textViewNome);
                             textViewLocal = (TextView) findViewById(R.id.textViewLocal);

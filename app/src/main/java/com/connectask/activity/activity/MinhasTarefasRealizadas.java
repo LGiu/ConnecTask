@@ -77,7 +77,9 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
                 listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
                 adapter = new TarefaAdapter(
                         MinhasTarefasRealizadas.this,
-                        listaTarefasBusca
+                        listaTarefasBusca,
+                        2
+
                 );
                 listViewTarefas.setAdapter(adapter);
 
@@ -101,8 +103,9 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
 
         listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
         adapter = new TarefaAdapter(
-                this,
-                listaTarefas
+                MinhasTarefasRealizadas.this,
+                listaTarefas,
+                2
         );
         listViewTarefas.setAdapter(adapter);
 

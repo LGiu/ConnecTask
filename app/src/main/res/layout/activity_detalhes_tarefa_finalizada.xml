@@ -42,6 +42,24 @@
                     android:background="@android:color/white">
 
                     <TextView
+                        android:id="@+id/textViewNome4"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto"
+                        android:text="Maiara Oliveira"
+                        android:textSize="@dimen/botaoCadastrar"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView13"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textView13"
+                        app:layout_constraintTop_toTopOf="@+id/textView13" />
+
+                    <TextView
                         android:id="@+id/textViewData"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -156,36 +174,20 @@
                         app:layout_constraintTop_toBottomOf="@+id/textViewData" />
 
                     <TextView
-                        android:id="@+id/textViewNome"
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/roboto"
-                        android:text="Maiara Oliveira"
-                        android:textSize="@dimen/botaoCadastrar"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView13"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView13"
-                        app:layout_constraintTop_toTopOf="@+id/textView13" />
-
-                    <TextView
                         android:id="@+id/textView13"
                         android:layout_width="0dp"
                         android:layout_height="30dp"
+                        android:layout_marginBottom="100dp"
                         android:layout_marginLeft="16dp"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="16dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_bold"
                         android:text="@string/cadastrado"
                         android:textSize="@dimen/botaoCadastrar"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageButtonLocal" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewValor" />
 
                     <TextView
                         android:id="@+id/textViewD"
@@ -214,42 +216,6 @@
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-                    <Button
-                        android:id="@+id/buttonRealizar"
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="32dp"
-                        android:layout_marginLeft="32dp"
-                        android:layout_marginRight="32dp"
-                        android:layout_marginTop="24dp"
-                        android:background="@color/cor_principal"
-                        android:fontFamily="@font/roboto"
-                        android:text="@string/realizar"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/botaoCadastrar"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-                    <TextView
-                        android:id="@+id/textViewLocal"
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:fontFamily="@font/roboto_bold"
-                        android:text="@string/local"
-                        android:textSize="@dimen/botaoCadastrar"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageButtonLocal"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/imageButtonLocal"
-                        app:layout_constraintTop_toTopOf="@+id/imageButtonLocal" />
 
                     <TextView
                         android:id="@+id/textViewTipo"
@@ -285,16 +251,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textViewComentario" />
 
-                    <ImageButton
-                        android:id="@+id/imageButtonLocal"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="40dp"
-                        android:layout_marginTop="24dp"
-                        android:background="@android:color/white"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewValor"
-                        app:srcCompat="@drawable/ic_add_location" />
                 </android.support.constraint.ConstraintLayout>
             </ScrollView>
 

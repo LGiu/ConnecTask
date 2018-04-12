@@ -67,6 +67,9 @@ public class Home extends AppCompatActivity
     private Button buttonFiltros;
     private SearchView searchViewBusca;
     private SwipeRefreshLayout mSwipeToRefresh;
+    private TextView textViewNenhuma;
+
+    private ProgressDialog pDialog;
 
     private String id_processoTarefa = "";
     private String id_tarefa = "";
@@ -112,8 +115,6 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +176,8 @@ public class Home extends AppCompatActivity
                 mSwipeToRefresh.setRefreshing(false);
             }
         });
+
+        textViewNenhuma = (TextView) findViewById(R.id.textViewNenhuma);
 
         listarTarefas();
 
@@ -274,7 +277,8 @@ public class Home extends AppCompatActivity
                 listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
                 adapter = new TarefaAdapter(
                         Home.this,
-                        listaTarefasBusca
+                        listaTarefasBusca,
+                        1
                 );
                 listViewTarefas.setAdapter(adapter);
 
@@ -314,9 +318,9 @@ public class Home extends AppCompatActivity
 
         } else if (id == R.id.nav_pagamento) {
 
-        } else if (id == R.id.nav_configuracoes) {
+        } /*else if (id == R.id.nav_configuracoes) {
 
-        } else if (id == R.id.nav_logout) {
+        }*/ else if (id == R.id.nav_logout) {
             deslogarUsuario();
         }
 
@@ -332,8 +336,11 @@ public class Home extends AppCompatActivity
     }
 
     private void listarTarefas(){
-        //loading = new ProgressDialog(Home.this);
-        //loading.show();
+        //Showing progress dialog
+        pDialog = new ProgressDialog(Home.this);
+        pDialog.setMessage("Por favor, aguarde...");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         distancia = 0;
 
@@ -351,7 +358,8 @@ public class Home extends AppCompatActivity
         listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
         adapter = new TarefaAdapter(
                 this,
-                listaTarefas
+                listaTarefas,
+                1
         );
         listViewTarefas.setAdapter(adapter);
 
@@ -385,12 +393,16 @@ public class Home extends AppCompatActivity
                                     (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) < valor) &&
                                     (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
 
+                                textViewNenhuma.setVisibility(View.GONE);
+
                                 listaTarefas.add(tarefa);
                             }
                         } else {
                             if ((distancia < localizacao) &&
                                     (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) < valor) &&
                                             (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
+
+                                textViewNenhuma.setVisibility(View.GONE);
 
                                 listaTarefas.add(tarefa);
                             }
@@ -408,6 +420,7 @@ public class Home extends AppCompatActivity
 
             }
         });
+        pDialog.dismiss();
         //https://stackoverflow.com/questions/44777989/firebase-infinite-scroll-list-view-load-10-items-on-scrolling
     }
 

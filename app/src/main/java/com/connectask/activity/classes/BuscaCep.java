@@ -93,7 +93,7 @@ public class BuscaCep extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        // Showing progress dialog
+        //Showing progress dialog
         //pDialog = new ProgressDialog(context);
         //pDialog.setMessage("Por favor, aguarde...");
         //pDialog.setCancelable(false);

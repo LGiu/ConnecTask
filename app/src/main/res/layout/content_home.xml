@@ -27,6 +27,18 @@
             android:text="Filtros" />
 
 
+        <TextView
+            android:id="@+id/textViewNenhuma"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="30dp"
+            android:text="Nenhuma tarefa cadastrada no momento"
+            android:textAlignment="center"
+            android:textSize="22sp"
+            app:fontFamily="@font/roboto" />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="wrap_content"

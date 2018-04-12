@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.activity.DetalhesTarefa;
+import com.connectask.activity.activity.DetalhesTarefaFinalizada;
 import com.connectask.activity.model.Tarefa;
 
 import java.util.ArrayList;
@@ -22,11 +23,13 @@ import java.util.ArrayList;
 public class TarefaAdapter extends ArrayAdapter<Tarefa>{
     private ArrayList<Tarefa> listaTarefa;
     private Context context;
+    private int controle;
 
-    public TarefaAdapter(Context c, ArrayList<Tarefa> objects) {
+    public TarefaAdapter(Context c, ArrayList<Tarefa> objects, int controle) {
         super(c, 0, objects);
         this.context = c;
         this.listaTarefa = objects;
+        this.controle = controle;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
 
             // recupera elemento para exibição
             TextView titulo = (TextView) view.findViewById(R.id.textViewTitulo);
-            TextView descricao = (TextView) view.findViewById(R.id.textViewDescricao);
+            TextView descricao = (TextView) view.findViewById(R.id.textViewComentario);
             TextView tempo = (TextView) view.findViewById(R.id.textViewCep);
             TextView valor = (TextView) view.findViewById(R.id.textViewNome);
             Button detalhes = (Button) view.findViewById(R.id.buttonDetalhes);
@@ -58,11 +61,20 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
             detalhes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, DetalhesTarefa.class);
-                    String id = tarefa.getId();
-                    intent.putExtra("id", id);
-                    intent.putExtra("status", tarefa.getStatus().toString());
-                    context.startActivity(intent);
+                    if(controle == 1){
+                        Intent intent = new Intent(context, DetalhesTarefa.class);
+                        String id = tarefa.getId();
+                        intent.putExtra("id", id);
+                        intent.putExtra("status", tarefa.getStatus().toString());
+                        context.startActivity(intent);
+                    }
+                    else{
+                        Intent intent = new Intent(context, DetalhesTarefaFinalizada.class);
+                        String id = tarefa.getId();
+                        intent.putExtra("id", id);
+                        intent.putExtra("status", tarefa.getStatus().toString());
+                        context.startActivity(intent);
+                    }
                 }
             });
         }

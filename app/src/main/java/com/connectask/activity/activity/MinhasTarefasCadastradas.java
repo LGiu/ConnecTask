@@ -73,7 +73,8 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
                 listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
                 adapter = new TarefaAdapter(
                         MinhasTarefasCadastradas.this,
-                        listaTarefasBusca
+                        listaTarefasBusca,
+                        2
                 );
                 listViewTarefas.setAdapter(adapter);
 
@@ -97,8 +98,9 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
 
         listViewTarefas = (ListView) findViewById(R.id.listViewTarefas);
         adapter = new TarefaAdapter(
-                this,
-                listaTarefas
+                MinhasTarefasCadastradas.this,
+                listaTarefas,
+                2
         );
         listViewTarefas.setAdapter(adapter);
 
@@ -125,6 +127,7 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
                     String statusTarefa = tarefa.getStatus();
                     if((usuarioLogado.equals(identificadorUsuarioLogado))){
                         listaTarefas.add(tarefa);
+
                     }
 
                 }

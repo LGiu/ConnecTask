@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.connectask.activity.activity.MinhasTarefasRealizadas">
 
     <android.support.design.widget.AppBarLayout
@@ -11,15 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tamanho_toolbar"
-        android:background="@color/cor_principal"
-        android:paddingLeft="30px"
-        android:paddingTop="10px"
-        app:title="Minhas Tarefas Realizadas"
-        app:titleTextColor="@android:color/white" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tamanho_toolbar"
+            android:background="@color/cor_principal"
+            android:paddingLeft="30px"
+            android:paddingTop="10px"
+            app:title="Minhas Tarefas Realizadas"
+            app:titleTextColor="@android:color/white" />
 
         <LinearLayout
             android:layout_width="fill_parent"
