@@ -56,14 +56,20 @@ public class Login extends AppCompatActivity {
         buttonEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                usuario = new Usuario();
+                if((!editTextEmail.getText().toString().equals("")) && (!editTextSenha.getText().toString().equals("")))
+                {
+                    usuario = new Usuario();
 
-                usuario.setEmail(editTextEmail.getText().toString());
-                usuario.setSenha(editTextSenha.getText().toString());
-                validarLogin();
+                    usuario.setEmail(editTextEmail.getText().toString());
+                    usuario.setSenha(editTextSenha.getText().toString());
+
+                    validarLogin();
+                }
+                else{
+                    Toast.makeText(Login.this, "Digite o Login e a Senha!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
     }
 
     private void verificarUsuarioLogado(){
@@ -128,7 +134,8 @@ public class Login extends AppCompatActivity {
 
 
     public void esqueceuSenha(View view){
-
+        Intent intent = new Intent(Login.this, EsqueceuSenha.class);
+        startActivity(intent);
     }
 
     public void cadastrar(View view){

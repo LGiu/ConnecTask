@@ -86,8 +86,9 @@
         <activity android:name=".activity.activity.Filtro" />
         <activity android:name=".activity.activity.Denunciar" />
         <activity android:name=".activity.activity.Endereco" />
-        <activity android:name=".activity.activity.EditarEndereco"></activity>
-        <activity android:name=".activity.activity.DetalhesTarefaFinalizada"></activity>
+        <activity android:name=".activity.activity.EditarEndereco" />
+        <activity android:name=".activity.activity.DetalhesTarefaFinalizada" />
+        <activity android:name=".activity.activity.TarefaCadastrada"></activity>
     </application>
 
 </manifest>

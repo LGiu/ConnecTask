@@ -29,9 +29,8 @@ public class TarefaFinalizaRealizador extends AppCompatActivity {
         idTarefa = intent.getStringExtra("id");
         id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
 
-
         firebase = ConfiguracaoFirebase.getFirebase();
-        firebase.child("tarefas").child(idTarefa).child("status").setValue("5");
+        firebase.child("ProcessoTarefa").child(id_ProcessoTarefa).child("ativoRealizador").setValue("2");
 
         buttonAvaliar = (Button) findViewById(R.id.buttonAvaliar);
 

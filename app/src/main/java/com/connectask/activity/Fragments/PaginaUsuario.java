@@ -14,10 +14,6 @@ import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.activity.Denunciar;
-import com.connectask.activity.activity.Home;
-import com.connectask.activity.activity.Login;
-import com.connectask.activity.adapter.TarefaAdapter;
-import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Avaliacao;
 import com.connectask.activity.model.ProcessoTarefa;
@@ -29,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.connectask.activity.classes.Base64Custom.codificarBase64;
 
@@ -99,15 +94,13 @@ public class PaginaUsuario extends Fragment {
                     }
 
                 }
+                ratingBar.setRating(notaAvaliacao);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-
-        ratingBar.setRating(notaAvaliacao);
 
         listViewComentarios = (ListView) view.findViewById(R.id.listViewComentarios);
 
@@ -134,9 +127,9 @@ public class PaginaUsuario extends Fragment {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     Avaliacao avaliacao = dados.getValue(Avaliacao.class);
 
-                    if(idUsuario.equals(avaliacao.getId_usuario_emissor()) || idUsuario.equals(avaliacao.getId_usuario_realizador())){
+                    if(idUsuario.equals(avaliacao.getId_usuario_realizador())){
                         numeroAvaliacoes++;
-                        textViewAvaliacoes.setText(numeroAvaliacoes);
+                        textViewAvaliacoes.setText(String.valueOf(numeroAvaliacoes));
                     }
 
                 }
@@ -161,11 +154,11 @@ public class PaginaUsuario extends Fragment {
                     if(idUsuario.equals(processoTarefa.getId_usuario_emissor()))
                     {
                         numeroFinalizadas++;
-                        textViewTarefasFinalizadas.setText(numeroFinalizadas);
+                        textViewTarefasFinalizadas.setText(String.valueOf(numeroFinalizadas));
                     }
                     else if(idUsuario.equals(processoTarefa.getId_usuario_realizador())){
                         numeroRealizadas++;
-                        textViewTarefasRealizadas.setText(numeroRealizadas);
+                        textViewTarefasRealizadas.setText(String.valueOf(numeroRealizadas));
                     }
 
                 }
@@ -210,7 +203,7 @@ public class PaginaUsuario extends Fragment {
     private void listarComentarios(){
         comentarios = new ArrayList<String>();
 
-        firebase = ConfiguracaoFirebase.getFirebase().child("avalicao");
+        firebase = ConfiguracaoFirebase.getFirebase().child("avaliacao");
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -218,12 +211,13 @@ public class PaginaUsuario extends Fragment {
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Avaliacao avaliacao = dados.getValue(Avaliacao.class);
 
-                    if(avaliacao.getId_usuario_emissor().equals(idUsuario) || avaliacao.getId_usuario_realizador().equals(idUsuario)) {
+                    if(avaliacao.getId_usuario_realizador().equals(idUsuario)) {
                         comentarios.add(avaliacao.getAvaliacao());
-                        textViewNComentario.setText("");
+                        textViewNComentario.setVisibility(View.GONE);
                     }
                 }
-
+                adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, comentarios);
+                listViewComentarios.setAdapter(adapter);
             }
 
             @Override
@@ -232,8 +226,7 @@ public class PaginaUsuario extends Fragment {
             }
         });
 
-        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, comentarios);
-        listViewComentarios.setAdapter(adapter);
+
     }
 
 }

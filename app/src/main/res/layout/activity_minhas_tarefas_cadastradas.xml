@@ -42,11 +42,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewCampo" />
 
+            <TextView
+                android:id="@+id/textViewNenhuma"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Nenhuma tarefa"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                app:fontFamily="@font/roboto" />
+
             <ListView
                 android:id="@+id/listViewTarefas"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="20dp"
+                android:divider="@null"
                 android:scrollbars="vertical" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>

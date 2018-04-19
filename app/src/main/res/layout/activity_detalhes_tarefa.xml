@@ -166,6 +166,7 @@
                         android:fontFamily="@font/roboto"
                         android:text="Maiara Oliveira"
                         android:textSize="@dimen/botaoCadastrar"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/textView13"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"

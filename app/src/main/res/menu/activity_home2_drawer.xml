@@ -16,10 +16,10 @@
         <item
             android:id="@+id/nav_endereco"
             android:title="Endereços" />
-        <item
+        <!--<item
             android:id="@+id/nav_pagamento"
             android:title="Pagamento" />
-        <!--<item
+        <item
             android:id="@+id/nav_configuracoes"
             android:title="Configurações" />-->
         <item

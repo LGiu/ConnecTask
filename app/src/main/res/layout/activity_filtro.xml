@@ -34,7 +34,7 @@
 
             <Button
                 android:id="@+id/buttonFiltrar"
-                android:layout_width="185dp"
+                android:layout_width="160dp"
                 android:layout_height="@dimen/botaoFormulario"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
@@ -49,7 +49,7 @@
 
             <Button
                 android:id="@+id/buttonLimpar"
-                android:layout_width="185dp"
+                android:layout_width="160dp"
                 android:layout_height="@dimen/botaoFormulario"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
@@ -83,7 +83,7 @@
                 android:layout_height="@dimen/tamanhoEditTextFormulario"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="9dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView29" />

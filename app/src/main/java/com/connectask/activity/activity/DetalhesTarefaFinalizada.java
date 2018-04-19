@@ -92,7 +92,7 @@ public class DetalhesTarefaFinalizada extends AppCompatActivity {
                     for (DataSnapshot dados : dataSnapshot.getChildren()) {
                         ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                        if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivo().equals("1") ){
+                        if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivoEmissor().equals("1") && processoTarefa.getAtivoRealizador().equals("1") ){
                             controle = true;
                         }
 
@@ -127,7 +127,7 @@ public class DetalhesTarefaFinalizada extends AppCompatActivity {
                             textViewTarefa.setText(tituloTarefa);
 
                             textViewDescricao.setText(tarefa.getDescricao().toString());
-                            textViewTempo.setText(tarefa.getTempo().toString() + "hora(s)");
+                            textViewTempo.setText(tarefa.getTempo().toString() + " hora(s)");
                             textViewValor.setText(tarefa.getValor().toString());
 
                             firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");

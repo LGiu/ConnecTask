@@ -40,14 +40,20 @@ public class Coordenadas {
     }
 
     public void geoLocate() throws IOException {
-        gc = new Geocoder(contexto, Locale.getDefault());
-        address = gc.getFromLocationName(end, 1);
+        try {
+            gc = new Geocoder(contexto, Locale.getDefault());
 
-        Address add = address.get(0);
-        String locality = add.getLocality();
+            address = gc.getFromLocationName(end, 1);
 
-        latitude = add.getLatitude();
-        longitude = add.getLongitude();
+            Address add = address.get(0);
+            String locality = add.getLocality();
+
+            latitude = add.getLatitude();
+            longitude = add.getLongitude();
+        }
+        catch (Exception e){
+
+        }
 
     }
 

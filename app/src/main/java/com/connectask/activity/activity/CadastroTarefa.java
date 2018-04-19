@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,7 @@ import com.connectask.activity.Fragments.CadastroEndereco;
 import com.connectask.activity.classes.Moeda;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.classes.Util;
+import com.connectask.activity.classes.pagamento.CreditCard;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
 import com.connectask.activity.model.Tarefa;
@@ -30,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.carbs.android.library.MDDialog;
 
 public class CadastroTarefa extends AppCompatActivity {
 
@@ -107,7 +111,7 @@ public class CadastroTarefa extends AppCompatActivity {
 
         });
 
-        buttonCadastro.setOnClickListener(new View.OnClickListener() {
+        /*buttonCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -129,7 +133,8 @@ public class CadastroTarefa extends AppCompatActivity {
                     Toast.makeText(CadastroTarefa.this, msg, Toast.LENGTH_SHORT).show();
                 }
               }
-        });
+        });*/
+
 
         buttonNovoEndereco.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,6 +225,11 @@ public class CadastroTarefa extends AppCompatActivity {
             msg += "\nValor inválido.";
             teste = false;
         }
+        if(Integer.parseInt(editTextValor.getText().toString().substring(2, editTextValor.getText().length()).replace(",",".")) > 500)
+        {
+            msg += "\nValor inválido.";
+            teste = false;
+        }
         if(spinnerEndereco.getSelectedItem().toString().equals("") || spinnerEndereco.getSelectedItem().toString().equals(null))
         {
             msg += "\nSelecione um endereço de tarefa.";
@@ -227,5 +237,66 @@ public class CadastroTarefa extends AppCompatActivity {
         }
 
         return teste;
+    }
+
+    public void buy( View view ){
+        if(valida()) {
+            new MDDialog.Builder(this)
+                    .setTitle("Pagamento")
+                    .setContentView(R.layout.payment)
+                    .setNegativeButton("Cancelar", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    })
+                    .setPositiveButton("Finalizar", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        /*View root = v.getRootView();
+
+                        CreditCard creditCard = new CreditCard( MainActivity.this );
+                        creditCard.setCardNumber( getViewContent( root, R.id.card_number ) );
+                        creditCard.setName( getViewContent( root, R.id.name ) );
+                        creditCard.setMonth( getViewContent( root, R.id.month ) );
+                        creditCard.setYear( getViewContent( root, R.id.year ) );
+                        creditCard.setCvv( getViewContent( root, R.id.cvv ) );
+                        creditCard.setParcels( Integer.parseInt( getViewContent( root, R.id.parcels ) ) );
+
+                        getPaymentToken( creditCard );*/
+
+                            tarefa = new Tarefa();
+                            tarefa.setTitulo(editTextTitulo.getText().toString());
+                            tarefa.setTipo(spinnerTipo.getSelectedItem().toString());
+                            tarefa.setDescricao(editTextDescricao.getText().toString());
+                            tarefa.setTempo(String.valueOf(seekBarTempo.getProgress()));
+                            tarefa.setValor((editTextValor.getText().toString()));
+                            tarefa.setEndereco(idEndereco.get(spinnerEndereco.getSelectedItemPosition() - 1));
+
+                            tarefa.salvar(CadastroTarefa.this);
+
+                            Intent intent = new Intent(CadastroTarefa.this, TarefaCadastrada.class);
+                            startActivity(intent);
+
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+        else{
+            Toast.makeText(CadastroTarefa.this, msg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String getViewContent( View root, int id ){
+        EditText field = (EditText) root.findViewById(id);
+        return field.getText().toString();
+    }
+
+    private void getPaymentToken( CreditCard creditCard ){
+        /*WebView webView = (WebView) findViewById(R.id.web_view);
+        webView.getSettings().setJavaScriptEnabled( true );
+        webView.addJavascriptInterface( creditCard, "Android" );
+        webView.loadUrl("file:///android_asset/index.html");*/
     }
 }

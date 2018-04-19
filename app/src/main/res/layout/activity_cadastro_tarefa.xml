@@ -231,6 +231,7 @@
                         android:text="@string/cadastrar"
                         android:textColor="@android:color/background_light"
                         android:textSize="@dimen/TextoBotaoFormulario"
+                        android:onClick="buy"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

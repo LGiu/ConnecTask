@@ -106,7 +106,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                                 textViewTipo.setText(tarefa.getTipo());
                                                 textViewTitulo.setText(tarefa.getTitulo());
                                                 textViewDescricao.setText(tarefa.getDescricao());
-                                                textViewTempo.setText(tarefa.getTempo());
+                                                textViewTempo.setText(tarefa.getTempo() + " hora(s)");
                                                 textViewData.setText(tarefa.getData().replace("-","/"));
 
                                                 firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
@@ -164,7 +164,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, paginaUsuario);
+                                    fragmentTransaction.replace(R.id.fragment_tarefa_realizador, paginaUsuario);
                                     fragmentTransaction.addToBackStack(null).commit();
                                 }
                             });
@@ -178,7 +178,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
+                                    fragmentTransaction.replace(R.id.fragment_tarefa_realizador, local);
                                     fragmentTransaction.addToBackStack(null).commit();
                                 }
                             });
@@ -192,7 +192,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
+                                    fragmentTransaction.replace(R.id.fragment_tarefa_realizador, local);
                                     fragmentTransaction.addToBackStack(null).commit();
                                 }
                             });

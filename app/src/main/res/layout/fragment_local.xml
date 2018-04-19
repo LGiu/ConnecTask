@@ -247,7 +247,7 @@
 
         <ImageButton
             android:id="@+id/imageButtonMaps"
-            android:layout_width="96dp"
+            android:layout_width="0dp"
             android:layout_height="64dp"
             android:layout_marginTop="32dp"
             android:background="@android:color/white"

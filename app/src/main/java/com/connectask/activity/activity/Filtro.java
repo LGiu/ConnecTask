@@ -37,6 +37,7 @@ public class Filtro extends AppCompatActivity {
     private TextView textViewProgressoValor;
     private TextView textViewProgressoTempo;
 
+    private ValoresFiltro valoresFiltro;
 
     private List<String> listaTipo = new ArrayList<String>();
 
@@ -44,6 +45,8 @@ public class Filtro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtro);
+
+        valoresFiltro = new ValoresFiltro(Filtro.this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,12 +72,28 @@ public class Filtro extends AppCompatActivity {
 
         tipo();
 
-        textViewProgressoLocalizacao.setText("15 Km(s)");
-        textViewProgressoValor.setText("R$ 500,00");
-        textViewProgressoTempo.setText("96 Horas");
+        if(valoresFiltro.getCategoria().equals("")){
+            spinnerCategoria.setSelection(-1);
+        }
+        else if(valoresFiltro.getCategoria().equals("Doméstica")){
+            spinnerCategoria.setSelection(0);
+        }
+        else if(valoresFiltro.getCategoria().equals("Externa")){
+            spinnerCategoria.setSelection(1);
+        }
+        else if(valoresFiltro.getCategoria().equals("Serviço")){
+            spinnerCategoria.setSelection(2);
+        }
+        else if(valoresFiltro.getCategoria().equals("Outro")){
+            spinnerCategoria.setSelection(3);
+        }
+
+        textViewProgressoLocalizacao.setText(valoresFiltro.getLocalizacao()+" Km(s)");
+        textViewProgressoValor.setText(" R$ "+ valoresFiltro.getValor());
+        textViewProgressoTempo.setText(valoresFiltro.getTempo()+" Horas");
 
         seekBarLocalizacao.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress = 15;
+            int progress = valoresFiltro.getLocalizacao();
             @SuppressLint("WrongConstant")
             @Override
 
@@ -95,7 +114,7 @@ public class Filtro extends AppCompatActivity {
         });
 
         seekBarValor.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress = 15;
+            int progress = valoresFiltro.getValor();
             @SuppressLint("WrongConstant")
             @Override
 
@@ -116,7 +135,7 @@ public class Filtro extends AppCompatActivity {
         });
 
         seekBarTempo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress = 15;
+            int progress = valoresFiltro.getTempo();
             @SuppressLint("WrongConstant")
             @Override
 
@@ -142,9 +161,9 @@ public class Filtro extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent = new Intent(Filtro.this, Home.class);
 
-                ValoresFiltro preferencias = new ValoresFiltro(Filtro.this);
+                ValoresFiltro valoresFiltro = new ValoresFiltro(Filtro.this);
 
-                preferencias.salvarDados(spinnerCategoria.getSelectedItem().toString(), seekBarLocalizacao.getProgress(), seekBarValor.getProgress() , seekBarTempo.getProgress());
+                valoresFiltro.salvarDados(spinnerCategoria.getSelectedItem().toString(), seekBarLocalizacao.getProgress(), seekBarValor.getProgress() , seekBarTempo.getProgress());
                 startActivity(intent);
             }
         });
@@ -155,8 +174,8 @@ public class Filtro extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent = new Intent(Filtro.this, Home.class);
 
-                ValoresFiltro preferencias = new ValoresFiltro(Filtro.this);
-                preferencias.limparDados();
+                ValoresFiltro valoresFiltro = new ValoresFiltro(Filtro.this);
+                valoresFiltro.limparDados();
 
                 startActivity(intent);
             }

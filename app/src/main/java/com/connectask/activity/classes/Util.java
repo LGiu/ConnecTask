@@ -64,7 +64,7 @@ public class Util {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                    if ((identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_emissor()) || identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_realizador())) && processoTarefa.getAtivo().equals("1")){
+                    if ((identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_emissor()) || identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_realizador())) && processoTarefa.getAtivoEmissor().equals("1") && processoTarefa.getAtivoRealizador().equals("1")){
                         idProcesso = processoTarefa.getId();
                     }
                 }

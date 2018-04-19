@@ -97,7 +97,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                             textViewTipo.setText(tarefa.getTipo());
                             textViewTitulo.setText(tarefa.getTitulo());
                             textViewDescricao.setText(tarefa.getDescricao());
-                            textViewTempo.setText(tarefa.getTempo());
+                            textViewTempo.setText(tarefa.getTempo() + " hora(s)");
                             textViewData.setText(tarefa.getData().replace("-","/"));
 
                             firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
@@ -139,7 +139,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, paginaUsuario);
+                    fragmentTransaction.replace(R.id.fragment_tarefa_emissor, paginaUsuario);
                     fragmentTransaction.addToBackStack(null).commit();
                 }
             });
@@ -153,7 +153,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
+                    fragmentTransaction.replace(R.id.fragment_tarefa_emissor, local);
                     fragmentTransaction.addToBackStack(null).commit();
                 }
             });
@@ -167,7 +167,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
+                    fragmentTransaction.replace(R.id.fragment_tarefa_emissor, local);
                     fragmentTransaction.addToBackStack(null).commit();
                 }
             });
@@ -217,6 +217,10 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                                             firebase1.child("tarefas")
                                                     .child(idTarefa)
                                                     .child("status").setValue("3");
+
+                                            firebase1.child("ProcessoTarefa")
+                                                    .child(id_ProcessoTarefa)
+                                                    .child("status").setValue("2");
 
                                             Intent intent = new Intent(ProcessoTarefaEmissor.this, Home.class);
                                             startActivity(intent);

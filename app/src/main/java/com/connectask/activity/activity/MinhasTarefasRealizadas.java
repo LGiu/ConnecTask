@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
@@ -25,9 +26,9 @@ import java.util.ArrayList;
 
 public class MinhasTarefasRealizadas extends AppCompatActivity {
 
-    private DatabaseReference firebase1;
-    private DatabaseReference firebase2;
+    private DatabaseReference firebase;
 
+    private TextView textViewNenhuma;
     private ListView listViewTarefas;
     private ArrayAdapter adapter;
     private ArrayList<Tarefa> listaTarefas;
@@ -51,6 +52,8 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        textViewNenhuma = (TextView) findViewById(R.id.textViewNenhuma);
 
         listarTarefas();
 
@@ -110,10 +113,9 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
         listViewTarefas.setAdapter(adapter);
 
 
-        firebase1 = ConfiguracaoFirebase.getFirebase()
-                .child("ProcessoTarefa");
+        firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
 
-        firebase1.addValueEventListener(new ValueEventListener() {
+        firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -126,41 +128,42 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
 
                     processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                    if(!(processoTarefa.getId_tarefa().equals(identificadorUsuarioLogado))){
-                        firebase2 = ConfiguracaoFirebase.getFirebase()
-                                .child("tarefa")
-                                .child(processoTarefa.getId_tarefa());
-                        firebase2.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                //limpar lista
-                                listaTarefas.clear();
-                                //percorre o nó
-                                for (DataSnapshot dados: dataSnapshot.getChildren()){
-                                    Tarefa tarefa = dados.getValue(Tarefa.class);
-
-                                    String usuarioLogado = tarefa.getId_usuario();
-                                    String statusTarefa = tarefa.getStatus();
-                                    if(!(usuarioLogado.equals(identificadorUsuarioLogado) && (statusTarefa.equals("1")))){
-                                        listaTarefas.add(tarefa);
-                                    }
-
-                                }
-
-                                //Avisar adapter que mudou
-                                adapter.notifyDataSetChanged();
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                    if(processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado)){
+                        getTarefa();
                     }
 
                 }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getTarefa(){
+        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
+
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //limpar lista
+                listaTarefas.clear();
+                //percorre o nó
+                for (DataSnapshot dados: dataSnapshot.getChildren()){
+                    Tarefa tarefa = dados.getValue(Tarefa.class);
+
+                    if(processoTarefa.getId_tarefa().equals(tarefa.getId())){
+                        listaTarefas.add(tarefa);
+                        textViewNenhuma.setVisibility(View.GONE);
+                    }
+                }
+
+                //Avisar adapter que mudou
+                adapter.notifyDataSetChanged();
 
             }
 

@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:paddingVertical="20dp"
+                android:divider="@null"
                 android:scrollbars="vertical" />
         </android.support.v4.widget.SwipeRefreshLayout>
 

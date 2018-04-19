@@ -129,7 +129,7 @@ public class Dialog extends DialogFragment {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                    if(processoTarefa.getId_usuario_realizador().toString().equals(identificadorUsuarioLogado) && processoTarefa.getAtivo().equals("1")){
+                    if(processoTarefa.getId_usuario_realizador().toString().equals(identificadorUsuarioLogado) && processoTarefa.getAtivoEmissor().equals("1") && processoTarefa.getAtivoRealizador().equals("1")){
                         tarefaId = processoTarefa.getId_tarefa().toString();
                         id_ProcessoTarefa = processoTarefa.getId().toString();
                         c2 = false;

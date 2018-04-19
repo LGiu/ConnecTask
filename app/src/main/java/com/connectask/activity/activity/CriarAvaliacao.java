@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.connectask.activity.classes.Base64Custom.codificarBase64;
+
 public class CriarAvaliacao extends AppCompatActivity {
 
     private Button buttonEnviar;
@@ -32,6 +34,8 @@ public class CriarAvaliacao extends AppCompatActivity {
 
     private DatabaseReference firebase;
 
+    private boolean sairLoop = true;
+
     private Avaliacao avaliacao = new Avaliacao();
 
     @Override
@@ -42,6 +46,26 @@ public class CriarAvaliacao extends AppCompatActivity {
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
         id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
+
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                    ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+                    if(id_ProcessoTarefa.equals(processoTarefa.getId()) && (processoTarefa.getAtivoEmissor().equals("2") && processoTarefa.getAtivoRealizador().equals("2"))){
+                        firebase = ConfiguracaoFirebase.getFirebase();
+                        firebase.child("tarefas").child(idTarefa).child("status").setValue("5");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         buttonEnviar = (Button) findViewById(R.id.buttonEnviar);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
@@ -69,6 +93,7 @@ public class CriarAvaliacao extends AppCompatActivity {
         Preferencias preferencias = new Preferencias(CriarAvaliacao.this);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
+        sairLoop = true;
 
         firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
         firebase.addValueEventListener(new ValueEventListener() {
@@ -76,10 +101,16 @@ public class CriarAvaliacao extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
-                    if(id_ProcessoTarefa.equals(processoTarefa.getId())){
-                        avaliacao.setId_usuario_emissor(processoTarefa.getId_usuario_emissor());
-                        avaliacao.setId_usuario_realizador(processoTarefa.getId_usuario_realizador());
+                    if(id_ProcessoTarefa.equals(processoTarefa.getId()) && sairLoop){
+                        avaliacao.setId_usuario_emissor(identificadorUsuarioLogado);
+                        if(identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_emissor())){
+                            avaliacao.setId_usuario_realizador(processoTarefa.getId_usuario_emissor());
+                        }
+                        else if(identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_realizador())){
+                            avaliacao.setId_usuario_realizador(processoTarefa.getId_usuario_realizador());
+                        }
                     }
+
                 }
             }
 
@@ -98,18 +129,20 @@ public class CriarAvaliacao extends AppCompatActivity {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     Usuario usuario = dados.getValue(Usuario.class);
 
-                    float avaliacaoAtual = Float.parseFloat(usuario.getAvaliacao());
-                    int numeroAvaliacoes = Integer.parseInt(usuario.getNumeroAvaliacoes());
+                    if(identificadorUsuarioLogado.equals(codificarBase64(usuario.getEmail().toString()))){
+                        float avaliacaoAtual = Float.parseFloat(usuario.getAvaliacao());
+                        int numeroAvaliacoes = Integer.parseInt(usuario.getNumeroAvaliacoes());
 
-                    if(numeroAvaliacoes == 0){
-                        numeroAvaliacoes++;
-                        firebase.child(identificadorUsuarioLogado).child("avaliacao").setValue(String.valueOf(ratingBar.getRating()));
-                        firebase.child(identificadorUsuarioLogado).child("numeroAvaliacoes").setValue(String.valueOf(numeroAvaliacoes));
-                    }
-                    else{
-                        numeroAvaliacoes++;
-                        avaliacaoAtual = (avaliacaoAtual + ratingBar.getRating())/numeroAvaliacoes;
-                        firebase.child(identificadorUsuarioLogado).child("avaliacaoAtual").setValue(String.valueOf(avaliacaoAtual));
+                        if(numeroAvaliacoes == 0){
+                            numeroAvaliacoes++;
+                            firebase.child(identificadorUsuarioLogado).child("avaliacao").setValue(String.valueOf(ratingBar.getRating()));
+                            firebase.child(identificadorUsuarioLogado).child("numeroAvaliacoes").setValue(String.valueOf(numeroAvaliacoes));
+                        }
+                        else{
+                            numeroAvaliacoes++;
+                            avaliacaoAtual = (avaliacaoAtual + ratingBar.getRating())/numeroAvaliacoes;
+                            firebase.child(identificadorUsuarioLogado).child("avaliacaoAtual").setValue(String.valueOf(avaliacaoAtual));
+                        }
                     }
                 }
                 String nota = String.valueOf(ratingBar.getRating());

@@ -29,17 +29,14 @@ public class TarefaFinalizadaEmissor extends AppCompatActivity {
         idTarefa = intent.getStringExtra("id");
         id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
 
+        firebase = ConfiguracaoFirebase.getFirebase();
+        firebase.child("ProcessoTarefa").child(id_ProcessoTarefa).child("ativoEmissor").setValue("2");
 
         buttonAvaliar = (Button) findViewById(R.id.buttonAvaliar);
 
         buttonAvaliar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebase = ConfiguracaoFirebase.getFirebase();
-                firebase.child("tarefas").child(idTarefa).child("status").setValue("5");
-
-                firebase = ConfiguracaoFirebase.getFirebase();
-                firebase.child("ProcessoTarefa").child(id_ProcessoTarefa).child("ativo").setValue("2");
 
                 Intent intent = new Intent(TarefaFinalizadaEmissor.this, CriarAvaliacao.class);
                 intent.putExtra("id", idTarefa);

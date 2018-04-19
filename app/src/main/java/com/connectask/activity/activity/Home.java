@@ -2,6 +2,7 @@ package com.connectask.activity.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,7 +33,9 @@ import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
+import com.connectask.activity.classes.AtualizarTempo;
 import com.connectask.activity.classes.Coordenadas;
+import com.connectask.activity.classes.Introducao;
 import com.connectask.activity.classes.LocalizacaoAtual;
 import com.connectask.activity.classes.Permissao;
 import com.connectask.activity.classes.Preferencias;
@@ -73,7 +77,7 @@ public class Home extends AppCompatActivity
 
     private String id_processoTarefa = "";
     private String id_tarefa = "";
-    private int er = 0;
+    private int emissorOuRealizador = 0;
 
     private double latitude;
     private double longitude;
@@ -133,7 +137,7 @@ public class Home extends AppCompatActivity
                         for (DataSnapshot dados : dataSnapshot.getChildren()) {
                             ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                            if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivo().equals("1") ){
+                            if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivoEmissor().equals("1") && processoTarefa.getAtivoRealizador().equals("1") ){
                                 controle = true;
                             }
 
@@ -187,6 +191,8 @@ public class Home extends AppCompatActivity
 
         //Permissões
         Permissao.validaPermissao(1, this, permissoesNecessarias);
+
+        Introducao introducao = new Introducao(Home.this);
     }
 
     @Override
@@ -219,7 +225,7 @@ public class Home extends AppCompatActivity
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                    if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivo().equals("1") ){
+                    if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivoEmissor().equals("1") && processoTarefa.getAtivoRealizador().equals("1") ){
                         item.setIcon(R.drawable.not);
 
                     }
@@ -316,9 +322,9 @@ public class Home extends AppCompatActivity
             Intent intent = new Intent(this, com.connectask.activity.activity.Endereco.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_pagamento) {
+        } /*else if (id == R.id.nav_pagamento) {
 
-        } /*else if (id == R.id.nav_configuracoes) {
+        } else if (id == R.id.nav_configuracoes) {
 
         }*/ else if (id == R.id.nav_logout) {
             deslogarUsuario();
@@ -349,9 +355,6 @@ public class Home extends AppCompatActivity
         final int localizacao = valoresFiltro.getLocalizacao();
         final int valor = valoresFiltro.getValor();
         final int tempo = valoresFiltro.getTempo();
-
-        Tarefa tarefa = new Tarefa();
-        tarefa.atualizarTempo();
 
         listaTarefas = new ArrayList<>();
 
@@ -390,8 +393,8 @@ public class Home extends AppCompatActivity
                         if (categoria != "") {
                             if ((tarefa.getTipo().toString() == categoria) &&
                                  (distancia < localizacao) &&
-                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) < valor) &&
-                                    (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
+                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) <= valor) &&
+                                    (Integer.parseInt(tarefa.getTempo().toString()) <= tempo)) {
 
                                 textViewNenhuma.setVisibility(View.GONE);
 
@@ -399,8 +402,8 @@ public class Home extends AppCompatActivity
                             }
                         } else {
                             if ((distancia < localizacao) &&
-                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) < valor) &&
-                                            (Integer.parseInt(tarefa.getTempo().toString()) < tempo)) {
+                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) <= valor) &&
+                                            (Integer.parseInt(tarefa.getTempo().toString()) <= tempo)) {
 
                                 textViewNenhuma.setVisibility(View.GONE);
 
@@ -505,16 +508,19 @@ public class Home extends AppCompatActivity
                     ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
 
                     //Emissor
-                    if (identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_emissor()) && processoTarefa.getAtivo().equals("1")){
+                    if (identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_emissor()) && processoTarefa.getAtivoEmissor().equals("1")){
                         id_processoTarefa = processoTarefa.getId();
                         id_tarefa = processoTarefa.getId_tarefa();
-                        er = 1;
+                        emissorOuRealizador = 1;
+                        tarefaFinalizada2();
                     }
+
                     //Realizador
-                    else if (identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_realizador()) && processoTarefa.getAtivo().equals("1")){
+                    else if (identificadorUsuarioLogado.equals(processoTarefa.getId_usuario_realizador()) && processoTarefa.getAtivoRealizador().equals("1")){
                         id_processoTarefa = processoTarefa.getId();
                         id_tarefa = processoTarefa.getId_tarefa();
-                        er = 2;
+                        emissorOuRealizador = 2;
+                        tarefaFinalizada2();
                     }
 
                 }
@@ -525,7 +531,9 @@ public class Home extends AppCompatActivity
 
             }
         });
+    }
 
+    private void tarefaFinalizada2(){
         firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
         firebase.addValueEventListener(new ValueEventListener() {
@@ -535,13 +543,13 @@ public class Home extends AppCompatActivity
                     Tarefa tarefa = dados.getValue(Tarefa.class);
 
                     if (tarefa.getId().equals(id_tarefa) && tarefa.getStatus().equals("4")){
-                        if(er == 1){
+                        if(emissorOuRealizador == 1){
                             Intent intent = new Intent(Home.this, TarefaFinalizadaEmissor.class);
                             intent.putExtra("id", tarefa.getId());
                             intent.putExtra("id_ProcessoTarefa", id_processoTarefa);
                             startActivity(intent);
                         }
-                        else if (er == 2){
+                        else if (emissorOuRealizador == 2){
                             Intent intent = new Intent(Home.this, TarefaFinalizaRealizador.class);
                             intent.putExtra("id", tarefa.getId());
                             intent.putExtra("id_ProcessoTarefa", id_processoTarefa);
@@ -564,5 +572,4 @@ public class Home extends AppCompatActivity
         latitude = localizacaoAtual.getLatitude();
         longitude = localizacaoAtual.getLongitude();
     }
-
 }

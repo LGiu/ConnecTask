@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
@@ -27,6 +28,7 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
 
     private DatabaseReference firebase;
 
+    private TextView textViewNenhuma;
     private ListView listViewTarefas;
     private ArrayAdapter adapter;
     private ArrayList<Tarefa> listaTarefas;
@@ -48,6 +50,8 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        textViewNenhuma = (TextView) findViewById(R.id.textViewNenhuma);
 
         listarTarefas();
 
@@ -127,7 +131,7 @@ public class MinhasTarefasCadastradas extends AppCompatActivity {
                     String statusTarefa = tarefa.getStatus();
                     if((usuarioLogado.equals(identificadorUsuarioLogado))){
                         listaTarefas.add(tarefa);
-
+                        textViewNenhuma.setVisibility(View.GONE);
                     }
 
                 }

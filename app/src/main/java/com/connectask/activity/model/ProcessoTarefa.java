@@ -33,8 +33,8 @@ public class ProcessoTarefa {
     private String id_usuario_emissor;
     private String data;
     private String hora;
-    private String ativo;
-
+    private String ativoEmissor;
+    private String ativoRealizador;
 
     public ProcessoTarefa(){
     }
@@ -54,7 +54,8 @@ public class ProcessoTarefa {
         horaAtual = calendar.getTime();
         setHora(formataHora.format(horaAtual));
 
-        setAtivo("1");
+        setAtivoEmissor("1");
+        setAtivoRealizador("1");
 
         firebase = ConfiguracaoFirebase.getFirebase();
 
@@ -117,11 +118,19 @@ public class ProcessoTarefa {
     }
 
 
-    public String getAtivo() {
-        return ativo;
+    public String getAtivoEmissor() {
+        return ativoEmissor;
     }
 
-    public void setAtivo(String ativo) {
-        this.ativo = ativo;
+    public void setAtivoEmissor(String ativoEmissor) {
+        this.ativoEmissor = ativoEmissor;
+    }
+
+    public String getAtivoRealizador() {
+        return ativoRealizador;
+    }
+
+    public void setAtivoRealizador(String ativoRealizador) {
+        this.ativoRealizador = ativoRealizador;
     }
 }

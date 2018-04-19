@@ -56,7 +56,7 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
             final Tarefa tarefa = listaTarefa.get(position);
             titulo.setText( tarefa.getTitulo() );
             descricao.setText( tarefa.getDescricao() );
-            tempo.setText( tarefa.getTempo()  + "hora(s)");
+            tempo.setText( tarefa.getTempo() + " hora(s)");
             valor.setText( tarefa.getValor() );
             detalhes.setOnClickListener(new View.OnClickListener() {
                 @Override

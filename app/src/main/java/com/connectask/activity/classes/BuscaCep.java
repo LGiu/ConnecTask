@@ -103,7 +103,7 @@ public class BuscaCep extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         String line;
-        BufferedReader reader = new Webservice("http://cep.republicavirtual.com.br/web_cep.php?cep=" + cep).sendData(Webservice.RequestMethod.POST);
+        BufferedReader reader = new Webservice("http://cep.republicavirtual.com.br/web_cep.php?cep=" + cep).sendData(Webservice.RequestMethod.GET);
         try {
             int i = 0;
             while ((line = reader.readLine()) != null) {
