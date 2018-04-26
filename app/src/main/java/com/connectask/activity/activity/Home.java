@@ -68,7 +68,6 @@ public class Home extends AppCompatActivity
     private ArrayAdapter adapterBusca;
     private ArrayList<Tarefa> listaTarefas;
     private ArrayList<Tarefa> listaTarefasBusca;
-    private Button buttonFiltros;
     private SearchView searchViewBusca;
     private SwipeRefreshLayout mSwipeToRefresh;
     private TextView textViewNenhuma;
@@ -85,6 +84,8 @@ public class Home extends AppCompatActivity
     private boolean controle = false;
 
     private ProgressDialog loading;
+
+    private AtualizarTempo atualizarTempo;
 
     public double distancia = 0;
 
@@ -158,18 +159,18 @@ public class Home extends AppCompatActivity
                 });
             }
         });
-        //loading.cancel();
 
-        nomeUsuario();
 
-        buttonFiltros  = (Button) findViewById(R.id.buttonFiltros);
-        buttonFiltros.setOnClickListener(new View.OnClickListener() {
+        final FloatingActionButton fabFiltro = (FloatingActionButton) findViewById(R.id.fabFiltro);
+        fabFiltro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Home.this, Filtro.class);
                 startActivity(intent);
             }
         });
+
+        nomeUsuario();
 
 
         mSwipeToRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
@@ -180,6 +181,12 @@ public class Home extends AppCompatActivity
                 mSwipeToRefresh.setRefreshing(false);
             }
         });
+
+        //Showing progress dialog
+        pDialog = new ProgressDialog(Home.this);
+        pDialog.setMessage("Por favor, aguarde...");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         textViewNenhuma = (TextView) findViewById(R.id.textViewNenhuma);
 
@@ -342,13 +349,9 @@ public class Home extends AppCompatActivity
     }
 
     private void listarTarefas(){
-        //Showing progress dialog
-        pDialog = new ProgressDialog(Home.this);
-        pDialog.setMessage("Por favor, aguarde...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-
         distancia = 0;
+
+        //atualizarTempo = new AtualizarTempo();
 
         ValoresFiltro valoresFiltro = new ValoresFiltro(Home.this);
         final String categoria = valoresFiltro.getCategoria();
@@ -377,12 +380,13 @@ public class Home extends AppCompatActivity
                 listaTarefas.clear();
                 //percorre o nó
 
-
                 Preferencias preferencias = new Preferencias(Home.this);
                 final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Tarefa tarefa = dados.getValue(Tarefa.class);
+
+                    //atualizarTempo.atualiza(Home.this, tarefa.getId().toString(), tarefa.getId_usuario().toString(), tarefa.getStatus().toString(), tarefa.getData().toString(), tarefa.getHora().toString(), tarefa.getTempo().toString());
 
                     String usuarioId = tarefa.getId_usuario();
                     String statusTarefa = tarefa.getStatus();
@@ -423,7 +427,6 @@ public class Home extends AppCompatActivity
 
             }
         });
-        pDialog.dismiss();
         //https://stackoverflow.com/questions/44777989/firebase-infinite-scroll-list-view-load-10-items-on-scrolling
     }
 
@@ -496,6 +499,8 @@ public class Home extends AppCompatActivity
     }
 
     private void tarefaFinalizada(){
+        pDialog.dismiss();
+
         Preferencias preferencias = new Preferencias(Home.this);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 

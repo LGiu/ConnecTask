@@ -1,8 +1,11 @@
 package com.connectask.activity.Fragments;
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.activity.CadastroTarefa;
+import com.connectask.activity.activity.Home;
 import com.connectask.activity.classes.AsyncResponse;
 import com.connectask.activity.classes.BuscaCep;
 import com.connectask.activity.classes.Util;
@@ -51,6 +55,10 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
 
     private Endereco endereco;
 
+    private ProgressDialog pDialog;
+
+    private Context context;
+
     public CadastroEndereco() {
         // Required empty public constructor
     }
@@ -59,8 +67,8 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_cadastro_endereco, container, false);
+
 
         editTextCep = (EditText) view.findViewById(R.id.editTextCep);
         editTextRua = (EditText) view.findViewById(R.id.editTextNome);
@@ -104,13 +112,16 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                /*if(start == 7){
+                if(start == 7){
                     try {
                         buscaCep();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }*/
+                }
+                else if(start > 7){
+                    s = "";
+                }
             }
 
             @Override
@@ -166,9 +177,14 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
     }
 
     private void buscaCep() throws JSONException {
+        pDialog = new ProgressDialog(context);
+        pDialog.setMessage("Buscando Endereço...");
+        pDialog.setCancelable(false);
+        pDialog.show();
         buscaCep = new BuscaCep(getContext(), editTextCep.getText().toString());
         buscaCep.delegate = CadastroEndereco.this;
         buscaCep.execute();
+
     }
 
     private boolean valida(){
@@ -230,6 +246,10 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
                 editTextBairro.setText(output);
                 break;
         }
+        pDialog.dismiss();
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
 }

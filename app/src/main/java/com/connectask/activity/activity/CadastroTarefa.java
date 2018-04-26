@@ -1,7 +1,9 @@
 package com.connectask.activity.activity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,6 +53,10 @@ public class CadastroTarefa extends AppCompatActivity {
     private List<String> listaEndereco = new ArrayList<String>();
     private List<String> idEndereco = new ArrayList<String>();
     private List<String> listaTempo = new ArrayList<String>();
+    private ImageButton imageButtonTipo;
+    private ImageButton imageButtonDescricao;
+    private ImageButton imageButtonValor;
+    private ImageButton imageButtonTempo;
 
     private Tarefa tarefa;
     private FirebaseAuth autenticacao;
@@ -83,12 +90,16 @@ public class CadastroTarefa extends AppCompatActivity {
         spinnerEndereco = (Spinner) findViewById(R.id.spinnerEndereco);
         buttonCadastro = (Button) findViewById(R.id.buttonFinalizar);
         buttonNovoEndereco = (Button) findViewById(R.id.buttonNovoEndereco);
+        imageButtonTipo = (ImageButton) findViewById(R.id.imageButtonTipo);
+        imageButtonDescricao = (ImageButton) findViewById(R.id.imageButtonDescricao);
+        imageButtonValor = (ImageButton) findViewById(R.id.imageButtonValor);
+        imageButtonTempo = (ImageButton) findViewById(R.id.imageButtonTempo);
+
 
         tipo();
         endereco();
 
         editTextValor.addTextChangedListener(new Moeda(editTextValor));
-
 
         seekBarTempo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 15;
@@ -140,12 +151,44 @@ public class CadastroTarefa extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 CadastroEndereco cadastroEndereco = new CadastroEndereco();
+                cadastroEndereco.setContext(CadastroTarefa.this);
 
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+                //toolbar.setTitle("Cadastro de endereço");
+
                 fragmentTransaction.replace(R.id.fragment_cadastro, cadastroEndereco);
                 fragmentTransaction.addToBackStack(null).commit();
+            }
+        });
+
+
+        imageButtonTipo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                help("Tipo", "\nEscolha qual tipo de tarefa melhor define a sua:\n\nDoméstica: Tarefas que devem ser realizas em casa. EX: Cortar a grama, lavar o carro ou pintar a casa.\nExterna: Tarefas que devem ser realizadas na rua. EX: Pagar uma conta, ir à padaria ou farmácia comprar algo.\nServiço: Tarefas que devem funcionar como um trabalho. EX: Servir de segurança ou garçom por um dia.\nOutro: Outros tipos de tarefas que não se encaixam nas categorias acima.\n");
+            }
+        });
+
+        imageButtonDescricao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                help("Descrição", "\nDescreva neste campo todos os detalhes sobre a tarefa.\n");
+            }
+        });
+
+        imageButtonTempo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                help("Tempo", "\nEscolha o tempo que algum usuário terá para aceitar sua tarefa e realizá-la\n");
+            }
+        });
+
+        imageButtonValor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                help("Valor", "\nDigite o valor que deseja paga pagar para que outra pessoa realize está tarefa para você.\n");
             }
         });
     }
@@ -198,6 +241,7 @@ public class CadastroTarefa extends AppCompatActivity {
         arrayAdapterEndereco.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEndereco.setAdapter(arrayAdapterEndereco);
 
+        //spinnerEndereco.setSelection(listaEndereco.size());
     }
 
     private boolean valida(){
@@ -205,7 +249,7 @@ public class CadastroTarefa extends AppCompatActivity {
         msg = "Campos incorretos:";
         Util util = new Util();
 
-        if(editTextTitulo.getText().length() > 75 || editTextTitulo.getText().length() == 0)
+        if(editTextTitulo.getText().length() > 75 || editTextTitulo.getText().equals(""))
         {
             msg += "\nTítulo inválido.";
             teste = false;
@@ -215,7 +259,7 @@ public class CadastroTarefa extends AppCompatActivity {
             msg += "\nSelecione um tipo de tarefa.";
             teste = false;
         }
-        if(editTextDescricao.getText().length() > 255)
+        if(editTextDescricao.getText().length() > 255  || editTextDescricao.getText().equals(""))
         {
             msg += "\nDescrição inválida.";
             teste = false;
@@ -225,8 +269,11 @@ public class CadastroTarefa extends AppCompatActivity {
             msg += "\nValor inválido.";
             teste = false;
         }
-        if(Integer.parseInt(editTextValor.getText().toString().substring(2, editTextValor.getText().length()).replace(",",".")) > 500)
-        {
+        if(editTextValor.getText().equals("")) {
+            msg += "\nValor inválido.";
+            teste = false;
+        }
+        else if (Float.parseFloat(editTextValor.getText().toString().substring(2, editTextValor.getText().length()).replace(",", ".")) > 500.00) {
             msg += "\nValor inválido.";
             teste = false;
         }
@@ -298,5 +345,19 @@ public class CadastroTarefa extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled( true );
         webView.addJavascriptInterface( creditCard, "Android" );
         webView.loadUrl("file:///android_asset/index.html");*/
+    }
+
+    private void help(String titulo, String msg){
+        new AlertDialog.Builder(CadastroTarefa.this)
+                .setTitle(titulo)
+                .setMessage(msg)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                .show();
     }
 }

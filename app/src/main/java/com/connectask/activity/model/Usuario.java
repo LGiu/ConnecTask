@@ -27,7 +27,7 @@ public class Usuario {
     }
 
     public void salvar(String identificadorUsuario){
-        setStatus("1");
+        setStatus("2");
         //1 - Ativo
         //2 - Inativo
         //3 - Suspenso

@@ -15,16 +15,10 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@android:color/white"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/buttonFiltros"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@android:color/white"
-            android:fontFamily="@font/roboto"
-            android:text="Filtros" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="332dp">
 
 
         <TextView
@@ -33,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="150dp"
             android:text="Nenhuma tarefa cadastrada no momento"
             android:textAlignment="center"
             android:textSize="22sp"
@@ -49,8 +43,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:paddingVertical="20dp"
                 android:divider="@null"
+                android:paddingVertical="20dp"
                 android:scrollbars="vertical" />
         </android.support.v4.widget.SwipeRefreshLayout>
 

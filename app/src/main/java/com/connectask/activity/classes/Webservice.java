@@ -47,7 +47,7 @@ public class Webservice {
             urlConnection.setRequestProperty("X-Requested-With", "XMLHttpRequest");
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(15000);
-            if (requestMethod.toString().equals("POST")) {
+            if (requestMethod.toString().equals("GET")) {
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setDoOutput(true);
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
@@ -55,8 +55,6 @@ public class Webservice {
                     wr.write(params.build().getEncodedQuery());
                 }
                 wr.flush();
-            } else {
-                urlConnection.setRequestMethod("GET");
             }
 //            urlConnection.setDoInput(true);
 //            urlConnection.setChunkedStreamingMode(0);

@@ -28,6 +28,11 @@ public class Preferencias {
         editor.commit();
     }
 
+    public void limpaDados(){
+        editor.putString(CHAVE_IDENTIFICADOR, "");
+        editor.commit();
+    }
+
     public String getIdentificado(){
         return preferences.getString(CHAVE_IDENTIFICADOR, null);
     }

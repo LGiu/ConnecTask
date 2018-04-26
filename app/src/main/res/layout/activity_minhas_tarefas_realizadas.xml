@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white"
     tools:context="com.connectask.activity.activity.MinhasTarefasRealizadas">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -49,7 +50,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="30dp"
-                android:text="Nenhuma tarefa"
+                android:text="Nenhuma tarefa Realizada"
                 android:textAlignment="center"
                 android:textSize="22sp"
                 app:fontFamily="@font/roboto" />
@@ -57,9 +58,10 @@
             <ListView
                 android:id="@+id/listViewTarefas"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="20dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
                 android:divider="@null"
+                android:paddingVertical="20dp"
                 android:scrollbars="vertical" />
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>

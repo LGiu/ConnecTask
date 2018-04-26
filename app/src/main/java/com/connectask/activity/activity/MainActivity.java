@@ -15,9 +15,6 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AtualizarTempo atualizarTempo = new AtualizarTempo();
-        atualizarTempo.atualiza();
-
         Handler handler = new Handler();
         handler.postDelayed(this, 3000);
 

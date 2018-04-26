@@ -73,24 +73,29 @@ public class Filtro extends AppCompatActivity {
         tipo();
 
         if(valoresFiltro.getCategoria().equals("")){
-            spinnerCategoria.setSelection(-1);
-        }
-        else if(valoresFiltro.getCategoria().equals("Doméstica")){
             spinnerCategoria.setSelection(0);
         }
-        else if(valoresFiltro.getCategoria().equals("Externa")){
+        else if(valoresFiltro.getCategoria().equals("Doméstica")){
             spinnerCategoria.setSelection(1);
         }
-        else if(valoresFiltro.getCategoria().equals("Serviço")){
+        else if(valoresFiltro.getCategoria().equals("Externa")){
             spinnerCategoria.setSelection(2);
         }
-        else if(valoresFiltro.getCategoria().equals("Outro")){
+        else if(valoresFiltro.getCategoria().equals("Serviço")){
             spinnerCategoria.setSelection(3);
+        }
+        else if(valoresFiltro.getCategoria().equals("Outro")){
+            spinnerCategoria.setSelection(4);
         }
 
         textViewProgressoLocalizacao.setText(valoresFiltro.getLocalizacao()+" Km(s)");
+        seekBarLocalizacao.setProgress(valoresFiltro.getLocalizacao());
+
         textViewProgressoValor.setText(" R$ "+ valoresFiltro.getValor());
+        seekBarValor.setProgress(valoresFiltro.getValor());
+
         textViewProgressoTempo.setText(valoresFiltro.getTempo()+" Horas");
+        seekBarTempo.setProgress(valoresFiltro.getTempo());
 
         seekBarLocalizacao.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = valoresFiltro.getLocalizacao();

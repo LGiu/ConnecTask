@@ -71,6 +71,7 @@ public class BuscaEndereco{
     }
 }*/
 
+
 public class BuscaCep extends AsyncTask<Void, Void, Void> {
 
     private ProgressDialog pDialog;
@@ -81,7 +82,7 @@ public class BuscaCep extends AsyncTask<Void, Void, Void> {
     private String rua;
     private String bairro;
 
-    public JSONObject objectCep;
+    public JSONObject objectCep = null;
 
     public CadastroEndereco delegate = null;
 
@@ -103,16 +104,20 @@ public class BuscaCep extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         String line;
-        BufferedReader reader = new Webservice("http://cep.republicavirtual.com.br/web_cep.php?cep=" + cep).sendData(Webservice.RequestMethod.GET);
+        BufferedReader reader = new Webservice("https://viacep.com.br/ws/"+cep+"/json/" ).sendData(Webservice.RequestMethod.GET);
         try {
-            int i = 0;
-            while ((line = reader.readLine()) != null) {
-                objectCep = new JSONObject(line);
-                estado = objectCep.getString("estado");
-                cidade = objectCep.getString("cidade");
-                rua = objectCep.getString("rua");
-                bairro = objectCep.getString("bairro");
+            StringBuffer buffer = new StringBuffer();
+            while((line = reader.readLine()) != null) {
+                buffer.append(line);
             }
+            objectCep = new JSONObject(buffer.toString());
+
+            estado = objectCep.getString("uf");
+            cidade = objectCep.getString("localidade");
+            rua = objectCep.getString("logradouro");
+            bairro = objectCep.getString("bairro");
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

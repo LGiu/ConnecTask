@@ -71,9 +71,9 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
             textViewCidade = (TextView) view.findViewById(R.id.textViewCidade);
             textViewCep = (TextView) view.findViewById(R.id.textViewCep);
             textViewRua = (TextView) view.findViewById(R.id.textViewRua);
-            textViewNumero = (TextView) view.findViewById(R.id.textViewCep);
+            textViewNumero = (TextView) view.findViewById(R.id.textViewNumero);
             textViewBairro = (TextView) view.findViewById(R.id.textViewBairro);
-            textViewComplemento = (TextView) view.findViewById(R.id.textViewCep);
+            textViewComplemento = (TextView) view.findViewById(R.id.textViewComplemento);
             imageButtonEditar = (ImageButton) view.findViewById(R.id.imageButtonEditar);
             imageButtonExcluir = (ImageButton) view.findViewById(R.id.imageButtonExcluir);
 
@@ -82,7 +82,7 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
             textViewCidade.setText( endereco.getCidade() );
             textViewCep.setText( endereco.getCep() );
             textViewRua.setText( endereco.getRua() );
-            textViewNumero.setText( endereco.getNumero() );
+            textViewNumero.setText( endereco.getNumero().toString() );
             textViewBairro.setText( endereco.getBairro() );
             textViewComplemento.setText( endereco.getComplemento() );
 
