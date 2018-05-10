@@ -34,24 +34,24 @@
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
-    <TextView
-        android:id="@+id/textViewMensagem"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/roboto"
-        android:text="Você recebeu um código SMS para validação, digite este código abaixo:"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="22sp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitulo"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+            <TextView
+                android:id="@+id/textViewMensagem"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/roboto"
+                android:text="Aguarde e você receberá um código SMS para validação. Digite este código abaixo:"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewTitulo"
+                tools:layout_constraintLeft_creator="1"
+                tools:layout_constraintTop_creator="1" />
 
             <EditText
                 android:id="@+id/editTextCodigo"
@@ -60,6 +60,7 @@
                 android:layout_marginTop="50dp"
                 android:ems="10"
                 android:hint="Digite o código"
+                android:textAlignment="center"
                 android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -20,7 +20,7 @@ public class Usuario {
     private String avaliacao;
     private String numeroAvaliacoes;
     private String avaliacaoAtual;
-
+    private String introducao;
 
     public Usuario(){
 
@@ -35,6 +35,8 @@ public class Usuario {
         setAvaliacao("0");
         setNumeroAvaliacoes("0");
         setAvaliacaoAtual("0");
+
+        setIntroducao("0");
 
         DatabaseReference referenciaFirebase = ConfiguracaoFirebase.getFirebase();
         referenciaFirebase.child("usuarios").child(getId()).setValue(this);
@@ -120,5 +122,13 @@ public class Usuario {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public String getIntroducao() {
+        return introducao;
+    }
+
+    public void setIntroducao(String introducao) {
+        this.introducao = introducao;
     }
 }

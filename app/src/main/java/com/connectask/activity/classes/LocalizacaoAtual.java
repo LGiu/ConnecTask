@@ -28,9 +28,12 @@ public class LocalizacaoAtual extends AppCompatActivity implements GoogleApiClie
     private double latitude;
     private double longitude;
 
-    public LocalizacaoAtual(Context context) {
+    public AsyncResponse delegate = null;
 
+
+    public LocalizacaoAtual(Context context, AsyncResponse delegate) {
         contexto = context;
+        this.delegate = delegate;
 
         callConnection();
     }
@@ -64,6 +67,7 @@ public class LocalizacaoAtual extends AppCompatActivity implements GoogleApiClie
         if(l != null){
             latitude = l.getLatitude();
             longitude = l.getLongitude();
+            delegate.processFinish(1, "Finish");
         }
     }
 
@@ -77,11 +81,11 @@ public class LocalizacaoAtual extends AppCompatActivity implements GoogleApiClie
 
     }
 
-    public double getLatitude(){
+    public double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude(){
+    public double getLongitude() {
         return longitude;
     }
 }

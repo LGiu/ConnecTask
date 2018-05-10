@@ -1,11 +1,9 @@
 package com.connectask.activity.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +14,6 @@ import com.connectask.activity.classes.Celular;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.classes.Token;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.connectask.activity.model.Usuario;
 import com.github.rtoshiro.util.format.SimpleMaskFormatter;
 import com.github.rtoshiro.util.format.text.MaskTextWatcher;
 import com.google.firebase.database.DatabaseReference;

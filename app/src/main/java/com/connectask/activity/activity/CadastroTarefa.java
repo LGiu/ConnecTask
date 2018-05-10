@@ -3,12 +3,11 @@ package com.connectask.activity.activity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +43,9 @@ public class CadastroTarefa extends AppCompatActivity {
     private Spinner spinnerTipo;
     private EditText editTextDescricao;
     private TextView textViewTempo;
+    private TextView textViewTempoCadastro;
     private SeekBar seekBarTempo;
+    private SeekBar seekBarTempoCadastro;
     private EditText editTextValor;
     private Spinner spinnerEndereco;
     private Button buttonCadastro;
@@ -57,6 +58,7 @@ public class CadastroTarefa extends AppCompatActivity {
     private ImageButton imageButtonDescricao;
     private ImageButton imageButtonValor;
     private ImageButton imageButtonTempo;
+    private ImageButton imageButtonTempoCadastro;
 
     private Tarefa tarefa;
     private FirebaseAuth autenticacao;
@@ -85,7 +87,9 @@ public class CadastroTarefa extends AppCompatActivity {
         spinnerTipo = (Spinner) findViewById(R.id.spinnerTipo);
         editTextDescricao = (EditText) findViewById(R.id.editTextDescricao);
         seekBarTempo = (SeekBar) findViewById(R.id.seekBarTempo);
-        textViewTempo = (TextView) findViewById(R.id.textViewCep);
+        seekBarTempoCadastro = (SeekBar) findViewById(R.id.seekBarTempoCadastro);
+        textViewTempo = (TextView) findViewById(R.id.textViewTempo);
+        textViewTempoCadastro = (TextView) findViewById(R.id.textViewTempoCadastro);
         editTextValor = (EditText) findViewById(R.id.editTextValor);
         spinnerEndereco = (Spinner) findViewById(R.id.spinnerEndereco);
         buttonCadastro = (Button) findViewById(R.id.buttonFinalizar);
@@ -94,7 +98,7 @@ public class CadastroTarefa extends AppCompatActivity {
         imageButtonDescricao = (ImageButton) findViewById(R.id.imageButtonDescricao);
         imageButtonValor = (ImageButton) findViewById(R.id.imageButtonValor);
         imageButtonTempo = (ImageButton) findViewById(R.id.imageButtonTempo);
-
+        imageButtonTempoCadastro = (ImageButton) findViewById(R.id.imageButtonTempoCadastro);
 
         tipo();
         endereco();
@@ -110,6 +114,27 @@ public class CadastroTarefa extends AppCompatActivity {
                 progress = progresValue;
                 //Toast.makeText(Filtro.this, ""+progress+"", Toast.LENGTH_LONG).show();
                 textViewTempo.setText(""+progress+" hora(s)");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //Toast.makeText(Filtro.this, ""+progress+"", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //Toast.makeText(Filtro.this, ""+progress+"", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        seekBarTempoCadastro.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 15;
+            @SuppressLint("WrongConstant")
+            @Override
+
+            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
+                progress = progresValue;
+                //Toast.makeText(Filtro.this, ""+progress+"", Toast.LENGTH_LONG).show();
+                textViewTempoCadastro.setText(""+progress+" hora(s)");
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -181,7 +206,14 @@ public class CadastroTarefa extends AppCompatActivity {
         imageButtonTempo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                help("Tempo", "\nEscolha o tempo que algum usuário terá para aceitar sua tarefa e realizá-la\n");
+                help("Tempo", "\nEscolha o tempo que algum usuário terá para realizar sua tarefa após aceitá-la\n");
+            }
+        });
+
+        imageButtonTempoCadastro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                help("Tempo", "\nEscolha o tempo que algum usuário terá para aceitar realizar sua tarefa \n");
             }
         });
 
@@ -208,6 +240,8 @@ public class CadastroTarefa extends AppCompatActivity {
         Preferencias preferencias = new Preferencias(CadastroTarefa.this);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
+        listaEndereco.add("");
+
         firebase = ConfiguracaoFirebase.getFirebase().child("endereco").child(identificadorUsuarioLogado);
 
         firebase.addValueEventListener(new ValueEventListener() {
@@ -215,18 +249,10 @@ public class CadastroTarefa extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Endereco endereco = dados.getValue(Endereco.class);
-                    String id = endereco.getId();
+
                     if(identificadorUsuarioLogado.equals(endereco.getId_usuario())){
-                        String end = ""+endereco.getRua()+", "+endereco.getNumero()+"";
-                        if(end.length() > 20){
-                            end = end.substring(0, 20);
-                            listaEndereco.add(end);
-                            idEndereco.add(id);
-                        }
-                        else{
-                            listaEndereco.add(end);
-                            idEndereco.add(id);
-                        }
+                        idEndereco.add(endereco.getId());
+                        listaEndereco.add(endereco.getNome());
                     }
                 }
             }
@@ -235,12 +261,10 @@ public class CadastroTarefa extends AppCompatActivity {
 
             }
         });
-        listaEndereco.add("");
 
         ArrayAdapter<String> arrayAdapterEndereco = new ArrayAdapter<String>(CadastroTarefa.this, android.R.layout.simple_list_item_1, listaEndereco);
         arrayAdapterEndereco.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerEndereco.setAdapter(arrayAdapterEndereco);
-
         //spinnerEndereco.setSelection(listaEndereco.size());
     }
 
@@ -274,12 +298,12 @@ public class CadastroTarefa extends AppCompatActivity {
             teste = false;
         }
         else if (Float.parseFloat(editTextValor.getText().toString().substring(2, editTextValor.getText().length()).replace(",", ".")) > 500.00) {
-            msg += "\nValor inválido.";
+            msg += "\nValor deve ser menor que R$ 500, 00.";
             teste = false;
         }
         if(spinnerEndereco.getSelectedItem().toString().equals("") || spinnerEndereco.getSelectedItem().toString().equals(null))
         {
-            msg += "\nSelecione um endereço de tarefa.";
+            msg += "\nSelecione um endereço para a tarefa.";
             teste = false;
         }
 
@@ -317,6 +341,7 @@ public class CadastroTarefa extends AppCompatActivity {
                             tarefa.setTipo(spinnerTipo.getSelectedItem().toString());
                             tarefa.setDescricao(editTextDescricao.getText().toString());
                             tarefa.setTempo(String.valueOf(seekBarTempo.getProgress()));
+                            tarefa.setTempoCadastro(String.valueOf(seekBarTempoCadastro.getProgress()));
                             tarefa.setValor((editTextValor.getText().toString()));
                             tarefa.setEndereco(idEndereco.get(spinnerEndereco.getSelectedItemPosition() - 1));
 
@@ -329,10 +354,13 @@ public class CadastroTarefa extends AppCompatActivity {
                     })
                     .create()
                     .show();
+
+            help("Aviso", "\nO método de pagamento está desabilitado para teste. Para finalizar o cadastro da tarefa apenas clique no botão Fianlizar sem preencher os dados.\n");
         }
         else{
             Toast.makeText(CadastroTarefa.this, msg, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private String getViewContent( View root, int id ){

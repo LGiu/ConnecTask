@@ -1,8 +1,5 @@
 package com.connectask.activity.model;
 
-import android.content.Context;
-
-import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 

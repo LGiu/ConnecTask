@@ -1,6 +1,7 @@
 package com.connectask.activity.Fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -36,7 +37,8 @@ public class Dialog extends DialogFragment {
 
     private DatabaseReference firebase;
 
-    private Button ok;
+    private Button buttonDetalhes;
+    private Button buttonFechar;
     private TextView textViewTitulo;
     private TextView textViewDescricao;
     private TextView textViewTempo;
@@ -56,6 +58,7 @@ public class Dialog extends DialogFragment {
     private boolean c1 = true;
     private boolean c2 = true;
 
+    private ProgressDialog pDialog;
 
     public Dialog() {
         // Required empty public constructor
@@ -68,21 +71,28 @@ public class Dialog extends DialogFragment {
         view = inflater.inflate(R.layout.fragment_dialog, container, false);
         getDialog().setTitle("");
 
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Por favor, aguarde...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         textViewTitulo = (TextView) view.findViewById(R.id.textViewTitle);
         textViewDescricao = (TextView) view.findViewById(R.id.textViewComentario);
-        textViewTempo = (TextView) view.findViewById(R.id.textViewCep);
+        textViewTempo = (TextView) view.findViewById(R.id.textViewTempo);
         textViewNome = (TextView) view.findViewById(R.id.textViewNome);
         textViewER = (TextView) view.findViewById(R.id.textViewER);
         textViewStatus = (TextView) view.findViewById(R.id.textViewStatus);
         layoutTarefa = (LinearLayout) view.findViewById(R.id.layoutTarefa);
+        buttonDetalhes = (Button) view.findViewById(R.id.buttonDetalhes);
 
-        Button ok = (Button) view.findViewById(R.id.buttonOk);
-        ok.setOnClickListener(new View.OnClickListener() {
+        buttonFechar = (Button) view.findViewById(R.id.buttonFechar);
+        buttonFechar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
         });
+
 
         Preferencias preferencias = new Preferencias(getContext());
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
@@ -96,12 +106,13 @@ public class Dialog extends DialogFragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     tarefa = dados.getValue(Tarefa.class);
-                    if(tarefa.getStatus().toString().equals("2") && tarefa.getId_usuario().equals(identificadorUsuarioLogado)){
+                    if(tarefa.getStatus().toString().equals("2") && tarefa.getId_usuario().equals(identificadorUsuarioLogado))
+                    {
                         tarefaId = tarefa.getId();
                         status = tarefa.getStatus();
 
                         textViewTitulo.setText(tarefa.getTitulo().toString());
-                        textViewTempo.setText(tarefa.getTempo().toString());
+                        textViewTempo.setText(tarefa.getTempoCadastro().toString());
                         textViewER.setText("Realizador:");
                         c1 = false;
                         montaEmissor();
@@ -151,6 +162,7 @@ public class Dialog extends DialogFragment {
 
         });
 
+        pDialog.dismiss();
 
         return view;
     }
@@ -198,6 +210,17 @@ public class Dialog extends DialogFragment {
                     layoutTarefa.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Intent intent = new Intent(getContext(), ProcessoTarefaEmissor.class);
+                            intent.putExtra("id", tarefaId);
+                            intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
+                            intent.putExtra("status", status);
+                            startActivity(intent);
+                        }
+                    });
+
+                    buttonDetalhes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProcessoTarefaEmissor.class);
                             intent.putExtra("id", tarefaId);
                             intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
@@ -257,6 +280,16 @@ public class Dialog extends DialogFragment {
                         layoutTarefa.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                Intent intent = new Intent(getContext(), ProcessoTarefaRealizador.class);
+                                intent.putExtra("id", tarefaId);
+                                intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
+                                startActivity(intent);
+                            }
+                        });
+
+                        buttonDetalhes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
                                 Intent intent = new Intent(getContext(), ProcessoTarefaRealizador.class);
                                 intent.putExtra("id", tarefaId);
                                 intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);

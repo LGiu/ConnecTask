@@ -1,17 +1,22 @@
 package com.connectask.activity.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.Fragments.Local;
 import com.connectask.activity.Fragments.PaginaUsuario;
+import com.connectask.activity.classes.Progress;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
@@ -42,13 +47,22 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
     private TextView textViewLocal;
     private TextView textViewData;
     private ImageButton imageButtonLocal;
+    private ImageButton imageButtonUsuario;
+    private ImageView imageViewHelp;
 
     private Tarefa tarefa = new Tarefa();
+
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processo_tarefa_realizador);
+
+        pDialog = new ProgressDialog(ProcessoTarefaRealizador.this);
+        pDialog.setMessage("Por favor, aguarde...");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,6 +75,9 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        Progress progress = new Progress(ProcessoTarefaRealizador.this, false);
+        progress.threard(1000);
 
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
@@ -83,11 +100,13 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                             textViewTipo = (TextView) findViewById(R.id.textViewTipo);
                             textViewTitulo = (TextView) findViewById(R.id.textViewTitulo);
                             textViewDescricao = (TextView) findViewById(R.id.textViewComentario);
-                            textViewTempo = (TextView) findViewById(R.id.textViewCep);
+                            textViewTempo = (TextView) findViewById(R.id.textViewTempo);
                             textViewNome = (TextView) findViewById(R.id.textViewNome);
                             textViewLocal = (TextView) findViewById(R.id.textViewLocal);
                             textViewData = (TextView) findViewById(R.id.textViewData);
                             imageButtonLocal = (ImageButton) findViewById(R.id.imageButtonLocal);
+                            imageButtonUsuario = (ImageButton) findViewById(R.id.imageButtonUsuario);
+                            imageViewHelp = (ImageView) findViewById(R.id.imageViewHelp);
 
                             if (idTarefa != null) {
                                 firebase1 = ConfiguracaoFirebase.getFirebase()
@@ -106,7 +125,7 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                                 textViewTipo.setText(tarefa.getTipo());
                                                 textViewTitulo.setText(tarefa.getTitulo());
                                                 textViewDescricao.setText(tarefa.getDescricao());
-                                                textViewTempo.setText(tarefa.getTempo() + " hora(s)");
+                                                textViewTempo.setText(tarefa.getTempoCadastro() + " hora(s)");
                                                 textViewData.setText(tarefa.getData().replace("-","/"));
 
                                                 firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
@@ -144,14 +163,36 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                             buttonCancelar.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    firebase1 = ConfiguracaoFirebase.getFirebase();
 
-                                    firebase1.child("tarefas")
-                                            .child(idTarefa)
-                                            .child("status").setValue("3");
+                                    new AlertDialog.Builder(ProcessoTarefaRealizador.this)
+                                            .setTitle("Finalizar tarefa")
+                                            .setMessage("Tem certeza que deseja cancelar esta tarefa?")
+                                            .setPositiveButton("Sim",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            firebase1 = ConfiguracaoFirebase.getFirebase();
 
-                                    Intent intent = new Intent(ProcessoTarefaRealizador.this, Home.class);
-                                    startActivity(intent);
+                                                            firebase1.child("tarefas")
+                                                                    .child(idTarefa)
+                                                                    .child("status").setValue("3");
+
+                                                            firebase1.child("ProcessoTarefa")
+                                                                    .child(id_ProcessoTarefa)
+                                                                    .child("ativoEmissor").setValue("2");
+
+                                                            firebase1.child("ProcessoTarefa")
+                                                                    .child(id_ProcessoTarefa)
+                                                                    .child("ativoRealizador").setValue("2");
+
+                                                            Intent intent = new Intent(ProcessoTarefaRealizador.this, Home.class);
+                                                            startActivity(intent);
+                                                            finish();
+                                                        }
+                                                    })
+                                            .setNegativeButton("Não", null)
+                                            .show();
+
                                 }
                             });
 
@@ -159,6 +200,22 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     PaginaUsuario paginaUsuario = new PaginaUsuario();
+                                    paginaUsuario.setContext(ProcessoTarefaRealizador.this);
+                                    paginaUsuario.setId(idTarefa);
+
+                                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                                    fragmentTransaction.replace(R.id.fragment_tarefa_realizador, paginaUsuario);
+                                    fragmentTransaction.addToBackStack(null).commit();
+                                }
+                            });
+
+                            imageButtonUsuario.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    PaginaUsuario paginaUsuario = new PaginaUsuario();
+                                    paginaUsuario.setContext(ProcessoTarefaRealizador.this);
                                     paginaUsuario.setId(idTarefa);
 
                                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -196,6 +253,23 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
                                     fragmentTransaction.addToBackStack(null).commit();
                                 }
                             });
+
+                            imageViewHelp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    new AlertDialog.Builder(ProcessoTarefaRealizador.this)
+                                            .setTitle("E agora?")
+                                            .setMessage("Agora basta você realizar a tarefa específicada. Após a realização, o usuário emissor da tarefa irá finalizá-la.")
+                                            .setPositiveButton("OK",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            dialogInterface.dismiss();
+                                                        }
+                                                    })
+                                            .show();
+                                }
+                            });
                         }
 
                         else if (statusTarefa.equals("4")){
@@ -207,6 +281,9 @@ public class ProcessoTarefaRealizador extends AppCompatActivity {
 
                     }
                 }
+
+                pDialog.dismiss();
+
             }
 
             @Override

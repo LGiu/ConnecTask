@@ -97,8 +97,9 @@
                         android:id="@+id/textView6"
                         android:layout_width="0dp"
                         android:layout_height="25dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="@font/roboto"
                         android:text="@string/tipo"
                         android:textColor="@android:color/black"
@@ -144,14 +145,27 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:text="Tempo máximo para realizar"
+                        android:text="Tempo máximo para realizar a tarefa"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/tamanhoTextFormaularios"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/editTextDescricao" />
 
                     <TextView
-                        android:id="@+id/textViewCep"
+                        android:id="@+id/textView36"
+                        android:layout_width="315dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Tempo máximo para que um usuário aceite sua tarefa"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/tamanhoTextFormaularios"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/seekBarTempo" />
+
+                    <TextView
+                        android:id="@+id/textViewTempo"
                         android:layout_width="0dp"
                         android:layout_height="33dp"
                         android:layout_marginTop="16dp"
@@ -164,12 +178,27 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
+                    <TextView
+                        android:id="@+id/textViewTempoCadastro"
+                        android:layout_width="0dp"
+                        android:layout_height="33dp"
+                        android:layout_marginTop="16dp"
+                        android:text="1 hora()"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView36" />
+
                     <SeekBar
                         android:id="@+id/seekBarTempo"
                         android:layout_width="0dp"
                         android:layout_height="18dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
                         android:max="96"
                         android:min="1"
                         android:progress="1"
@@ -178,7 +207,24 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewCep" />
+                        app:layout_constraintTop_toBottomOf="@+id/textViewTempo" />
+
+                    <SeekBar
+                        android:id="@+id/seekBarTempoCadastro"
+                        android:layout_width="0dp"
+                        android:layout_height="18dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:max="96"
+                        android:min="1"
+                        android:progress="1"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewTempoCadastro" />
 
                     <EditText
                         android:id="@+id/editTextNome"
@@ -190,7 +236,6 @@
                         android:ems="10"
                         android:fontFamily="@font/roboto"
                         android:hint="@string/digiteTitulo"
-                        android:inputType="textPersonName"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
@@ -245,13 +290,14 @@
                         android:id="@+id/textView8"
                         android:layout_width="0dp"
                         android:layout_height="25dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:text="@string/valor"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/tamanhoTextFormaularios"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/seekBarTempo" />
+                        app:layout_constraintTop_toBottomOf="@+id/seekBarTempoCadastro" />
 
                     <ImageButton
                         android:id="@+id/imageButtonTipo"
@@ -287,6 +333,18 @@
                         app:layout_constraintBottom_toBottomOf="@+id/textView7"
                         app:layout_constraintStart_toEndOf="@+id/textView7"
                         app:layout_constraintTop_toTopOf="@+id/textView7"
+                        app:srcCompat="@drawable/ic_help_outline" />
+
+                    <ImageButton
+                        android:id="@+id/imageButtonTempoCadastro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@android:color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView36"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/textView36"
                         app:srcCompat="@drawable/ic_help_outline" />
 
                     <ImageButton

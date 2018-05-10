@@ -1,13 +1,12 @@
 package com.connectask.activity.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.connectask.R;
@@ -32,6 +31,9 @@ public class CriarAvaliacao extends AppCompatActivity {
     private String idTarefa;
     public String id_ProcessoTarefa;
 
+    public String nota;
+    public String descricao;
+
     private DatabaseReference firebase;
 
     private boolean sairLoop = true;
@@ -49,7 +51,7 @@ public class CriarAvaliacao extends AppCompatActivity {
 
 
         firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
@@ -96,7 +98,7 @@ public class CriarAvaliacao extends AppCompatActivity {
         sairLoop = true;
 
         firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
@@ -123,7 +125,7 @@ public class CriarAvaliacao extends AppCompatActivity {
 
         firebase = ConfiguracaoFirebase.getFirebase().child("usuarios");
 
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
@@ -143,12 +145,12 @@ public class CriarAvaliacao extends AppCompatActivity {
                             avaliacaoAtual = (avaliacaoAtual + ratingBar.getRating())/numeroAvaliacoes;
                             firebase.child(identificadorUsuarioLogado).child("avaliacaoAtual").setValue(String.valueOf(avaliacaoAtual));
                         }
+                        nota = String.valueOf(ratingBar.getRating());
+                        descricao = editTextDescricao.getText().toString();
+                        salvar();
                     }
                 }
-                String nota = String.valueOf(ratingBar.getRating());
-                String descricao = editTextDescricao.getText().toString();
-                Toast.makeText(CriarAvaliacao.this, "Avaliado com sucesso!", Toast.LENGTH_SHORT).show();
-                avaliacao.salvar(idTarefa, nota, descricao, id_ProcessoTarefa);
+
             }
 
             @Override
@@ -156,6 +158,11 @@ public class CriarAvaliacao extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void salvar(){
+        Toast.makeText(CriarAvaliacao.this, "Avaliado com sucesso!", Toast.LENGTH_SHORT).show();
+        avaliacao.salvar(idTarefa, nota, descricao, id_ProcessoTarefa);
     }
 
 }

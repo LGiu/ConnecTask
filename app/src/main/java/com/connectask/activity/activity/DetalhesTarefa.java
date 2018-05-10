@@ -2,9 +2,9 @@ package com.connectask.activity.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +16,7 @@ import com.connectask.R;
 import com.connectask.activity.Fragments.Local;
 import com.connectask.activity.Fragments.PaginaUsuario;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.classes.Progress;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
@@ -47,13 +48,20 @@ public class DetalhesTarefa extends AppCompatActivity {
     private Button buttonRealizar;
     private TextView textViewLocal;
     private ImageButton imageButtonLocal;
+    private ImageButton imageButtonLocal2;
+    private ImageButton imageButtonUsuario;
 
     private ProcessoTarefa processoTarefa = new ProcessoTarefa();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_tarefa);
+
+        Progress progress = new Progress(DetalhesTarefa.this, false);
+        progress.threard(1000);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,12 +80,14 @@ public class DetalhesTarefa extends AppCompatActivity {
         textViewTipo = (TextView) findViewById(R.id.textViewTipo);
         textViewTarefa = (TextView) findViewById(R.id.textViewTarefa);
         textViewDescricao = (TextView) findViewById(R.id.textViewComentario);
-        textViewTempo = (TextView) findViewById(R.id.textViewCep);
-        textViewValor = (TextView) findViewById(R.id.textViewNome);
+        textViewTempo = (TextView) findViewById(R.id.textViewTempo);
+        textViewValor = (TextView) findViewById(R.id.textViewValor);
         textViewNome = (TextView) findViewById(R.id.textViewNome);
         buttonRealizar = (Button) findViewById(R.id.buttonRealizar);
         textViewLocal = (TextView) findViewById(R.id.textViewLocal);
         imageButtonLocal = (ImageButton) findViewById(R.id.imageButtonLocal);
+        imageButtonLocal2 = (ImageButton) findViewById(R.id.imageButtonLocal2);
+        imageButtonUsuario = (ImageButton) findViewById(R.id.imageButtonUsuario);
 
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
@@ -124,7 +134,7 @@ public class DetalhesTarefa extends AppCompatActivity {
 
                         String id = tarefa.getId();
                         if(id.equals(idTarefa)){
-                            textViewData.setText(tarefa.getData().toString().replace("-","/"));
+                            textViewData.setText(tarefa.getDataCadastro().toString().replace("-","/"));
 
                             String tipo = tarefa.getTipo();
                             textViewTipo.setText(tarefa.getTipo().toString());
@@ -170,8 +180,8 @@ public class DetalhesTarefa extends AppCompatActivity {
                                                                 new DialogInterface.OnClickListener() {
                                                                     @Override
                                                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                                                        firebase1.child(idTarefa)
-                                                                                .child("status").setValue("2");
+                                                                        firebase1.child(idTarefa).child("status").setValue("2");
+
                                                                         status = "2";
 
                                                                         processoTarefa.setId_tarefa(idTarefa);
@@ -182,8 +192,8 @@ public class DetalhesTarefa extends AppCompatActivity {
                                                                         Intent intent = new Intent(DetalhesTarefa.this, ProcessoTarefaRealizador.class);
                                                                         intent.putExtra("id", idTarefa);
                                                                         intent.putExtra("id_ProcessoTarefa", processoTarefa.getId());
-
                                                                         startActivity(intent);
+                                                                        finish();
                                                                     }
                                                                 })
                                                         .setNegativeButton("Não", null)
@@ -194,6 +204,7 @@ public class DetalhesTarefa extends AppCompatActivity {
 
                         }
                     }
+
                 }
 
                 @Override
@@ -206,6 +217,7 @@ public class DetalhesTarefa extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     PaginaUsuario paginaUsuario = new PaginaUsuario();
+                    paginaUsuario.setContext(DetalhesTarefa.this);
                     paginaUsuario.setId(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -215,6 +227,22 @@ public class DetalhesTarefa extends AppCompatActivity {
                     fragmentTransaction.addToBackStack(null).commit();
                 }
             });
+
+            imageButtonUsuario.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PaginaUsuario paginaUsuario = new PaginaUsuario();
+                    paginaUsuario.setContext(DetalhesTarefa.this);
+                    paginaUsuario.setId(idTarefa);
+
+                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, paginaUsuario);
+                    fragmentTransaction.addToBackStack(null).commit();
+                }
+            });
+
 
             textViewLocal.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -231,6 +259,20 @@ public class DetalhesTarefa extends AppCompatActivity {
             });
 
             imageButtonLocal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Local local = new Local();
+                    local.setId(idTarefa);
+
+                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                    fragmentTransaction.replace(R.id.fragment_detalhes_tarefa, local);
+                    fragmentTransaction.addToBackStack(null).commit();
+                }
+            });
+
+            imageButtonLocal2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Local local = new Local();

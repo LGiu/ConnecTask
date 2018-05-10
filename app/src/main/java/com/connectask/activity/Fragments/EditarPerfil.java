@@ -1,18 +1,19 @@
 package com.connectask.activity.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.connectask.R;
-import com.connectask.activity.activity.CadastroUsuario;
 import com.connectask.activity.activity.Perfil;
 import com.connectask.activity.classes.Cpf;
 import com.connectask.activity.classes.Preferencias;
@@ -62,28 +63,30 @@ public class EditarPerfil extends Fragment {
 
         if(textViewCampo.equals("CPF")){
             editTextCampo.addTextChangedListener(Cpf.insert(editTextCampo,1));
+            editTextCampo.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         }
         else if(textViewCampo.equals("Telefone")){
             editTextCampo.addTextChangedListener(Telefone.insert("(##)#####-####", editTextCampo));
+            editTextCampo.setInputType(InputType.TYPE_CLASS_PHONE);
+
+        }
+        else if(textViewCampo.equals("Senha")){
+            editTextCampo.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+        else if(textViewCampo.equals("E-Mail")){
+            editTextCampo.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         }
 
         buttonSalvar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(txCampo == "CPF" && editTextCampo.length() == 11) {
-                    new AlertDialog.Builder(getContext())
-                            .setTitle("Erro")
-                            .setMessage("CPF inválido")
-                            .show();
-                }
-                else {
+                if(valida()) {
                     Preferencias preferencias = new Preferencias(getContext());
                     final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
-                    firebase = ConfiguracaoFirebase.getFirebase()
-                            .child("usuarios");
+                    firebase = ConfiguracaoFirebase.getFirebase().child("usuarios");
 
                     firebase.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -91,16 +94,21 @@ public class EditarPerfil extends Fragment {
                             for (DataSnapshot dados : dataSnapshot.getChildren()) {
                                 Usuario usuario = dados.getValue(Usuario.class);
 
-                                if (identificadorUsuarioLogado.equals(codificarBase64(usuario.getEmail()))) {
-                                    String campo = txCampo.toLowerCase();
+                                if (identificadorUsuarioLogado.equals(codificarBase64(usuario.getEmail())))
+                                {
+                                    String campo = txCampo.toLowerCase().replace(":","").replace("-","");
                                     String valor = editTextCampo.getText().toString();
+
                                     firebase.child(identificadorUsuarioLogado).child(campo).setValue(valor);
 
-                                    android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
+                                    Intent intent = new Intent(getContext(), Perfil.class);
+                                    startActivity(intent);
+
+                                    /*android.support.v4.app.FragmentManager fragmentManager = getFragmentManager();
                                     Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_perfil);
                                     android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                     fragmentTransaction.remove(fragment);
-                                    fragmentTransaction.commit();
+                                    fragmentTransaction.commit();*/
                                 }
                             }
                         }
@@ -110,6 +118,10 @@ public class EditarPerfil extends Fragment {
 
                         }
                     });
+                }
+                else {
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -142,6 +154,13 @@ public class EditarPerfil extends Fragment {
                 teste = false;
             }
         }
+        else if(txCampo.equals("CPF")){
+            if(editTextCampo.getText().length() != 14)
+            {
+                msg += "\nCPF inválido.";
+                teste = false;
+            }
+        }
         else if(txCampo.equals("Telefone")){
             if(editTextCampo.getText().length() != 13 && editTextCampo.getText().length() != 14)
             {
@@ -150,9 +169,9 @@ public class EditarPerfil extends Fragment {
             }
         }
         else if(txCampo.equals("Senha")){
-            if(util.isPasswordValid(editTextCampo.getText().toString().trim()))
+            if(editTextCampo.getText().toString().length() < 6 && editTextCampo.getText().toString().length() > 20)
             {
-                msg += "\nSenha inválido.";
+                msg += "\nSenha inválido.\nA senha deve conter no mínimo 6 e no máximo 20 dígitos.";
                 teste = false;
             }
         }

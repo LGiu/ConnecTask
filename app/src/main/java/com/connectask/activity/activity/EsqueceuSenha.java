@@ -1,8 +1,9 @@
 package com.connectask.activity.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,9 +29,21 @@ public class EsqueceuSenha extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         buttonRecuperar = (Button) findViewById(R.id.buttonRecuperar);
 
+        buttonRecuperar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //reset(v);
+                Toast.makeText(
+                        EsqueceuSenha.this,
+                        "Funcionalidade desabilitada no momento.",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        });
+
     }
 
-    public void reset( View view ){
+    public void reset(View view){
         firebaseAuth
                 .sendPasswordResetEmail( editTextEmail.getText().toString() )
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -44,6 +57,9 @@ public class EsqueceuSenha extends AppCompatActivity {
                                     "Recuperação de acesso iniciada. Email enviado.",
                                     Toast.LENGTH_SHORT
                             ).show();
+
+                            Intent intent = new Intent(EsqueceuSenha.this, Login.class);
+                            startActivity(intent);
                         }
                         else{
                             Toast.makeText(

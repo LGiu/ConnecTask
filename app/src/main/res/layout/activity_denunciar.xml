@@ -61,7 +61,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
             <EditText
-                android:id="@+id/editTextDenuncia"
+                android:id="@+id/editTextDescricao"
                 android:layout_width="0dp"
                 android:layout_height="140dp"
                 android:layout_marginEnd="16dp"
@@ -69,7 +69,7 @@
                 android:layout_marginTop="50dp"
                 android:ems="10"
                 android:fontFamily="@font/roboto"
-                android:hint="DIga-nos o porque da denúncia"
+                android:hint="Diga-nos o porque da denúncia"
                 android:inputType="textMultiLine"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -95,7 +95,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextDenuncia" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextDescricao" />
 
         </android.support.constraint.ConstraintLayout>
 

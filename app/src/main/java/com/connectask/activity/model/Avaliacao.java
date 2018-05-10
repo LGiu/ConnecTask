@@ -1,15 +1,7 @@
 package com.connectask.activity.model;
 
-import android.content.Context;
-
-import com.connectask.activity.activity.CriarAvaliacao;
-import com.connectask.activity.activity.Home;
-import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by Leonardo Giuliani on 14/02/2018.

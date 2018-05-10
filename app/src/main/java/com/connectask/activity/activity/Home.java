@@ -2,50 +2,39 @@ package com.connectask.activity.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AbsListView;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
+import com.connectask.activity.classes.AsyncResponse;
 import com.connectask.activity.classes.AtualizarTempo;
-import com.connectask.activity.classes.Coordenadas;
-import com.connectask.activity.classes.Introducao;
 import com.connectask.activity.classes.LocalizacaoAtual;
 import com.connectask.activity.classes.Permissao;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.classes.Progress;
 import com.connectask.activity.classes.ValoresFiltro;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
 import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
-import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,11 +42,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static com.connectask.activity.classes.Base64Custom.codificarBase64;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, Runnable {
+        implements NavigationView.OnNavigationItemSelectedListener, Runnable, AsyncResponse{
 
     private FirebaseAuth usuarioAutenticacao;
 
@@ -72,8 +63,6 @@ public class Home extends AppCompatActivity
     private SwipeRefreshLayout mSwipeToRefresh;
     private TextView textViewNenhuma;
 
-    private ProgressDialog pDialog;
-
     private String id_processoTarefa = "";
     private String id_tarefa = "";
     private int emissorOuRealizador = 0;
@@ -83,11 +72,13 @@ public class Home extends AppCompatActivity
 
     private boolean controle = false;
 
-    private ProgressDialog loading;
-
     private AtualizarTempo atualizarTempo;
 
     public double distancia = 0;
+
+    private LocalizacaoAtual localizacaoAtual;
+
+    private ProgressDialog pDialog;
 
     private String[] permissoesNecessarias = new String[]{
             Manifest.permission.INTERNET,
@@ -103,6 +94,9 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         usuarioAutenticacao = ConfiguracaoFirebase.getFirebaseAuteticacao();
+
+        //Localização atual do usuário
+        localizacaoAtual = new LocalizacaoAtual(Home.this, this);
 
         setContentView(R.layout.activity_home);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -121,6 +115,9 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Progress progress = new Progress(Home.this, true);
+        progress.threard(3000);
+
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,21 +127,21 @@ public class Home extends AppCompatActivity
                 Preferencias preferencias = new Preferencias(Home.this);
                 final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
-                firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
+                firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
-                firebase.addValueEventListener(new ValueEventListener() {
+                firebase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                            ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
+                            Tarefa tarefa = dados.getValue(Tarefa.class);
 
-                            if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivoEmissor().equals("1") && processoTarefa.getAtivoRealizador().equals("1") ){
+                            if (tarefa.getId_usuario().equals(identificadorUsuarioLogado) && (tarefa.getStatus().equals("1") || tarefa.getStatus().equals("2"))){
                                 controle = true;
                             }
 
                         }
                         if(controle){
-                            Toast.makeText(Home.this, "Você já está envolvido em um processo de uma tarefa", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Home.this, "Você já uma tarefa cadastra ativa no momento.", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             Intent intent = new Intent(Home.this, CadastroTarefa.class);
@@ -182,24 +179,15 @@ public class Home extends AppCompatActivity
             }
         });
 
-        //Showing progress dialog
-        pDialog = new ProgressDialog(Home.this);
-        pDialog.setMessage("Por favor, aguarde...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-
         textViewNenhuma = (TextView) findViewById(R.id.textViewNenhuma);
 
         listarTarefas();
-
-        pegarLocalizacao();
 
         tarefaFinalizada();
 
         //Permissões
         Permissao.validaPermissao(1, this, permissoesNecessarias);
 
-        Introducao introducao = new Introducao(Home.this);
     }
 
     @Override
@@ -208,6 +196,8 @@ public class Home extends AppCompatActivity
         startActivity(intent);
     }
 
+
+    private boolean nada = true;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -234,9 +224,13 @@ public class Home extends AppCompatActivity
 
                     if (((processoTarefa.getId_usuario_emissor().equals(identificadorUsuarioLogado) || processoTarefa.getId_usuario_realizador().equals(identificadorUsuarioLogado))) && processoTarefa.getAtivoEmissor().equals("1") && processoTarefa.getAtivoRealizador().equals("1") ){
                         item.setIcon(R.drawable.not);
-
+                        nada = false;
                     }
 
+                }
+                if(nada)
+                {
+                    item.setIcon(R.drawable.notpadrao);
                 }
             }
 
@@ -270,6 +264,12 @@ public class Home extends AppCompatActivity
     @Override
     public void run() {
 
+    }
+
+    @Override
+    public void processFinish(int status, String output) {
+        this.latitude = localizacaoAtual.getLatitude();
+        this.longitude = localizacaoAtual.getLongitude();
     }
 
     //Busca
@@ -318,6 +318,9 @@ public class Home extends AppCompatActivity
         if (id == R.id.nav_perfil) {
             Intent intent = new Intent(this, Perfil.class);
             startActivity(intent);
+        } else if (id == R.id.nav_tarefas_ativas) {
+            Intent intent = new Intent(this, MinhasTarefasAtivas.class);
+            startActivity(intent);
         } else if (id == R.id.nav_tarefas_cadastradas) {
             Intent intent = new Intent(this, MinhasTarefasCadastradas.class);
             startActivity(intent);
@@ -333,7 +336,11 @@ public class Home extends AppCompatActivity
 
         } else if (id == R.id.nav_configuracoes) {
 
-        }*/ else if (id == R.id.nav_logout) {
+        }*/ else if (id == R.id.nav_report) {
+            Intent intent = new Intent(this, Report.class);
+            startActivity(intent);
+
+        }else if (id == R.id.nav_logout) {
             deslogarUsuario();
         }
 
@@ -351,7 +358,9 @@ public class Home extends AppCompatActivity
     private void listarTarefas(){
         distancia = 0;
 
-        //atualizarTempo = new AtualizarTempo();
+        atualizarTempo = new AtualizarTempo();
+        atualizarTempo.setContext(Home.this);
+        atualizarTempo.atualiza();
 
         ValoresFiltro valoresFiltro = new ValoresFiltro(Home.this);
         final String categoria = valoresFiltro.getCategoria();
@@ -369,8 +378,7 @@ public class Home extends AppCompatActivity
         );
         listViewTarefas.setAdapter(adapter);
 
-        firebase = ConfiguracaoFirebase.getFirebase()
-                .child("tarefas");
+        firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -386,29 +394,22 @@ public class Home extends AppCompatActivity
                 for (DataSnapshot dados: dataSnapshot.getChildren()){
                     Tarefa tarefa = dados.getValue(Tarefa.class);
 
-                    //atualizarTempo.atualiza(Home.this, tarefa.getId().toString(), tarefa.getId_usuario().toString(), tarefa.getStatus().toString(), tarefa.getData().toString(), tarefa.getHora().toString(), tarefa.getTempo().toString());
-
                     String usuarioId = tarefa.getId_usuario();
                     String statusTarefa = tarefa.getStatus();
 
-                    distancia(usuarioId, tarefa.getEndereco());
+                    distancia = distancia(usuarioId, tarefa.getEndereco());
 
                     if((!(usuarioId.equals(identificadorUsuarioLogado)) && (statusTarefa.equals("1")))) {
                         if (categoria != "") {
-                            if ((tarefa.getTipo().toString() == categoria) &&
-                                 (distancia < localizacao) &&
-                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) <= valor) &&
-                                    (Integer.parseInt(tarefa.getTempo().toString()) <= tempo)) {
-
+                            if ((tarefa.getTipo().toString() == categoria) && (distancia < localizacao) && (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) <= valor) && (Integer.parseInt(tarefa.getTempo().toString()) <= tempo))
+                            {
                                 textViewNenhuma.setVisibility(View.GONE);
 
                                 listaTarefas.add(tarefa);
                             }
                         } else {
-                            if ((distancia < localizacao) &&
-                                    (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) <= valor) &&
-                                            (Integer.parseInt(tarefa.getTempo().toString()) <= tempo)) {
-
+                            if ((distancia < localizacao) && (Integer.parseInt(tarefa.getValor().toString().substring(0, tarefa.getValor().length() - 3).replace("R$","")) <= valor) && (Integer.parseInt(tarefa.getTempo().toString()) <= tempo))
+                            {
                                 textViewNenhuma.setVisibility(View.GONE);
 
                                 listaTarefas.add(tarefa);
@@ -416,6 +417,8 @@ public class Home extends AppCompatActivity
                         }
                     }
                 }
+
+                listaRelevancia();
 
                 //Avisar adapter que mudou
                 adapter.notifyDataSetChanged();
@@ -430,42 +433,108 @@ public class Home extends AppCompatActivity
         //https://stackoverflow.com/questions/44777989/firebase-infinite-scroll-list-view-load-10-items-on-scrolling
     }
 
-    private void distancia(String usuarioId, final String end){
+    private void listaRelevancia() {
+        ArrayList<Tarefa> tarefas10 = new ArrayList<>();
+        ArrayList<Tarefa> tarefas30 = new ArrayList<>();
+        ArrayList<Tarefa> tarefas50 = new ArrayList<>();
+        ArrayList<Tarefa> tarefasMais = new ArrayList<>();
 
-        firebase = ConfiguracaoFirebase.getFirebase().child("endereco").child(usuarioId);
+        for(Tarefa tarefa : listaTarefas)
+        {
+            distancia = distancia(tarefa.getId_usuario(), tarefa.getEndereco());
 
-        firebase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dados: dataSnapshot.getChildren()){
-                    Endereco endereco = dados.getValue(Endereco.class);
-
-                    //http://helpdev.com.br/2015/05/06/android-java-como-calcular-distancia-entre-dois-pontos-gps/
-                    if(endereco.getId().equals(end)){
-                            //double earthRadius = 3958.75;//miles
-                            double earthRadius = 6371;//kilometers
-                            double dLat = Math.toRadians(Double.parseDouble(endereco.getLatitude())  - latitude);
-                            double dLng = Math.toRadians(Double.parseDouble(endereco.getLongitude())  - longitude);
-                            double sindLat = Math.sin(dLat / 2);
-                            double sindLng = Math.sin(dLng / 2);
-                            double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
-                                    * Math.cos(Math.toRadians(latitude))
-                                    * Math.cos(Math.toRadians(Double.parseDouble(endereco.getLatitude())));
-                            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                            double dist = earthRadius * c;
-
-                            distancia = dist / 1000;
-
-                    }
-
-                }
+            if(distancia <= 10){
+                tarefas10.add(tarefa);
             }
+            else if(distancia > 10 && distancia <= 30){
+                tarefas30.add(tarefa);
+            }
+            else if(distancia > 30 && distancia <= 50){
+                tarefas50.add(tarefa);
+            }
+            else if(distancia > 50){
+                tarefasMais.add(tarefa);
+            }
+        }
 
+
+        Collections.sort(tarefas10, new Comparator<Tarefa>() {
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public int compare(Tarefa t1, Tarefa t2) {
+                if (Integer.parseInt(t1.getTempo()) > Integer.parseInt(t2.getTempo()))
+                {
+                    return 1;
+                }
+                else if (Integer.parseInt(t1.getTempo()) < Integer.parseInt(t2.getTempo())){
+                    return -1;
+                }
+                return 0;
             }
         });
+
+        Collections.sort(tarefas30, new Comparator<Tarefa>() {
+            @Override
+            public int compare(Tarefa t1, Tarefa t2) {
+                if (Integer.parseInt(t1.getTempo()) > Integer.parseInt(t2.getTempo()))
+                {
+                    return 1;
+                }
+                else if (Integer.parseInt(t1.getTempo()) < Integer.parseInt(t2.getTempo())){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+
+        Collections.sort(tarefas50, new Comparator<Tarefa>() {
+            @Override
+            public int compare(Tarefa t1, Tarefa t2) {
+                if (Integer.parseInt(t1.getTempo()) > Integer.parseInt(t2.getTempo()))
+                {
+                    return 1;
+                }
+                else if (Integer.parseInt(t1.getTempo()) < Integer.parseInt(t2.getTempo())){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+
+        Collections.sort(tarefasMais, new Comparator<Tarefa>() {
+            @Override
+            public int compare(Tarefa t1, Tarefa t2) {
+                if (Integer.parseInt(t1.getTempo()) > Integer.parseInt(t2.getTempo()))
+                {
+                    return 1;
+                }
+                else if (Integer.parseInt(t1.getTempo()) < Integer.parseInt(t2.getTempo())){
+                    return -1;
+                }
+                return 0;
+            }
+        });
+
+        listaTarefas.clear();
+
+        for(Tarefa tarefa : tarefas10)
+        {
+            listaTarefas.add(tarefa);
+        }
+
+        for(Tarefa tarefa : tarefas30)
+        {
+            listaTarefas.add(tarefa);
+        }
+
+        for(Tarefa tarefa : tarefas50)
+        {
+            listaTarefas.add(tarefa);
+        }
+
+        for(Tarefa tarefa : tarefasMais)
+        {
+            listaTarefas.add(tarefa);
+        }
     }
 
     protected void nomeUsuario(){
@@ -499,14 +568,14 @@ public class Home extends AppCompatActivity
     }
 
     private void tarefaFinalizada(){
-        pDialog.dismiss();
+        emissorOuRealizador = 0;
 
         Preferencias preferencias = new Preferencias(Home.this);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
         firebase = ConfiguracaoFirebase.getFirebase().child("ProcessoTarefa");
 
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
@@ -572,9 +641,45 @@ public class Home extends AppCompatActivity
         });
     }
 
-    private void pegarLocalizacao(){
-        LocalizacaoAtual localizacaoAtual = new LocalizacaoAtual(Home.this);
-        latitude = localizacaoAtual.getLatitude();
-        longitude = localizacaoAtual.getLongitude();
+    private double distancia(String usuarioId, final String end){
+
+        firebase = ConfiguracaoFirebase.getFirebase().child("endereco").child(usuarioId);
+
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dados: dataSnapshot.getChildren()){
+                    Endereco endereco = dados.getValue(Endereco.class);
+
+                    //http://helpdev.com.br/2015/05/06/android-java-como-calcular-distancia-entre-dois-pontos-gps/
+                    if(endereco.getId().equals(end)){
+                        //double earthRadius = 3958.75;//miles
+                        double earthRadius = 6371;//kilometers
+                        double dLat = Math.toRadians(Double.parseDouble(endereco.getLatitude())  - latitude);
+                        double dLng = Math.toRadians(Double.parseDouble(endereco.getLongitude())  - longitude);
+                        double sindLat = Math.sin(dLat / 2);
+                        double sindLng = Math.sin(dLng / 2);
+                        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                                * Math.cos(Math.toRadians(latitude))
+                                * Math.cos(Math.toRadians(Double.parseDouble(endereco.getLatitude())));
+                        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        double dist = earthRadius * c;
+
+                        distancia = dist / 1000;
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return distancia;
     }
+
+
 }

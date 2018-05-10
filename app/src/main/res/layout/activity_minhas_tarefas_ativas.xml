@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    tools:context="com.connectask.activity.activity.MinhasTarefasAtivas">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tamanho_toolbar"
+            android:background="@color/cor_principal"
+            android:paddingLeft="30px"
+            android:paddingTop="10px"
+            app:title="Minhas Tarefas Ativas"
+            app:titleTextColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="332dp">
+
+
+            <SearchView
+                android:id="@+id/searchViewBusca"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewCampo" />
+
+            <TextView
+                android:id="@+id/textViewNenhuma"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Nenhuma tarefa ativa"
+                android:textAlignment="center"
+                android:textSize="22sp"
+                app:fontFamily="@font/roboto" />
+
+            <ListView
+                android:id="@+id/listViewTarefas"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:divider="@null"
+                android:paddingVertical="20dp"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+</android.support.constraint.ConstraintLayout>

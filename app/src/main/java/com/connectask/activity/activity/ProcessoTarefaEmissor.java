@@ -1,19 +1,22 @@
 package com.connectask.activity.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.Fragments.Local;
 import com.connectask.activity.Fragments.PaginaUsuario;
+import com.connectask.activity.classes.Progress;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
@@ -44,8 +47,12 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
     private TextView textViewLocal;
     private TextView textViewData;
     private ImageButton imageButtonLocal;
+    private ImageButton imageButtonUsuario;
+    private ImageView imageViewHelp;
 
     private Tarefa tarefa = new Tarefa();
+
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,9 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
             }
         });
 
+        Progress progress = new Progress(ProcessoTarefaEmissor.this, false);
+        progress.threard(1000);
+
         Intent intent = getIntent();
         idTarefa = intent.getStringExtra("id");
         id_ProcessoTarefa = intent.getStringExtra("id_ProcessoTarefa");
@@ -77,11 +87,13 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
             textViewTipo = (TextView) findViewById(R.id.textViewTipo);
             textViewTitulo = (TextView) findViewById(R.id.textViewTitulo);
             textViewDescricao = (TextView) findViewById(R.id.textViewComentario);
-            textViewTempo = (TextView) findViewById(R.id.textViewCep);
+            textViewTempo = (TextView) findViewById(R.id.textViewTempo);
             textViewNome = (TextView) findViewById(R.id.textViewNome);
             textViewLocal = (TextView) findViewById(R.id.textViewLocal);
             imageButtonLocal = (ImageButton) findViewById(R.id.imageButtonLocal);
             textViewData = (TextView) findViewById(R.id.textViewData);
+            imageButtonUsuario = (ImageButton) findViewById(R.id.imageButtonUsuario);
+            imageViewHelp = (ImageView) findViewById(R.id.imageViewHelp);
 
             firebase1 = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
@@ -97,7 +109,7 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                             textViewTipo.setText(tarefa.getTipo());
                             textViewTitulo.setText(tarefa.getTitulo());
                             textViewDescricao.setText(tarefa.getDescricao());
-                            textViewTempo.setText(tarefa.getTempo() + " hora(s)");
+                            textViewTempo.setText(tarefa.getTempoCadastro() + " hora(s)");
                             textViewData.setText(tarefa.getData().replace("-","/"));
 
                             firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios");
@@ -134,6 +146,22 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     PaginaUsuario paginaUsuario = new PaginaUsuario();
+                    paginaUsuario.setContext(ProcessoTarefaEmissor.this);
+                    paginaUsuario.setId(idTarefa);
+
+                    android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                    fragmentTransaction.replace(R.id.fragment_tarefa_emissor, paginaUsuario);
+                    fragmentTransaction.addToBackStack(null).commit();
+                }
+            });
+
+            imageButtonUsuario.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PaginaUsuario paginaUsuario = new PaginaUsuario();
+                    paginaUsuario.setContext(ProcessoTarefaEmissor.this);
                     paginaUsuario.setId(idTarefa);
 
                     android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
@@ -190,10 +218,15 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                                                 .child(idTarefa)
                                                 .child("status").setValue("4");
 
+                                            firebase1.child("ProcessoTarefa")
+                                                    .child(id_ProcessoTarefa)
+                                                    .child("status").setValue("3");
+
                                         Intent intent = new Intent(ProcessoTarefaEmissor.this, TarefaFinalizadaEmissor.class);
                                         intent.putExtra("id", idTarefa);
                                         intent.putExtra("id_ProcessoTarefa", id_ProcessoTarefa);
                                         startActivity(intent);
+                                        finish();
                                         }
                                     })
                             .setNegativeButton("Não", null)
@@ -220,10 +253,15 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
 
                                             firebase1.child("ProcessoTarefa")
                                                     .child(id_ProcessoTarefa)
-                                                    .child("status").setValue("2");
+                                                    .child("ativoEmissor").setValue("2");
+
+                                            firebase1.child("ProcessoTarefa")
+                                                    .child(id_ProcessoTarefa)
+                                                    .child("ativoRealizador").setValue("2");
 
                                             Intent intent = new Intent(ProcessoTarefaEmissor.this, Home.class);
                                             startActivity(intent);
+                                            finish();
                                         }
                                     })
                             .setNegativeButton("Não", null)
@@ -231,6 +269,22 @@ public class ProcessoTarefaEmissor extends AppCompatActivity {
                 }
             });
 
+            imageViewHelp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(ProcessoTarefaEmissor.this)
+                            .setTitle("E agora?")
+                            .setMessage("Agora basta você esperar o usuário realizar a sua tarefa. Após a realização, você deve finalizar a tarefa.")
+                            .setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    })
+                            .show();
+                }
+            });
         }
 
         else if (statusTarefa.equals("4")){

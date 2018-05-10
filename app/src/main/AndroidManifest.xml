@@ -62,6 +62,7 @@
         <activity android:name=".activity.activity.CadastroTarefa" />
         <activity android:name=".activity.activity.MinhasTarefasCadastradas" />
         <activity android:name=".activity.activity.MinhasTarefasRealizadas" />
+        <activity android:name=".activity.activity.MinhasTarefasAtivas" />
         <activity android:name=".activity.activity.EsqueceuSenha" />
         <activity
             android:name=".activity.activity.Perfil"
@@ -90,7 +91,8 @@
         <activity android:name=".activity.activity.EditarEndereco" />
         <activity android:name=".activity.activity.DetalhesTarefaFinalizada" />
         <activity android:name=".activity.activity.TarefaCadastrada" />
-        <activity android:name=".activity.activity.Validacao"></activity>
+        <activity android:name=".activity.activity.Validacao" />
+        <activity android:name=".activity.activity.Report"></activity>
     </application>
 
 </manifest>

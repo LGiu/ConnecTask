@@ -4,40 +4,39 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
-import com.connectask.activity.activity.Home;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.connectask.activity.model.ProcessoTarefa;
-import com.connectask.activity.model.Sessao;
+import com.connectask.activity.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import static com.connectask.activity.classes.Base64Custom.codificarBase64;
+
 public class Introducao {
 
     private Context context;
     private DatabaseReference firebase;
+    private DatabaseReference firebase2;
 
     private int novo = 0;
 
-    public Introducao(Context context){
+    public Introducao(final Context context){
         this.context = context;
 
         Preferencias preferencias = new Preferencias(context);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
-        firebase = ConfiguracaoFirebase.getFirebase().child("sessao").child(identificadorUsuarioLogado);
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase = ConfiguracaoFirebase.getFirebase().child("usuarios");
+        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
-                    Sessao sessao = dados.getValue(Sessao.class);
-                    if(identificadorUsuarioLogado.equals(sessao.getId_usuario())){
-                        novo++;
+                    Usuario usuario = dados.getValue(Usuario.class);
+                    if(identificadorUsuarioLogado.equals(codificarBase64(usuario.getEmail().toString())) && usuario.getIntroducao().equals("0")){
+
+                        introducao1();
                     }
-                }
-                if(novo == 1){
-                    introducao1();
                 }
             }
 
@@ -48,11 +47,26 @@ public class Introducao {
         });
     }
 
+    private void setarIndroducao()
+    {
+        Preferencias preferencias = new Preferencias(context);
+        final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
+        firebase2 = ConfiguracaoFirebase.getFirebase().child("usuarios").child(identificadorUsuarioLogado);
+        firebase2.child("introducao").setValue("1");
+    }
+
     private void introducao1(){
+
         new AlertDialog.Builder(context)
                 .setTitle("Introdução")
                 .setMessage("\nÉ novo por aqui? Que tal uma breve introdução para saber como funciona o ConnecTask.\n")
-                .setPositiveButton("NÃO, OBRIGADO", null)
+                .setNegativeButton("NÃO, OBRIGADO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setarIndroducao();
+                    }
+                })
                 .setPositiveButton("VAMOS LÁ",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -112,12 +126,29 @@ public class Introducao {
 
     private void introducao5(){
         new AlertDialog.Builder(context)
+                .setTitle("Tarefas em progresso")
+                .setMessage("\nSempre que você possuir uma tarefa em andamento aparecerá uma notificação no canto superior direito de sua tela.\n")
+                .setPositiveButton("PROXIMO",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                introducao6();
+                                dialogInterface.dismiss();
+
+                            }
+                        })
+                .show();
+    }
+
+    private void introducao6(){
+        new AlertDialog.Builder(context)
                 .setTitle("Pronto")
                 .setMessage("\nAgora que você já sabe mais sobre o aplicativo está pronto para iniciar.\n")
                 .setPositiveButton("VAMOS LÁ",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                setarIndroducao();
                                 dialogInterface.dismiss();
                             }
                         })

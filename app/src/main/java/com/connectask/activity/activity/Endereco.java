@@ -1,23 +1,19 @@
 package com.connectask.activity.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.Fragments.CadastroEndereco;
 import com.connectask.activity.adapter.EnderecoAdapter;
-import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Preferencias;
-import com.connectask.activity.classes.ValoresFiltro;
+import com.connectask.activity.classes.Progress;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.connectask.activity.model.Tarefa;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,6 +49,9 @@ public class Endereco extends AppCompatActivity {
             }
         });
 
+        Progress progress = new Progress(Endereco.this, false);
+        progress.threard(1000);
+
         buttonNovoEndereco = (Button) findViewById(R.id.buttonNovoEndereco);
         listViewEndereco = (ListView) findViewById(R.id.listViewEndereco);
 
@@ -62,6 +61,7 @@ public class Endereco extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CadastroEndereco cadastroEndereco = new CadastroEndereco();
+                cadastroEndereco.setContext(Endereco.this);
 
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

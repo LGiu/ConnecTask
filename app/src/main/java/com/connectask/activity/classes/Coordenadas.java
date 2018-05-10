@@ -3,9 +3,6 @@ package com.connectask.activity.classes;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
 
 import java.io.IOException;
 import java.util.List;

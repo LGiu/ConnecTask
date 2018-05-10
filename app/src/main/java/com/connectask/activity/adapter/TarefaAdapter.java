@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.activity.DetalhesTarefa;
+import com.connectask.activity.activity.DetalhesTarefaAtiva;
 import com.connectask.activity.activity.DetalhesTarefaFinalizada;
 import com.connectask.activity.model.Tarefa;
 
@@ -24,6 +25,9 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
     private ArrayList<Tarefa> listaTarefa;
     private Context context;
     private int controle;
+
+    private TextView tempo;
+    private TextView te;
 
     public TarefaAdapter(Context c, ArrayList<Tarefa> objects, int controle) {
         super(c, 0, objects);
@@ -49,15 +53,24 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
             // recupera elemento para exibição
             TextView titulo = (TextView) view.findViewById(R.id.textViewTitulo);
             TextView descricao = (TextView) view.findViewById(R.id.textViewComentario);
-            TextView tempo = (TextView) view.findViewById(R.id.textViewCep);
+            tempo = (TextView) view.findViewById(R.id.textViewTempo);
+            te = (TextView) view.findViewById(R.id.textViewTe);
             TextView valor = (TextView) view.findViewById(R.id.textViewNome);
             Button detalhes = (Button) view.findViewById(R.id.buttonDetalhes);
 
             final Tarefa tarefa = listaTarefa.get(position);
             titulo.setText( tarefa.getTitulo() );
             descricao.setText( tarefa.getDescricao() );
-            tempo.setText( tarefa.getTempo() + " hora(s)");
             valor.setText( tarefa.getValor() );
+
+            if(controle == 1){
+                tempo.setText( tarefa.getTempo() + " hora(s)");
+            }
+            else if(controle == 2){
+                tempo.setVisibility( View.GONE);
+                te.setVisibility( View.GONE);
+            }
+
             detalhes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -68,8 +81,15 @@ public class TarefaAdapter extends ArrayAdapter<Tarefa>{
                         intent.putExtra("status", tarefa.getStatus().toString());
                         context.startActivity(intent);
                     }
-                    else{
+                    else if (controle == 2){
                         Intent intent = new Intent(context, DetalhesTarefaFinalizada.class);
+                        String id = tarefa.getId();
+                        intent.putExtra("id", id);
+                        intent.putExtra("status", tarefa.getStatus().toString());
+                        context.startActivity(intent);
+                    }
+                    else if (controle == 3){
+                        Intent intent = new Intent(context, DetalhesTarefaAtiva.class);
                         String id = tarefa.getId();
                         intent.putExtra("id", id);
                         intent.putExtra("status", tarefa.getStatus().toString());

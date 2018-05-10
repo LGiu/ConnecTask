@@ -1,8 +1,8 @@
 package com.connectask.activity.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +39,7 @@ public class Denunciar extends AppCompatActivity {
         });
 
         textViewNome = (TextView) findViewById(R.id.textViewNome);
-        editTextDenuncia = (EditText) findViewById(R.id.editTextDenuncia);
+        editTextDenuncia = (EditText) findViewById(R.id.editTextDescricao);
         buttonEnviar = (Button) findViewById(R.id.buttonEnviar);
 
         Intent intent = getIntent();
@@ -58,6 +58,9 @@ public class Denunciar extends AppCompatActivity {
                 denuncia.setId_usuario_denunciado(idUsuario);
 
                 denuncia.salvar();
+
+                Intent intent = new Intent(Denunciar.this, Home.class);
+                startActivity(intent);
             }
         });
 

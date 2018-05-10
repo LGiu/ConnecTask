@@ -8,19 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.connectask.R;
-import com.connectask.activity.activity.DetalhesTarefa;
 import com.connectask.activity.activity.EditarEndereco;
-import com.connectask.activity.activity.Home;
-import com.connectask.activity.activity.ProcessoTarefaRealizador;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
+import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,7 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
     private Context context;
     private DatabaseReference firebase;
 
+    private TextView textViewNome;
     private TextView textViewEstado;
     private TextView textViewCidade;
     private TextView textViewCep;
@@ -67,6 +70,7 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
             view = inflater.inflate(R.layout.lista_endereco, parent, false);
 
             // recupera elemento para exibição
+            textViewNome = (TextView) view.findViewById(R.id.textViewNome);
             textViewEstado = (TextView) view.findViewById(R.id.textViewEstado);
             textViewCidade = (TextView) view.findViewById(R.id.textViewCidade);
             textViewCep = (TextView) view.findViewById(R.id.textViewCep);
@@ -78,6 +82,7 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
             imageButtonExcluir = (ImageButton) view.findViewById(R.id.imageButtonExcluir);
 
             final Endereco endereco = listaEndereco.get(posicao);
+            textViewNome.setText( endereco.getNome() );
             textViewEstado.setText( endereco.getEstado() );
             textViewCidade.setText( endereco.getCidade() );
             textViewCep.setText( endereco.getCep() );
@@ -92,6 +97,7 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
                 public void onClick(View view) {
                     Intent intent = new Intent(context, EditarEndereco.class);
                     intent.putExtra("id", endereco.getId());
+                    intent.putExtra("nome", textViewNome.getText().toString());
                     intent.putExtra("estado", textViewEstado.getText().toString());
                     intent.putExtra("cidade", textViewCidade.getText().toString());
                     intent.putExtra("cep", textViewCep.getText().toString());
@@ -108,6 +114,27 @@ public class EnderecoAdapter extends ArrayAdapter<Endereco>{
                 public void onClick(View view) {
                     Preferencias preferencias = new Preferencias(context);
                     final String identificadorUsuarioLogado = preferencias.getIdentificado();
+
+                    firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
+
+                    firebase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dados : dataSnapshot.getChildren()) {
+                                Tarefa tarefa = dados.getValue(Tarefa.class);
+
+                                if(tarefa.getEndereco().equals(endereco.getId()) && !tarefa.getStatus().equals("3")){
+                                    Toast.makeText(context, "Não é possível excluir este endereço, pois está vinculado a uma tarefa.", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                     new AlertDialog.Builder(context)
                             .setTitle("Excluir Endereço")

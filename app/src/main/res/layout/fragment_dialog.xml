@@ -11,7 +11,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_bold"
-        android:text="Tarefa ativas no momento"
+        android:text="Tarefas ativas no momento"
         android:textAlignment="center"
         android:textSize="20dp"
         android:textStyle="bold" />
@@ -94,7 +94,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textViewCep"
+                    android:id="@+id/textViewTempo"
                     android:layout_width="match_parent"
                     android:layout_height="28dp"
                     android:fontFamily="@font/roboto"
@@ -141,6 +141,35 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+
+                <TextView
+                    android:id="@+id/textViewSta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/roboto"
+                    android:text="Status"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -156,12 +185,44 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp">
 
-                <ImageView
-                    android:id="@+id/imageViewStatus"
+                <TextView
+                    android:id="@+id/textViewS"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:layout_weight="1"
-                    android:src="@drawable/andamento" />
+                    android:fontFamily="@font/roboto"
+                    android:text="EM ANDAMENTO"
+                    android:textAlignment="center"
+                    android:textColor="@color/cor_principal"
+                    android:textSize="@dimen/botaoCadastrar" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <Button
+                    android:id="@+id/buttonDetalhes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:fontFamily="@font/roboto"
+                    android:text="Mais Detalhes" />
             </LinearLayout>
 
         </LinearLayout>
@@ -183,14 +244,15 @@
             android:paddingHorizontal="20dp">
 
             <Button
-                android:id="@+id/buttonOk"
+                android:id="@+id/buttonFechar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:fontFamily="@font/roboto"
-                android:text="Ok" />
+                android:text="Fechar" />
         </LinearLayout>
 
     </LinearLayout>
+
 
 </LinearLayout>

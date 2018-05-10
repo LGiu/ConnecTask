@@ -1,6 +1,8 @@
 package com.connectask.activity.Fragments;
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -59,6 +61,10 @@ public class PaginaUsuario extends Fragment {
     private int numeroFinalizadas = 0;
     private int numeroRealizadas = 0;
 
+    private Context context;
+
+    private ProgressDialog pDialog;
+
     public PaginaUsuario() {
 
     }
@@ -68,6 +74,10 @@ public class PaginaUsuario extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_pagina_usuario, container, false);
 
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Por favor, aguarde...");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         textViewTarefasRealizadas = (TextView) view.findViewById(R.id.textViewTarefasRealizadas);
         textViewTarefasFinalizadas = (TextView) view.findViewById(R.id.textViewTarefasFinalizadas);
@@ -91,6 +101,8 @@ public class PaginaUsuario extends Fragment {
                         textViewNome.setText(usuario.getNome());
 
                         notaAvaliacao = Float.parseFloat(usuario.getAvaliacao());
+
+                        textViewDenunciar.setVisibility(View.GONE);
                     }
 
                 }
@@ -115,8 +127,6 @@ public class PaginaUsuario extends Fragment {
                 startActivity(intent);
             }
         });
-
-
 
         firebase = ConfiguracaoFirebase.getFirebase().child("avaliacao");
 
@@ -151,17 +161,18 @@ public class PaginaUsuario extends Fragment {
                 for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     ProcessoTarefa processoTarefa = dados.getValue(ProcessoTarefa.class);
 
-                    if(idUsuario.equals(processoTarefa.getId_usuario_emissor()))
+                    if(idUsuario.equals(processoTarefa.getId_usuario_emissor()) && processoTarefa.getAtivoEmissor().equals("2"))
                     {
                         numeroFinalizadas++;
                         textViewTarefasFinalizadas.setText(String.valueOf(numeroFinalizadas));
                     }
-                    else if(idUsuario.equals(processoTarefa.getId_usuario_realizador())){
+                    else if(idUsuario.equals(processoTarefa.getId_usuario_realizador()) && processoTarefa.getAtivoRealizador().equals("2")){
                         numeroRealizadas++;
                         textViewTarefasRealizadas.setText(String.valueOf(numeroRealizadas));
                     }
 
                 }
+                pDialog.dismiss();
             }
 
             @Override
@@ -216,7 +227,7 @@ public class PaginaUsuario extends Fragment {
                         textViewNComentario.setVisibility(View.GONE);
                     }
                 }
-                adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, comentarios);
+                adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, comentarios);
                 listViewComentarios.setAdapter(adapter);
             }
 
@@ -225,8 +236,10 @@ public class PaginaUsuario extends Fragment {
 
             }
         });
-
-
     }
 
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 }

@@ -51,10 +51,12 @@
 
                     <TextView
                         android:id="@+id/textViewData"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
                         android:layout_marginEnd="16dp"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto"
@@ -62,7 +64,7 @@
                         android:textAlignment="textEnd"
                         android:textSize="@dimen/botaoCadastrar"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageViewHelp"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -125,7 +127,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/textViewT" />
 
                     <TextView
-                        android:id="@+id/textViewCep"
+                        android:id="@+id/textViewTempo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
@@ -159,19 +161,18 @@
 
                     <TextView
                         android:id="@+id/textViewLocal"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="32dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_bold"
                         android:text="@string/local"
                         android:textSize="@dimen/botaoCadastrar"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imageButtonLocal"
-                        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewUsuario" />
 
                     <TextView
                         android:id="@+id/textView9"
@@ -213,7 +214,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="16dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="24dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto_bold"
                         android:text="Status"
@@ -227,7 +228,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/imageButtonLocal" />
 
                     <TextView
-                        android:id="@+id/textView13"
+                        android:id="@+id/textViewUsuario"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -244,18 +245,28 @@
                         android:id="@+id/textViewNome"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
                         android:layout_marginStart="4dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/roboto"
                         android:text="Dado"
                         android:textSize="@dimen/botaoCadastrar"
+                        android:maxLength="20"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView13"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/textView13"
-                        app:layout_constraintTop_toTopOf="@+id/textView13" />
+                        app:layout_constraintBottom_toBottomOf="@+id/textViewUsuario"
+                        app:layout_constraintStart_toEndOf="@+id/textViewUsuario"
+                        app:layout_constraintTop_toTopOf="@+id/textViewUsuario" />
+
+                    <ImageButton
+                        android:id="@+id/imageButtonUsuario"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@android:color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/textViewNome"
+                        app:layout_constraintStart_toEndOf="@+id/textViewNome"
+                        app:layout_constraintTop_toTopOf="@+id/textViewNome"
+                        app:srcCompat="@drawable/ic_launch_menor" />
 
                     <TextView
                         android:id="@+id/textViewSendo"
@@ -275,17 +286,18 @@
 
                     <ImageButton
                         android:id="@+id/imageButtonLocal"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginStart="8dp"
                         android:background="@android:color/white"
+                        android:scaleType="fitStart"
                         android:text="Dado"
-                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/textViewLocal"
                         app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewLocal"
+                        app:layout_constraintStart_toEndOf="@+id/textViewLocal"
+                        app:layout_constraintTop_toTopOf="@+id/textViewLocal"
                         app:srcCompat="@drawable/ic_add_location" />
 
                     <Button
@@ -306,6 +318,17 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textViewSendo" />
+
+                    <ImageView
+                        android:id="@+id/imageViewHelp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_action_help" />
 
                 </android.support.constraint.ConstraintLayout>
             </ScrollView>

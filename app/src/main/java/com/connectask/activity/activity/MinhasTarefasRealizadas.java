@@ -1,10 +1,8 @@
 package com.connectask.activity.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 import com.connectask.R;
 import com.connectask.activity.adapter.TarefaAdapter;
 import com.connectask.activity.classes.Preferencias;
+import com.connectask.activity.classes.Progress;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
@@ -52,6 +51,9 @@ public class MinhasTarefasRealizadas extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        Progress progress = new Progress(MinhasTarefasRealizadas.this, false);
+        progress.threard(1000);
 
         textViewNenhuma = (TextView) findViewById(R.id.textViewNenhuma);
 

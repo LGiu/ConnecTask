@@ -1,18 +1,10 @@
 package com.connectask.activity.classes;
 
 import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
 
-import com.connectask.activity.activity.CriarAvaliacao;
-import com.connectask.activity.activity.Home;
-import com.connectask.activity.activity.TarefaFinalizaRealizador;
-import com.connectask.activity.activity.TarefaFinalizadaEmissor;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.connectask.activity.model.Avaliacao;
 import com.connectask.activity.model.ProcessoTarefa;
 import com.connectask.activity.model.Tarefa;
-import com.connectask.activity.model.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -84,7 +76,7 @@ public class Util {
         Pattern pattern;
         Matcher matcher;
 
-        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{4,}$";
+        final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,20}$";
 
         pattern = Pattern.compile(PASSWORD_PATTERN);
         matcher = pattern.matcher(password);

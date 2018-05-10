@@ -1,23 +1,11 @@
 package com.connectask.activity.model;
 
-import android.content.Context;
-import android.content.Intent;
-import android.view.View;
-
-import com.connectask.activity.activity.DetalhesTarefa;
-import com.connectask.activity.activity.ProcessoTarefaEmissor;
-import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import static com.connectask.activity.classes.Base64Custom.codificarBase64;
 
 /**
  * Created by Leonardo Giuliani on 17/01/2018.

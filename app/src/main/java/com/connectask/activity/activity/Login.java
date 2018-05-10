@@ -3,9 +3,9 @@ package com.connectask.activity.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
@@ -13,11 +13,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.connectask.R;
-import com.connectask.activity.classes.ValoresFiltro;
-import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.classes.Base64Custom;
 import com.connectask.activity.classes.Preferencias;
-import com.connectask.activity.model.ProcessoTarefa;
+import com.connectask.activity.classes.Progress;
+import com.connectask.activity.classes.ValoresFiltro;
+import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Sessao;
 import com.connectask.activity.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,7 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import static com.connectask.activity.classes.Base64Custom.codificarBase64;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity{
 
     private EditText editTextEmail;
     private EditText editTextSenha;
@@ -64,12 +64,15 @@ public class Login extends AppCompatActivity {
         buttonEntrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if((!editTextEmail.getText().toString().equals("")) && (!editTextSenha.getText().toString().equals("")))
+                if((!editTextEmail.getText().toString().trim().equals("")) && (!editTextSenha.getText().toString().trim().equals("")))
                 {
+                    Progress progress = new Progress(Login.this, false);
+                    progress.threard(2000);
+
                     usuario = new Usuario();
 
-                    usuario.setEmail(editTextEmail.getText().toString());
-                    usuario.setSenha(editTextSenha.getText().toString());
+                    usuario.setEmail(editTextEmail.getText().toString().trim());
+                    usuario.setSenha(editTextSenha.getText().toString().trim());
 
                     validarLogin();
                 }
@@ -78,6 +81,13 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+
+        Progress progress = new Progress(Login.this, false);
+        progress.threard(5000);
+
+
+
+
     }
 
     private void verificarUsuarioLogado(){
@@ -91,6 +101,7 @@ public class Login extends AppCompatActivity {
 
             abrirHome();
         }
+
     }
 
     private void validarLogin(){
@@ -140,7 +151,6 @@ public class Login extends AppCompatActivity {
         finish();
     }
 
-
     public void esqueceuSenha(View view){
         Intent intent = new Intent(Login.this, EsqueceuSenha.class);
         startActivity(intent);
@@ -156,17 +166,14 @@ public class Login extends AppCompatActivity {
         final Preferencias preferencias = new Preferencias(Login.this);
         final String identificadorUsuarioLogado = preferencias.getIdentificado();
 
-        if(!identificadorUsuarioLogado.equals(null) && !identificadorUsuarioLogado.equals("")) {
-            pDialog = new ProgressDialog(Login.this);
-            pDialog.setMessage("Por favor, aguarde...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
+        if(identificadorUsuarioLogado != null)
+        {
             firebase = ConfiguracaoFirebase.getFirebase().child("usuarios");
 
             firebase.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot)
+                {
                     for (DataSnapshot dados : dataSnapshot.getChildren()) {
                         Usuario usuario = dados.getValue(Usuario.class);
 
@@ -183,9 +190,8 @@ public class Login extends AppCompatActivity {
                             }
                         }
                     }
-                    verificarUsuarioLogado();
-                    pDialog.dismiss();
 
+                    verificarUsuarioLogado();
                 }
 
                 @Override

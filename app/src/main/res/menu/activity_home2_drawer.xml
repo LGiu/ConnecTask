@@ -8,6 +8,9 @@
             android:id="@+id/nav_perfil"
             android:title="Perfil" />
         <item
+            android:id="@+id/nav_tarefas_ativas"
+            android:title="Minhas Tarefas Ativas" />
+        <item
             android:id="@+id/nav_tarefas_cadastradas"
             android:title="Minhas Tarefas Cadastradas" />
         <item
@@ -22,6 +25,9 @@
         <item
             android:id="@+id/nav_configuracoes"
             android:title="Configurações" />-->
+        <item
+            android:id="@+id/nav_report"
+            android:title="Reportar Erro" />
         <item
             android:id="@+id/nav_logout"
             android:title="Sair" />

@@ -1,12 +1,11 @@
 package com.connectask.activity.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.connectask.R;
-import com.connectask.activity.classes.AtualizarTempo;
 
 public class MainActivity extends AppCompatActivity implements Runnable {
 
@@ -15,8 +14,9 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Handler handler = new Handler();
-        handler.postDelayed(this, 3000);
+        handler.postDelayed(this, 5000);
 
     }
 
@@ -24,5 +24,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     public void run() {
         Intent it = new Intent(MainActivity.this, Login.class);
         startActivity(it);
+        finish();
     }
+
 }

@@ -1,12 +1,8 @@
 package com.connectask.activity.activity;
 
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.support.v4.app.FragmentActivity;
 
 import com.connectask.R;
 import com.google.android.gms.maps.CameraUpdate;
@@ -16,11 +12,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

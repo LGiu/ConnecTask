@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,8 +17,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.connectask.R;
-import com.connectask.activity.activity.CadastroTarefa;
-import com.connectask.activity.activity.Home;
 import com.connectask.activity.classes.AsyncResponse;
 import com.connectask.activity.classes.BuscaCep;
 import com.connectask.activity.classes.Util;
@@ -27,7 +24,6 @@ import com.connectask.activity.model.Endereco;
 
 import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +34,7 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
 
     private View view;
 
+    private EditText editTextNomeEnd;
     private EditText editTextCep;
     private EditText editTextRua;
     private EditText editTextNumero;
@@ -69,9 +66,9 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_cadastro_endereco, container, false);
 
-
+        editTextNomeEnd = (EditText) view.findViewById(R.id.editTextNomeEnd);
         editTextCep = (EditText) view.findViewById(R.id.editTextCep);
-        editTextRua = (EditText) view.findViewById(R.id.editTextNome);
+        editTextRua = (EditText) view.findViewById(R.id.editTextRua);
         editTextNumero = (EditText) view.findViewById(R.id.editTextNumero);
         editTextBairro = (EditText) view.findViewById(R.id.editTextBairro);
         editTextComplemento = (EditText) view.findViewById(R.id.editTextComplemento);
@@ -84,20 +81,27 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
         buttonCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                endereco = new Endereco();
-                endereco.setEstado(spinnerEstado.getSelectedItem().toString());
-                endereco.setCidade(editTextCidade.getText().toString());
-                endereco.setCep(editTextCep.getText().toString());
-                endereco.setRua(editTextRua.getText().toString());
-                endereco.setNumero(editTextNumero.getText().toString());
-                endereco.setBairro(editTextBairro.getText().toString());
-                endereco.setComplemento((editTextComplemento.getText().toString()));
+                if(valida())
+                {
+                    endereco = new Endereco();
+                    endereco.setNome(editTextNomeEnd.getText().toString());
+                    endereco.setEstado(spinnerEstado.getSelectedItem().toString());
+                    endereco.setCidade(editTextCidade.getText().toString());
+                    endereco.setCep(editTextCep.getText().toString());
+                    endereco.setRua(editTextRua.getText().toString());
+                    endereco.setNumero(editTextNumero.getText().toString());
+                    endereco.setBairro(editTextBairro.getText().toString());
+                    endereco.setComplemento((editTextComplemento.getText().toString()));
 
-                try{
-                    cadastrarEnderenco();
+                    try {
+                        cadastrarEnderenco();
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Endereço Incorreto", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                catch (Exception e){
-                    Toast.makeText(getContext(), "Endereço Incorreto", Toast.LENGTH_SHORT).show();
+                else{
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+
                 }
 
             }
@@ -140,7 +144,8 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_cadastro);
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(fragment);
-        fragmentTransaction.commit();    }
+        fragmentTransaction.commit();
+    }
 
     private void estado(){
         listaEstado.add("AC");
@@ -181,10 +186,13 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
         pDialog.setMessage("Buscando Endereço...");
         pDialog.setCancelable(false);
         pDialog.show();
-        buscaCep = new BuscaCep(getContext(), editTextCep.getText().toString());
-        buscaCep.delegate = CadastroEndereco.this;
-        buscaCep.execute();
-
+        try {
+            buscaCep = new BuscaCep(context, editTextCep.getText().toString());
+            buscaCep.delegate = CadastroEndereco.this;
+            buscaCep.execute();
+        }
+        catch (Exception e){
+        }
     }
 
     private boolean valida(){
@@ -192,9 +200,14 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
         msg = "Campos incorretos:";
         Util util = new Util();
 
+        if(editTextNomeEnd.getText().length() > 255)
+        {
+            msg += "\nNome inválido.";
+            teste = false;
+        }
         if(editTextCep.getText().length() != 8)
         {
-            msg += "\nCep inválida.";
+            msg += "\nCep inválido.";
             teste = false;
         }
         if(editTextCidade.getText().length() > 100 || editTextCidade.getText().length() == 0)
@@ -230,10 +243,16 @@ public class CadastroEndereco extends Fragment implements AsyncResponse {
     public void processFinish(int status, String output) {
         switch (status) {
             case 1:
-                for (int i = 0; i < 26; i++) {
-                    if(listaEstado.get(i).equals(output)){
-                        spinnerEstado.setSelection(i);
+                if(output != null || output != "")
+                {
+                    for (int i = 0; i < 26; i++) {
+                        if (listaEstado.get(i).equals(output)) {
+                            spinnerEstado.setSelection(i);
+                        }
                     }
+                }
+                else{
+                    Toast.makeText(getContext(), "CEP não encontrado", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case 2:

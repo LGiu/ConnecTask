@@ -1,19 +1,15 @@
 package com.connectask.activity.activity;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +19,6 @@ import com.connectask.activity.Fragments.EditarPerfil;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Foto;
-import com.connectask.activity.model.Tarefa;
 import com.connectask.activity.model.Usuario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -107,7 +102,7 @@ public class Perfil extends AppCompatActivity {
             }
         });
 
-        imageViewFoto.setOnClickListener(new View.OnClickListener() {
+        /*imageViewFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK,
@@ -115,7 +110,7 @@ public class Perfil extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem"), PICK_IMAGE);
 
             }
-        });
+        });*/
 
         textViewNome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +144,7 @@ public class Perfil extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 EditarPerfil editarPerfil = new EditarPerfil();
-                editarPerfil.setCampos("Nome", textViewNome.getText().toString());
+                editarPerfil.setCampos("CPF", textViewCpf.getText().toString());
 
                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -2,7 +2,6 @@ package com.connectask.activity.model;
 
 import android.content.Context;
 
-import com.connectask.activity.activity.Home;
 import com.connectask.activity.classes.Coordenadas;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
@@ -15,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 public class Endereco {
 
     private String id;
+    private String nome;
     private String estado;
     private String cidade;
     private String cep;
@@ -60,7 +60,16 @@ public class Endereco {
         setLatitude(String.valueOf(coordenadas.getLatitude()));
         setLongitude(String.valueOf(coordenadas.getLongitude()));
 
-        firebase.child("endereco").child(getId_usuario()).child(getId()).setValue(this);
+        firebase = ConfiguracaoFirebase.getFirebase();
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("nome").setValue(getNome());
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("rua").setValue(getRua());
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("cidade").setValue(getCidade());
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("cep").setValue(getCep());
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("estado").setValue(getEstado());
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("numero").setValue(getNumero());
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("bairro").setValue(getBairro());
+        firebase.child("endereco").child(getId_usuario()).child(getId()).child("complemento").setValue(getComplemento());
+
     }
 
 
@@ -151,5 +160,13 @@ public class Endereco {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }

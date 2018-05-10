@@ -2,7 +2,6 @@ package com.connectask.activity.model;
 
 import android.content.Context;
 
-import com.connectask.activity.activity.Home;
 import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
@@ -87,4 +86,5 @@ public class Sessao {
     public void setHora(String hora) {
         this.hora = hora;
     }
+
 }

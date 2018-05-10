@@ -42,7 +42,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="Agora basta aguarda."
+        android:text="Agora basta aguardar"
         android:textAlignment="center"
         android:textSize="21sp"
         app:layout_constraintEnd_toEndOf="parent"

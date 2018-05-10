@@ -2,11 +2,9 @@ package com.connectask.activity.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
@@ -14,15 +12,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.connectask.R;
+import com.connectask.activity.classes.Base64Custom;
 import com.connectask.activity.classes.Celular;
 import com.connectask.activity.classes.Cpf;
 import com.connectask.activity.classes.Permissao;
+import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.classes.Telefone;
 import com.connectask.activity.classes.Token;
 import com.connectask.activity.classes.Util;
 import com.connectask.activity.config.ConfiguracaoFirebase;
-import com.connectask.activity.classes.Base64Custom;
-import com.connectask.activity.classes.Preferencias;
 import com.connectask.activity.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,10 +36,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.connectask.activity.classes.Base64Custom.codificarBase64;
 
 public class CadastroUsuario extends AppCompatActivity {
 
@@ -191,6 +185,7 @@ public class CadastroUsuario extends AppCompatActivity {
             msg += "\nNome inválido.";
             teste = false;
         }
+        //Validar se existe telefone igual
         if(editTextCpf.getText().length() != 14)
         {
             msg += "\nCPF inválido.";
@@ -209,9 +204,9 @@ public class CadastroUsuario extends AppCompatActivity {
             teste = false;
         }
 
-        if(util.isPasswordValid(editTextSenha.getText().toString().trim()))
+        if(editTextSenha.getText().toString().length() < 6 && editTextSenha.getText().toString().length() > 20)
         {
-            msg += "\nSenha inválido.";
+            msg += "\nSenha inválido.\nA senha deve conter no mínimo 6 e no máximo 20 dígitos.";
             teste = false;
         }
 

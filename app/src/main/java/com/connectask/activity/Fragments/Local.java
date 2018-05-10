@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.connectask.R;
 import com.connectask.activity.activity.MapsActivity;
-import com.connectask.activity.classes.Coordenadas;
+import com.connectask.activity.classes.Progress;
 import com.connectask.activity.config.ConfiguracaoFirebase;
 import com.connectask.activity.model.Endereco;
 import com.connectask.activity.model.Tarefa;
@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Local extends Fragment {
+public class Local extends Fragment{
 
     private View view;
 
@@ -40,16 +40,16 @@ public class Local extends Fragment {
     private ImageButton imageButtonMaps;
     private TextView textViewMaps;
 
-    private double latitude;
-    private double longitude;
+    private String latitude;
+    private String longitude;
 
     private String idTarefa;
     private String idEndereco;
     private String idUsuario;
 
+
     public Local() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,21 +57,23 @@ public class Local extends Fragment {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_local, container, false);
 
+        Progress progress = new Progress(getContext(), false);
+        progress.threard(1000);
+
+
         textViewEstado = (TextView) view.findViewById(R.id.textViewEstado);
         textViewCidade = (TextView) view.findViewById(R.id.textViewCidade);
-        textViewCep = (TextView) view.findViewById(R.id.textViewCep);
+        textViewCep = (TextView) view.findViewById(R.id.textViewTempo);
         textViewRua = (TextView) view.findViewById(R.id.textViewRua);
-        textViewNumero = (TextView) view.findViewById(R.id.textViewCep);
+        textViewNumero = (TextView) view.findViewById(R.id.textViewNumero);
         textViewBairro = (TextView) view.findViewById(R.id.textViewBairro);
-        textViewComplemento = (TextView) view.findViewById(R.id.textViewCep);
+        textViewComplemento = (TextView) view.findViewById(R.id.textViewComplemento);
         imageButtonMaps = (ImageButton) view.findViewById(R.id.imageButtonMaps);
         textViewMaps = (TextView) view.findViewById(R.id.textViewMaps);
 
+        if (idTarefa != null) {
 
-        if(idTarefa != null) {
-
-            firebase = ConfiguracaoFirebase.getFirebase()
-                    .child("tarefas");
+            firebase = ConfiguracaoFirebase.getFirebase().child("tarefas");
 
             firebase.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -93,10 +95,7 @@ public class Local extends Fragment {
 
                 }
             });
-
-
         }
-
 
         imageButtonMaps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +143,9 @@ public class Local extends Fragment {
                             textViewNumero.setText(endereco.getNumero());
                             textViewBairro.setText(endereco.getBairro());
                             textViewComplemento.setText(endereco.getComplemento());
+                            latitude = endereco.getLatitude().toString();
+                            longitude = endereco.getLongitude().toString();
+
                         }
                     }
                 }
@@ -153,11 +155,7 @@ public class Local extends Fragment {
 
                 }
             });
-
-            Coordenadas coordenadas = new Coordenadas(getContext(), textViewEstado.getText().toString(), textViewCidade.getText().toString(), textViewCep.getText().toString(), textViewRua.getText().toString(), textViewNumero.getText().toString());
-            latitude = coordenadas.getLatitude();
-            longitude = coordenadas.getLongitude();
-
         }
     }
+
 }
